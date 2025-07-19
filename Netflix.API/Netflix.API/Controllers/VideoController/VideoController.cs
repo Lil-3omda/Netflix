@@ -1,0 +1,114 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Netflix.API.DTOs.VideoDTO;
+using Netflix.API.Models;
+using Netflix.API.Repositories.Interfaces;
+
+namespace Netflix.API.Controllers.VideoController
+{
+    [Route("api/Videos")]
+    [ApiController]
+    public class VideoController : ControllerBase
+    {
+        IUnitOfWork _unitOfWork;
+        IMapper _mapper;
+
+        public VideoController(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        // Get All Videos
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var videos = await _unitOfWork.Videos.GetAllAsync();
+            var result = _mapper.Map<List<VideoResponseDto>>(videos);
+            return Ok(result);
+        }
+
+        // Get Video By Id
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByid(int id)
+        {
+            var video = await _unitOfWork.Videos.GetByIdAsync(id);
+            if (video == null)
+                return NotFound("Video not found!");
+            var result = _mapper.Map<VideoResponseDto>(video);
+            return Ok(result);
+        }
+
+        //  Get paged videos
+        //[HttpGet("paged")]
+        //public async Task<IActionResult> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        //{
+        //    var videos = await _unitOfWork.Videos.GetPagedVideosAsync(pageNumber, pageSize);
+        //    var totalCount = await _unitOfWork.Videos.GetTotalCountAsync();
+
+        //    var result = _mapper.Map<List<VideoResponseDto>>(videos);
+
+        //    return Ok(new
+        //    {
+        //        TotalItems = totalCount,
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+        //        Data = result
+        //    });
+        //}
+
+        // Get Video BY search
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search([FromQuery] string keyword, [FromQuery] int pagenum, [FromQuery]  int pagesize)
+        {
+            var videos = await _unitOfWork.Videos.SearchAsync(keyword, pagenum, pagesize);
+            var result = _mapper.Map<VideoResponseDto>(videos);
+            return Ok(result);
+        }
+
+        //Add Video
+        [Authorize(Roles ="Admin")]
+        [HttpPost]
+       public async Task<IActionResult> AddVideo([FromBody] VideoUploadDto dto)
+        {
+            var video = _mapper.Map<Video>(dto);
+            video.ViewCount = 0;
+
+            await _unitOfWork.Videos.AddAsync(video);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Video Upload Successfully");
+        }
+
+        // Get video by type
+        [HttpGet("type/{type}")]
+        public async Task<IActionResult> GetByType(VideoType type, [FromQuery]int pagenum = 1, [FromQuery] int pagesize=10)
+        {
+            var videos = await _unitOfWork.Videos.GetByTypeAsync(type, pagenum, pagesize);
+            var result = _mapper.Map<VideoResponseDto>(videos);
+            return Ok(result);
+        }
+
+        // update data vide by admin 
+        [Authorize(Roles ="Admin")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateVideo(int id,[FromBody] VideoUploadDto dto)
+        {
+            var video = await _unitOfWork.Videos.GetByIdAsync(id);
+            if (video == null)
+                return NotFound("video not found!");
+            //update data is video
+            _mapper.Map(dto, video);
+
+            _unitOfWork.Videos.Update(video);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Video Update Successfully");
+        }
+        //public async Task<IActionResult> AddRating(int id, [FromBody])
+    }
+}
