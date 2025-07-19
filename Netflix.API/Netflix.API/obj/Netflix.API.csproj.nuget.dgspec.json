@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Netflix.API.csproj": {}
+    "D:\\ItiGrduationProjectNetflix\\Netflix\\Netflix.API\\Netflix.API\\Netflix.API.csproj": {}
   },
   "projects": {
-    "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Netflix.API.csproj": {
+    "D:\\ItiGrduationProjectNetflix\\Netflix\\Netflix.API\\Netflix.API\\Netflix.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Netflix.API.csproj",
+        "projectUniqueName": "D:\\ItiGrduationProjectNetflix\\Netflix\\Netflix.API\\Netflix.API\\Netflix.API.csproj",
         "projectName": "Netflix.API",
-        "projectPath": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Netflix.API.csproj",
-        "packagesPath": "C:\\Users\\Lil3o\\.nuget\\packages\\",
-        "outputPath": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\obj\\",
+        "projectPath": "D:\\ItiGrduationProjectNetflix\\Netflix\\Netflix.API\\Netflix.API\\Netflix.API.csproj",
+        "packagesPath": "C:\\Users\\elhad\\.nuget\\packages\\",
+        "outputPath": "D:\\ItiGrduationProjectNetflix\\Netflix\\Netflix.API\\Netflix.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Lil3o\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\elhad\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
