@@ -4,9 +4,9 @@ using Netflix.API.Repositories.Interfaces;
 
 namespace Netflix.API.Repositories
 {
-    public class UnitOfWork:IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext context;
+        public ApplicationDbContext context { get; }
 
         public IGenericRepository<Video> Videos { get; }
 
