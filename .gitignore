@@ -18,3 +18,27 @@
 .DS_Store
 Thumbs.db
 .env
+
+# ========== Backend: ASP.NET Core (.NET) ==========
+Netflix.api/Netflix.api/bin/
+Netflix.api/Netflix.api/obj/
+Netflix.api/Netflix.api/*.db
+Netflix.api/Netflix.api/*.user
+Netflix.api/Netflix.api/*.suo
+Netflix.api/Netflix.api/appsettings.Development.json
+Netflix.api/Netflix.api/.env
+Netflix.api/Netflix.api/.vs/
+Netflix.API/Netflix.API/obj/
+**/.vs/
+Netflix.api/.vs
+Netflix.API/.vs/
+Netflix.API/.vs/Netflix.API/
+ Netflix.API/.vs/Netflix.API/CopilotIndices/
+
+
+# ========== Frontend: Angular ==========
+‪wud-zsct-qdd‬‏"/Netflix.API/bin/" 
+"/Netflix.API/obj/" 
+"/Netflix.API/.vs/" 
+"*.user" 
+"*.suo" 
