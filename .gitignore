@@ -22,7 +22,6 @@ Netflix.API/.vs/Netflix.API/CopilotIndices/
 **/.env
 **/.vs/
 **/CopilotIndices/
-*.sln
 
 # ========== Frontend: Angular ==========
 Netflix/node_modules/
