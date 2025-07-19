@@ -1,0 +1,20 @@
+# ========== Backend: ASP.NET Core (.NET) ==========
+/Netflix.API/bin/
+/Netflix.API/obj/
+/Netflix.API/*.db
+/Netflix.API/*.user
+/Netflix.API/*.suo
+/Netflix.API/appsettings.Development.json
+/Netflix.API/.env
+
+# ========== Frontend: Angular ==========
+/Netflix/node_modules/
+/Netflix/dist/
+/Netflix/.angular/
+/Netflix/.env
+
+# ========== General ==========
+*.log
+.DS_Store
+Thumbs.db
+.env
