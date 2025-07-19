@@ -175,3 +175,4 @@ D:\Courses\NetflixClone\Netflix.API\Netflix.API\obj\Debug\net9.0\refint\Netflix.
 D:\Courses\NetflixClone\Netflix.API\Netflix.API\obj\Debug\net9.0\Netflix.API.pdb
 D:\Courses\NetflixClone\Netflix.API\Netflix.API\obj\Debug\net9.0\Netflix.API.genruntimeconfig.cache
 D:\Courses\NetflixClone\Netflix.API\Netflix.API\obj\Debug\net9.0\ref\Netflix.API.dll
+D:\Courses\NetflixClone\Netflix.API\Netflix.API\obj\Debug\net9.0\Netflix.API.sourcelink.json
