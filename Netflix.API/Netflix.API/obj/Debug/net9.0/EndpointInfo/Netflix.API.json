@@ -221,6 +221,18 @@
           }
         }
       }
+    },
+    "/api/Category/names": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {

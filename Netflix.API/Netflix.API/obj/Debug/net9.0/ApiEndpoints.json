@@ -112,6 +112,16 @@
   },
   {
     "ContainingType": "Netflix.API.Controllers.CategoryController",
+    "Method": "GetCategoryNames",
+    "RelativePath": "api/Category/names",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Netflix.API.Controllers.CategoryController",
     "Method": "GetAllPaginated",
     "RelativePath": "api/Category/paginated",
     "HttpMethod": "GET",

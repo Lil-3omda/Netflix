@@ -8,6 +8,7 @@ namespace Netflix.API.Services.Interfaces
         Task<IEnumerable<CategoryDto>> GetAllAsync();
         Task<PaginatedResult<CategoryDto>> GetAllPaginatedAsync(PaginationParams paginationParams);
         Task<CategoryDto?> GetByIdAsync(int id);
+        Task<List<string>> GetCategoryNamesAsync();
         Task AddAsync(CreateCategoryDto dto);
         Task<bool> UpdateAsync(int id, UpdateCategoryDto dto);
         Task<bool> DeleteAsync(int id);

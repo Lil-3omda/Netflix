@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Netflix.API.DTOs.CategoryDtos;
 using Netflix.API.Paginations;
+using Netflix.API.Services;
 using Netflix.API.Services.Interfaces;
 
 namespace Netflix.API.Controllers
@@ -39,6 +40,13 @@ namespace Netflix.API.Controllers
                 return NotFound();
 
             return Ok(category);
+        }
+
+        [HttpGet("names")]
+        public async Task<IActionResult> GetCategoryNames()
+        {
+            var names = await categoryService.GetCategoryNamesAsync();
+            return Ok(names);
         }
 
         [HttpPost]

@@ -61,6 +61,13 @@ namespace Netflix.API.Services
             return mapper.Map<CategoryDto>(category);
         }
 
+        public async Task<List<string>> GetCategoryNamesAsync()
+        {
+            return await context.Categories
+                .Select(c => c.Name)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(CreateCategoryDto dto)
         {
             var category = mapper.Map<Category>(dto);
