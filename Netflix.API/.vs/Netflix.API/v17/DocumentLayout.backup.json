@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\Courses\\NetflixClone\\Netflix.API\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|d:\\courses\\netflixclone\\netflix.api\\netflix.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|solutionrelative:netflix.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|d:\\courses\\netflixclone\\netflix.api\\netflix.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|solutionrelative:netflix.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|d:\\courses\\netflixclone\\netflix.api\\netflix.api\\dtos\\userdtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|solutionrelative:netflix.api\\dtos\\userdtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|d:\\courses\\netflixclone\\netflix.api\\netflix.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|solutionrelative:netflix.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F8B8C0DF-D25D-489D-8CCE-C9AC71558817}|Netflix.API\\Netflix.API.csproj|d:\\courses\\netflixclone\\netflix.api\\netflix.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -98,7 +98,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 18,
           "Children": [
             {
               "$type": "Bookmark",
@@ -106,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "UserProfile.cs",
               "DocumentMoniker": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Mappings\\UserProfile.cs",
               "RelativeDocumentMoniker": "Netflix.API\\Mappings\\UserProfile.cs",
@@ -114,8 +114,7 @@
               "RelativeToolTip": "Netflix.API\\Mappings\\UserProfile.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-19T10:44:59.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-19T10:44:59.445Z"
             },
             {
               "$type": "Document",
@@ -127,8 +126,7 @@
               "RelativeToolTip": "Netflix.API\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-19T09:12:37.787Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-19T09:12:37.787Z"
             },
             {
               "$type": "Document",
@@ -192,7 +190,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Netflix.API\\Controllers\\AuthController.cs",
@@ -205,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "LoginDTO.cs",
               "DocumentMoniker": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\DTOs\\UserDtos\\LoginDTO.cs",
               "RelativeDocumentMoniker": "Netflix.API\\DTOs\\UserDtos\\LoginDTO.cs",
@@ -213,8 +211,7 @@
               "RelativeToolTip": "Netflix.API\\DTOs\\UserDtos\\LoginDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-19T08:45:15.565Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-19T08:45:15.565Z"
             },
             {
               "$type": "Document",
@@ -314,13 +311,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Netflix.API\\Data\\ApplicationDbContext.cs",
               "ToolTip": "D:\\Courses\\NetflixClone\\Netflix.API\\Netflix.API\\Data\\ApplicationDbContext.cs",
               "RelativeToolTip": "Netflix.API\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAawE0AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAD4v00AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-19T07:56:21.593Z",
               "EditorCaption": ""

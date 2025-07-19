@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "Netflix.API.Controllers.AuthController",
+    "Method": "CheckEmailExists",
+    "RelativePath": "api/Auth/email-exists",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Netflix.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
     "HttpMethod": "POST",

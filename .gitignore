@@ -1,20 +1,25 @@
 # ========== Backend: ASP.NET Core (.NET) ==========
-netflix.api/netflix.api/bin/
-netflix.api/netflix.api/obj/
-netflix.api/netflix.api/*.db
-netflix.api/netflix.api/*.user
-netflix.api/netflix.api/*.suo
-netflix.api/netflix.api/appsettings.Development.json
-netflix.api/netflix.api/.env
+Netflix.api/Netflix.api/bin/
+Netflix.api/Netflix.api/obj/
+Netflix.api/Netflix.api/*.db
+Netflix.api/Netflix.api/*.user
+Netflix.api/Netflix.api/*.suo
+Netflix.api/Netflix.api/appsettings.Development.json
+Netflix.api/Netflix.api/.env
+Netflix.api/Netflix.api/.vs/
+Netflix.API/Netflix.API/obj/
 **/.vs/
-netflix.api/.vs
+Netflix.api/.vs
+Netflix.API/.vs/
+Netflix.API/.vs/Netflix.API/
+ Netflix.API/.vs/Netflix.API/CopilotIndices/
 
 
 # ========== Frontend: Angular ==========
-netflix/node_modules/
-netflix/dist/
-netflix/.angular/
-netflix/.env
+Netflix/node_modules/
+Netflix/dist/
+Netflix/.angular/
+Netflix/.env
 
 # ========== General ==========
 *.log

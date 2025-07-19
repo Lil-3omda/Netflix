@@ -72,6 +72,13 @@ namespace Netflix.API.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        [HttpGet("email-exists")]
+        public async Task<IActionResult> CheckEmailExists(string email)
+        {
+            var exists = await userManager.FindByEmailAsync(email) != null;
+            return Ok(new { exists });
+        }
     }
 
 }
