@@ -6,6 +6,9 @@ netflix.api/netflix.api/*.user
 netflix.api/netflix.api/*.suo
 netflix.api/netflix.api/appsettings.Development.json
 netflix.api/netflix.api/.env
+**/.vs/
+netflix.api/.vs
+
 
 # ========== Frontend: Angular ==========
 netflix/node_modules/
