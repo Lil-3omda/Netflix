@@ -1,25 +1,4 @@
 # ========== Backend: ASP.NET Core (.NET) ==========
-/Netflix.API/bin/
-/Netflix.API/obj/
-/Netflix.API/*.db
-/Netflix.API/*.user
-/Netflix.API/*.suo
-/Netflix.API/appsettings.Development.json
-/Netflix.API/.env
-
-# ========== Frontend: Angular ==========
-/Netflix/node_modules/
-/Netflix/dist/
-/Netflix/.angular/
-/Netflix/.env
-
-# ========== General ==========
-*.log
-.DS_Store
-Thumbs.db
-.env
-
-# ========== Backend: ASP.NET Core (.NET) ==========
 Netflix.api/Netflix.api/bin/
 Netflix.api/Netflix.api/obj/
 Netflix.api/Netflix.api/*.db
@@ -33,12 +12,30 @@ Netflix.API/Netflix.API/obj/
 Netflix.api/.vs
 Netflix.API/.vs/
 Netflix.API/.vs/Netflix.API/
- Netflix.API/.vs/Netflix.API/CopilotIndices/
-
+Netflix.API/.vs/Netflix.API/CopilotIndices/
+**/bin/
+**/obj/
+**/*.db
+**/*.user
+**/*.suo
+**/appsettings.Development.json
+**/.env
+**/.vs/
+**/CopilotIndices/
+*.sln
 
 # ========== Frontend: Angular ==========
-‪wud-zsct-qdd‬‏"/Netflix.API/bin/" 
-"/Netflix.API/obj/" 
-"/Netflix.API/.vs/" 
-"*.user" 
-"*.suo" 
+Netflix/node_modules/
+Netflix/dist/
+Netflix/.angular/
+Netflix/.env
+
+# ========== General ==========
+*.log
+.DS_Store
+Thumbs.db
+.env
+
+# ========== IDE/Editor Specific ==========
+.vscode/
+.idea/

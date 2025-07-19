@@ -17,7 +17,7 @@ namespace Netflix.API.Data
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<WatchProgress> WatchProgresses { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SubscriptionPlan> Subscriptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,7 +29,7 @@ namespace Netflix.API.Data
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Subscription>()
+            builder.Entity<SubscriptionPlan>()
                 .HasOne(s => s.User)
                 .WithMany(u => u.Subscriptions)
                 .HasForeignKey(s => s.UserId)
