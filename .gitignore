@@ -22,6 +22,10 @@ Netflix.API/.vs/Netflix.API/CopilotIndices/
 **/.env
 **/.vs/
 **/CopilotIndices/
+.vs/
+bin/
+obj/
+
 
 
 # ========== Frontend: Angular ==========
