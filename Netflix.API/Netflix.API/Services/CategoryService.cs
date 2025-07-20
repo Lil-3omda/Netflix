@@ -60,6 +60,17 @@ namespace Netflix.API.Services
 
             return mapper.Map<CategoryDto>(category);
         }
+        public async Task<CategoryDto?> GetByNameAsync(string name)
+        {
+            var category = await context.Categories
+                .Include(c => c.Videos)
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
+
+            if (category == null)
+                return null;
+
+            return mapper.Map<CategoryDto>(category);
+        }
 
         public async Task<List<string>> GetCategoryNamesAsync()
         {

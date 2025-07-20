@@ -32,10 +32,19 @@ namespace Netflix.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var category = await categoryService.GetByIdAsync(id);
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
+        }
+        [HttpGet("{name:alpha}")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var category = await categoryService.GetByNameAsync(name);
             if (category == null)
                 return NotFound();
 
@@ -77,8 +86,7 @@ namespace Netflix.API.Controllers
         {
             var deleted = await categoryService.DeleteAsync(id);
             if (!deleted)
-                return BadRequest("Cannot delete category that contains videos or category not found.");
-
+                return BadRequest(new { message = "Cannot delete category that contains videos or category not found." });
             return NoContent();
         }
     }
