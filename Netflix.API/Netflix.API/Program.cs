@@ -11,6 +11,8 @@ using Netflix.API.Services;
 using Netflix.API.Services.Interfaces;
 using System.Text;
 
+using Netflix.API.Repositories.VideoRepository;
+
 namespace Netflix.API
 {
     public class Program
@@ -25,6 +27,8 @@ namespace Netflix.API
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

@@ -1,5 +1,6 @@
 ﻿using Netflix.API.Data;
 using Netflix.API.Models;
+using Netflix.API.Repositories.VideoRepository;
 
 namespace Netflix.API.Repositories.Interfaces
 {
@@ -7,6 +8,8 @@ namespace Netflix.API.Repositories.Interfaces
     {
         ApplicationDbContext context { get; }
         IGenericRepository<Video> Videos { get; }
+
+        IVideoRepository Videos { get; }
         Task<int> SaveAsync();
     }
 }

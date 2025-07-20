@@ -1,6 +1,7 @@
 ﻿using Netflix.API.Data;
 using Netflix.API.Models;
 using Netflix.API.Repositories.Interfaces;
+using Netflix.API.Repositories.VideoRepository;
 
 namespace Netflix.API.Repositories
 {
@@ -8,12 +9,12 @@ namespace Netflix.API.Repositories
     {
         public ApplicationDbContext context { get; }
 
-        public IGenericRepository<Video> Videos { get; }
+        public IVideoRepository Videos { get; }
 
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(ApplicationDbContext context,IVideoRepository videorepo)
         {
             this.context = context;
-            Videos = new GenericRepository<Video>(context);
+            Videos = videorepo;
         }
 
         public async Task<int> SaveAsync() => await context.SaveChangesAsync();

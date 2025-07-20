@@ -18,6 +18,10 @@ Netflix.API/.vs/Netflix.API/CopilotIndices/
 */.db
 */.user
 */.suo
+=======
+**/*.db
+**/*.user
+**/*.suo
 **/appsettings.Development.json
 **/.env
 **/.vs/
