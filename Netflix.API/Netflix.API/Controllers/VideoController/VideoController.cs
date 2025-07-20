@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Netflix.API.DTOs.RatingDTOs;
 using Netflix.API.DTOs.VideoDTO;
 using Netflix.API.Models;
 using Netflix.API.Repositories.Interfaces;
@@ -109,6 +110,27 @@ namespace Netflix.API.Controllers.VideoController
 
             return Ok("Video Update Successfully");
         }
-        //public async Task<IActionResult> AddRating(int id, [FromBody])
+
+        // Rating Videos
+        [Authorize]
+        [HttpPost("{id}/rate")]
+        public async Task<IActionResult> AddRating(int id, [FromBody] RateUserDto dto)
+        {
+            var video = await _unitOfWork.Videos.GetByIdAsync(id);
+            if (video == null)
+                return NotFound("video not found");
+
+            var result=_mapper.Map<Rating>(dto);
+            result.VideoId = id;
+
+            video.Ratings ??= new List<Rating>();
+            video.Ratings.Add(result);
+
+            _unitOfWork.Videos.Update(video);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Rating Added Successfully");
+        } 
+
     }
 }
