@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -454,14 +454,22 @@ export class Login {
     this.isLoading = true;
 
     // Use auth service for login
-    this.authService.login(this.email, this.password).then(success => {
-      this.isLoading = false;
-      if (success) {
-        this.router.navigate(['/browse']);
-      } else {
-        this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
+    this.authService.login(this.email, this.password).subscribe({
+      next: (success) => {
+        this.isLoading = false;
+        if (success) {
+          this.router.navigate(['/browse']);
+        } else {
+          this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.emailError = 'An error occurred. Please try again later.';
+        console.error(err);
       }
     });
+
   }
 
   goToSignup() {

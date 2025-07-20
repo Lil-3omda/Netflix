@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -685,15 +685,21 @@ export class SignupComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Use auth service for signup
-    this.authService.signup(this.email, this.password, this.selectedPlan || 'Standard').then(success => {
-      this.isLoading = false;
-      if (success) {
-        this.nextStep();
-      } else {
-        this.emailError = 'Something went wrong. Please try again.';
+    this.authService.signup(this.email, this.password, this.selectedPlan || 'Standard').subscribe({
+      next: (success) => {
+        this.isLoading = false;
+        if (success) {
+          this.nextStep();
+        } else {
+          this.emailError = 'Something went wrong. Please try again.';
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.emailError = 'Signup failed. Please check your connection or try again later.';
       }
     });
+
   }
 
   selectPlan(planId: string) {
@@ -701,7 +707,6 @@ export class SignupComponent implements OnInit {
   }
 
   completeSignup() {
-    // Simulate signup completion
     this.router.navigate(['/browse']);
   }
 

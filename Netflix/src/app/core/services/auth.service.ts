@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; 
+import { tap } from 'rxjs/operators';
 
 export interface User {
   id: string;
@@ -19,88 +22,51 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private router: Router) {
-    // Check if user is already logged in
+  private apiUrl = environment.apiUrl; 
+
+  constructor(private http: HttpClient, private router: Router) {
     this.checkAuthStatus();
   }
 
   private checkAuthStatus(): void {
     const token = localStorage.getItem('netflix_token');
     const user = localStorage.getItem('netflix_user');
-    
+
     if (token && user) {
       this.currentUserSubject.next(JSON.parse(user));
       this.isAuthenticatedSubject.next(true);
     }
   }
 
-  async login(email: string, password: string): Promise<boolean> {
-    try {
-      // Simulate API call
-      await this.delay(2000);
-      
-      // Mock validation
-      if (email && password.length >= 4) {
-        const user: User = {
-          id: '1',
-          email: email,
-          name: email.split('@')[0],
-          plan: 'Premium'
-        };
-
-        // Store in localStorage (in real app, use secure storage)
-        localStorage.setItem('netflix_token', 'mock_jwt_token');
-        localStorage.setItem('netflix_user', JSON.stringify(user));
-
-        this.currentUserSubject.next(user);
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
+      tap(response => {
+        localStorage.setItem('netflix_token', response.token);
+        localStorage.setItem('netflix_user', JSON.stringify(response.user));
+        this.currentUserSubject.next(response.user);
         this.isAuthenticatedSubject.next(true);
-
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
-    }
+      })
+    );
   }
 
-  async signup(email: string, password: string, plan: string): Promise<boolean> {
-    try {
-      // Simulate API call
-      await this.delay(1500);
-      
-      // Mock validation
-      if (email && password.length >= 4) {
-        const user: User = {
-          id: '2',
-          email: email,
-          name: email.split('@')[0],
-          plan: plan
-        };
-
-        // Store in localStorage (in real app, use secure storage)
-        localStorage.setItem('netflix_token', 'mock_jwt_token');
-        localStorage.setItem('netflix_user', JSON.stringify(user));
-
-        this.currentUserSubject.next(user);
+  signup(email: string, password: string, plan: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, { email, password, plan }).pipe(
+      tap(response => {
+        localStorage.setItem('netflix_token', response.token);
+        localStorage.setItem('netflix_user', JSON.stringify(response.user));
+        this.currentUserSubject.next(response.user);
         this.isAuthenticatedSubject.next(true);
-
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Signup error:', error);
-      return false;
-    }
+      })
+    );
   }
 
   logout(): void {
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
-    
+
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
-    
+
     this.router.navigate(['/']);
   }
 
@@ -110,9 +76,5 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

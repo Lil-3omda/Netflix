@@ -109,7 +109,7 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
       </main>
 
-      <div class="success-message">
+      <!-- <div class="success-message">
         <div class="success-content">
           <div class="success-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
@@ -122,7 +122,7 @@ import { AuthService } from '../../core/services/auth.service';
           <button class="logout-btn" (click)="logout()">Sign Out</button>
         </div>
       </div>
-    </div>
+    </div> -->
   `,
   styles: [`
     .dashboard {
