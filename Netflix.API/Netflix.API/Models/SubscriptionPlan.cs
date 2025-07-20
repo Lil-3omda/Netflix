@@ -1,6 +1,6 @@
 ﻿namespace Netflix.API.Models
 {
-    public class Subscription
+    public class SubscriptionPlan
     {
         public int Id { get; set; }
 
