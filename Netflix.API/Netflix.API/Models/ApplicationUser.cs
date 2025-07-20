@@ -8,7 +8,9 @@ namespace Netflix.API.Models
         public bool IsAdmin { get; set; }
         public List<Profile> Profiles { get; set; }
         public string FullName { get; set; }
+
         public List<UserSubscription> Subscriptions { get; set; }
+
 
     }
 }

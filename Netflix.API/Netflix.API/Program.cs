@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Netflix.API.Models;
 using System.Text;
 using Netflix.API.Data;
+using Netflix.API.Repositories.VideoRepository;
 
 namespace Netflix.API
 {
@@ -22,6 +23,8 @@ namespace Netflix.API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

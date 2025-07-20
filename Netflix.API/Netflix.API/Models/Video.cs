@@ -1,5 +1,11 @@
 ﻿namespace Netflix.API.Models
 {
+    public enum VideoType 
+    { 
+    Movie,
+    Show
+    }
+
     public class Video
     {
         public int Id { get; set; }
@@ -7,8 +13,8 @@
         public string Description { get; set; }
         public string Url { get; set; }
         public int ViewCount { get; set; }
-
         public int CategoryId { get; set; }
+        public VideoType Type { get; set; }
         public Category Category { get; set; }
 
         public List<Rating> Ratings { get; set; }

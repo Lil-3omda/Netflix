@@ -15,16 +15,18 @@ Netflix.API/.vs/Netflix.API/
 Netflix.API/.vs/Netflix.API/CopilotIndices/
 **/bin/
 **/obj/
-*/.db
-*/.user
-*/.suo
+**/*.db
+**/*.user
+**/*.suo
 **/appsettings.Development.json
 **/.env
 **/.vs/
 **/CopilotIndices/
+
 .vs/
 bin/
 obj/
+
 
 
 
@@ -42,4 +44,6 @@ Thumbs.db
 
 # ========== IDE/Editor Specific ==========
 .vscode/
+
 .idea/
+
