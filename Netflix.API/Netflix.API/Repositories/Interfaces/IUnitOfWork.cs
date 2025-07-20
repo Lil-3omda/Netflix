@@ -1,10 +1,11 @@
 ﻿using Netflix.API.Models;
+using Netflix.API.Repositories.VideoRepository;
 
 namespace Netflix.API.Repositories.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IGenericRepository<Video> Videos { get; }
+        IVideoRepository Videos { get; }
         Task<int> SaveAsync();
     }
 }
