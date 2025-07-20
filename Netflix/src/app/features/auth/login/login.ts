@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -430,7 +431,7 @@ export class Login {
   emailError: string = '';
   passwordError: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -452,12 +453,15 @@ export class Login {
 
     this.isLoading = true;
 
-    // Simulate login process
-    setTimeout(() => {
+    // Use auth service for login
+    this.authService.login(this.email, this.password).then(success => {
       this.isLoading = false;
-      // Redirect to browse page after successful login
-      this.router.navigate(['/browse']);
-    }, 2000);
+      if (success) {
+        this.router.navigate(['/browse']);
+      } else {
+        this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
+      }
+    });
   }
 
   goToSignup() {

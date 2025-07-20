@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -648,7 +649,7 @@ export class SignupComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit() {
     // Get email from query params if coming from landing page
@@ -684,10 +685,15 @@ export class SignupComponent implements OnInit {
 
     this.isLoading = true;
 
-    setTimeout(() => {
+    // Use auth service for signup
+    this.authService.signup(this.email, this.password, this.selectedPlan || 'Standard').then(success => {
       this.isLoading = false;
-      this.nextStep();
-    }, 1500);
+      if (success) {
+        this.nextStep();
+      } else {
+        this.emailError = 'Something went wrong. Please try again.';
+      }
+    });
   }
 
   selectPlan(planId: string) {
