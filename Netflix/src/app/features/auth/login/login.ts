@@ -455,9 +455,9 @@ export class Login {
 
     // Use auth service for login
     this.authService.login(this.email, this.password).subscribe({
-      next: (success) => {
+      next: (response) => {
         this.isLoading = false;
-        if (success) {
+        if (response.token && response.user) {
           this.router.navigate(['/browse']);
         } else {
           this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
@@ -465,7 +465,15 @@ export class Login {
       },
       error: (err) => {
         this.isLoading = false;
-        this.emailError = 'An error occurred. Please try again later.';
+        if (err.error?.requiresVerification) {
+          this.emailError = 'Please verify your email before logging in. Check your email for the verification code and complete the signup process.';
+        } else if (err.error?.message) {
+          this.emailError = err.error.message;
+        } else if (err.status === 401) {
+          this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
+        } else {
+          this.emailError = 'An error occurred. Please try again later.';
+        }
         console.error(err);
       }
     });
