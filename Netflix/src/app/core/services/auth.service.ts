@@ -8,8 +8,9 @@ import { tap } from 'rxjs/operators';
 export interface User {
   id: string;
   email: string;
-  name?: string;
+  fullName?: string;
   plan?: string;
+  isEmailVerified?: boolean;
 }
 
 @Injectable({
@@ -41,23 +42,42 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
       tap(response => {
-        localStorage.setItem('netflix_token', response.token);
-        localStorage.setItem('netflix_user', JSON.stringify(response.user));
-        this.currentUserSubject.next(response.user);
-        this.isAuthenticatedSubject.next(true);
+        if (response.token && response.user) {
+          localStorage.setItem('netflix_token', response.token);
+          localStorage.setItem('netflix_user', JSON.stringify(response.user));
+          this.currentUserSubject.next(response.user);
+          this.isAuthenticatedSubject.next(true);
+        }
       })
     );
   }
 
-  signup(email: string, password: string, plan: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/register`, { email, password, plan }).pipe(
+  signup(fullName: string, email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, { 
+      fullName, 
+      email, 
+      password 
+    });
+  }
+
+  verifyOtp(email: string, otpCode: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/verify-otp`, { 
+      email, 
+      otpCode 
+    }).pipe(
       tap(response => {
-        localStorage.setItem('netflix_token', response.token);
-        localStorage.setItem('netflix_user', JSON.stringify(response.user));
-        this.currentUserSubject.next(response.user);
-        this.isAuthenticatedSubject.next(true);
+        if (response.token && response.user) {
+          localStorage.setItem('netflix_token', response.token);
+          localStorage.setItem('netflix_user', JSON.stringify(response.user));
+          this.currentUserSubject.next(response.user);
+          this.isAuthenticatedSubject.next(true);
+        }
       })
     );
+  }
+
+  resendOtp(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/resend-otp`, { email });
   }
 
   logout(): void {
@@ -76,5 +96,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
+  }
+
+  checkEmailExists(email: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/auth/email-exists?email=${encodeURIComponent(email)}`);
   }
 }
