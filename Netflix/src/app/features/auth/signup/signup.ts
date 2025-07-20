@@ -26,7 +26,23 @@ import { Router, ActivatedRoute } from '@angular/router';
 
       <div class="signup-container">
         <div class="signup-content">
-          <div class="step-indicator">
+          <div data-layout="item" class="layout-item_styles__zc08zp30 default-ltr-cache-ins004 e1lmojl70 " dir="ltr" style="--zc08zpy: 0 0 calc(100% - 16px); --zc08zp1g: 0 0 calc(100% - 12px); --zc08zp1y: 0 0 calc(50% - 12px); --zc08zp2g: 0 0 calc(33.333333333333336% - 12px); --zc08zp2y: 0 0 calc(33.333333333333336% - 12px); --zc08zp7: 0px;">
+            <div data-layout="wrapper" class="layout-container_wrapperStyles__12wd1go1d layout-container_wrapperStyles_dangerouslyApplyPointerEvents_true__12wd1go1e stack_styles__16b3gu10 default-ltr-cache-i06njo e125orgl0" dir="ltr">
+              <div data-layout="stack" class="layout-container_styles__12wd1go1g" dir="ltr" style="--_12wd1go0: flex-start; --_12wd1go1: 0px; --_12wd1go2: column; --_12wd1go3: flex-start; --_12wd1go5: 0px 0px 32px 0px; --_12wd1go6: 0px; --_12wd1go7: 100%;">
+                <div data-layout="stackItem" class="layout-item_styles__zc08zp30" dir="ltr" style="--zc08zp0: calc(100% - 0px); --zc08zp7: 0px;">
+                   <picture class="d-flex justify-content-center">
+                    <img
+                      alt=""
+                      src="https://dnm.nflximg.net/api/v6/nZVnzNNIegknNmej1Y3hGtfUZfU/AAAAAYL3Poat96BIA7iKG0irg4MM5cXH4o6cb46c2ci_jINem1kWl-CbgntjgPFQVw.png?r=bff"
+                      width="260"
+                      height="62"
+                      class="signup-logo">
+                  </picture>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step-indicator mt-4">
             <span class="step-text">STEP <strong>{{ currentStep }}</strong> OF <strong>3</strong></span>
           </div>
 
@@ -126,8 +142,8 @@ import { Router, ActivatedRoute } from '@angular/router';
             <div class="plans-container">
               <div class="plan-card"
                    *ngFor="let plan of plans"
-                   [class.selected]="selectedPlan === plan.id"
-                   (click)="selectPlan(plan.id)">
+                    [class.selected]="selectedPlan === plan.id"
+                    (click)="selectPlan(plan.id)">
                 <div class="plan-name">{{ plan.name }}</div>
                 <div class="plan-quality">{{ plan.quality }}</div>
                 <div class="plan-price">EGP {{ plan.price }}/month</div>
@@ -220,6 +236,17 @@ import { Router, ActivatedRoute } from '@angular/router';
       height: 45px;
       width: auto;
       fill: #e50914;
+    }
+    .logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .signup-logo {
+      display: block;
+      max-width: 100%;
+      height: auto;
     }
 
     .sign-in-btn {
