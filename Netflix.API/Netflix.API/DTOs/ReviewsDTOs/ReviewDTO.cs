@@ -2,6 +2,7 @@
 {
     public class ReviewDTO
     {
+        public int Id { get; set; }
         public int ProfileId { get; set; }
         public string ProfileName { get; set; }
         public int Rating { get; set; }
