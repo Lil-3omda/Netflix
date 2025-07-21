@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { MovieSliderSectionComponent } from '../../../shared/movie-slider/movie-slider';
+import { NetflixModel } from '../../../components/netflix-model/netflix-model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule,MovieSliderSectionComponent],
+  imports: [CommonModule,FormsModule,MovieSliderSectionComponent,NetflixModel],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -32,4 +34,28 @@ scrollRight() {
   this.slider.nativeElement.scrollBy({ left: 300, behavior: 'smooth' });
 }
 
+
+
+// model
+
+  isModalOpen:boolean = false;
+
+  openMovieModal() {
+    console.log('modal opened!');
+    this.isModalOpen = true;
+  }
+  selectedMovie:any=null;
+
+  handleMovieClick(movie:any){
+    this.selectedMovie= movie;
+    console.log('movie clicked:',movie);
+  }
+
+
+  closeMovieModal() {
+     console.log('modal close!');
+         this.selectedMovie= null;
+  }
+    showModal = false;
+    // this.isModalOpen = false;
 }
