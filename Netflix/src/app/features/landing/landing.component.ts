@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
       <!-- Hero Section -->
       <div class="hero-section">
         <div class="hero-background">
-          <img src="https://assets.nflxext.com/ffe/siteui/vlv3/b2c3e95b-b7b5-4bb7-a883-f4bfc7472fb7/19fc1a4c-82db-4481-ad08-3a1dffbb8c39/EG-en-20240805-POP_SIGNUP_TWO_WEEKS-perspective_WEB_24a485f6-1820-42be-9b60-1b066f2eb869_large.jpg" alt="Netflix Background">
+          <img src="assets/images/zjgs096khv591.jpg">
           <div class="hero-overlay"></div>
         </div>
 
@@ -44,12 +44,12 @@ import { Router } from '@angular/router';
             <h1 class="hero-title">Unlimited movies, TV shows, and more</h1>
             <p class="hero-subtitle">Watch anywhere. Cancel anytime.</p>
             <p class="hero-cta">Ready to watch? Enter your email to create or restart your membership.</p>
-            
+
             <div class="email-signup-form">
               <div class="email-input-container">
-                <input 
-                  type="email" 
-                  class="email-input" 
+                <input
+                  type="email"
+                  class="email-input"
                   [(ngModel)]="email"
                   [class.has-value]="email.length > 0"
                   placeholder=" "
@@ -171,9 +171,9 @@ import { Router } from '@angular/router';
           <p>Ready to watch? Enter your email to create or restart your membership.</p>
           <div class="email-signup-form">
             <div class="email-input-container">
-              <input 
-                type="email" 
-                class="email-input" 
+              <input
+                type="email"
+                class="email-input"
                 [(ngModel)]="email"
                 [class.has-value]="email.length > 0"
                 placeholder=" ">

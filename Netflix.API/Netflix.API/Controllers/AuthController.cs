@@ -199,7 +199,7 @@ namespace Netflix.API.Controllers
         private string GenerateOtpCode()
         {
             var random = new Random();
-            return random.Next(100000, 999999).ToString(); // 6-digit OTP
+            return random.Next(100000, 999999).ToString(); 
         }
 
         [HttpGet("email-exists")]

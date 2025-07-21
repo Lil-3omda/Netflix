@@ -232,7 +232,7 @@ import { AuthService } from '../../../core/services/auth.service';
         rgba(0, 0, 0, 0.75),
         rgba(0, 0, 0, 0.75)
       ),
-      url('https://assets.nflxext.com/ffe/siteui/vlv3/563192ea-ac0e-4906-a865-ba9899ffafad/6b2842d1-2339-4f08-84f6-148e9fcbe01b/EG-en-20231218-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+      url('/assets/images/zjgs096khv591.jpg');
       background-size: cover;
       background-position: center;
       color: white;
@@ -286,7 +286,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .signup-content {
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.10);
       padding: 60px;
       border-radius: 4px;
       backdrop-filter: blur(10px);
@@ -577,12 +577,12 @@ import { AuthService } from '../../../core/services/auth.service';
       .signup-content {
         padding: 40px 30px;
       }
-      
+
       .logo-svg {
         width: 120px;
         height: 32px;
       }
-      
+
       .header-content {
         padding: 0 20px;
       }
@@ -598,13 +598,13 @@ export class SignupComponent implements OnInit {
   receiveOffers: boolean = false;
   showPassword: boolean = false;
   isLoading: boolean = false;
-  
+
   // Error messages
   fullNameError: string = '';
   emailError: string = '';
   passwordError: string = '';
   otpError: string = '';
-  
+
   selectedPlan: string = 'standard';
   resendCooldown: number = 0;
   private resendTimer?: any;

@@ -114,7 +114,14 @@ import { AuthService } from '../../../core/services/auth.service';
     .login-page {
       min-height: 100vh;
       position: relative;
-      background: #000;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0.75)
+      ),
+      url('/assets/images/zjgs096khv591.jpg');
+      background-size: cover;
+      background-position: center;
       color: white;
       font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
@@ -140,7 +147,7 @@ import { AuthService } from '../../../core/services/auth.service';
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.10);
     }
 
     .login-header {

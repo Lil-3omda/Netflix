@@ -18,38 +18,27 @@ namespace Netflix.API.Services
         {
             try
             {
-                // For demo purposes, we'll just log the OTP instead of actually sending email
-                // In production, you would integrate with a real email service like SendGrid, AWS SES, etc.
-                
-                _logger.LogInformation($"OTP Email would be sent to: {email}");
-                _logger.LogInformation($"OTP Code: {otpCode}");
-                _logger.LogInformation($"Full Name: {fullName}");
-                
-                // Simulate email sending delay
-                await Task.Delay(500);
-                
-                // For demo purposes, always return true
-                // In production, implement actual email sending logic here
-                /*
                 var smtpClient = new SmtpClient(_configuration["Email:SmtpHost"])
                 {
                     Port = int.Parse(_configuration["Email:SmtpPort"]),
-                    Credentials = new NetworkCredential(_configuration["Email:Username"], _configuration["Email:Password"]),
-                    EnableSsl = true,
+                    Credentials = new NetworkCredential(
+                        _configuration["Email:Username"],
+                        _configuration["Email:Password"]),
+                    EnableSsl = true
                 };
 
                 var mailMessage = new MailMessage
                 {
-                    From = new MailAddress(_configuration["Email:FromAddress"], "Netflix"),
+                    From = new MailAddress(_configuration["Email:FromAddress"], "Netflix Team"),
                     Subject = "Your Netflix Verification Code",
                     Body = CreateOtpEmailBody(otpCode, fullName),
-                    IsBodyHtml = true,
+                    IsBodyHtml = true
                 };
 
                 mailMessage.To.Add(email);
                 await smtpClient.SendMailAsync(mailMessage);
-                */
-                
+
+                _logger.LogInformation($"Email sent successfully to {email}");
                 return true;
             }
             catch (Exception ex)
@@ -58,6 +47,7 @@ namespace Netflix.API.Services
                 return false;
             }
         }
+
 
         private string CreateOtpEmailBody(string otpCode, string fullName)
         {
