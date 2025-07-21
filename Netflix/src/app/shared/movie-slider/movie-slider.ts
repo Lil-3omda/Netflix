@@ -1,9 +1,14 @@
 import { Component, Input, ViewChild, ElementRef,Output,EventEmitter } from '@angular/core';
 import { NetflixModel } from '../../components/netflix-model/netflix-model';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+
+export class MovieSlider {
+
 
 @Component({
   selector: 'app-movie-slider',
-  imports: [NetflixModel],
+  imports: [NetflixModel,CommonModule],
   templateUrl: './movie-slider.html',
   styleUrl: './movie-slider.css'
 })
@@ -25,7 +30,22 @@ export class MovieSliderSectionComponent {
     this.selectedMovie=null;
    }
   @ViewChild('slider', { static: false }) slider!: ElementRef;
+  
+  // @Input() categoryName: string = '';
+  // movies: [] = [];
 
+  // constructor(private movieService: MovieCategory) {}
+
+  // ngOnInit(): void {
+  //   if (this.categoryName) {
+  //     this.movieService.getMoviesByCategory(this.categoryName).subscribe(data => {
+  //       this.movies = data;
+  //     });
+  //   }
+  // }
+
+  
+ 
   scrollLeft() {
     this.slider.nativeElement.scrollBy({ left: -300, behavior: 'smooth' });
   }
