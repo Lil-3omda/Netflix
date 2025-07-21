@@ -1,15 +1,19 @@
 
-using Microsoft.EntityFrameworkCore;
-using Netflix.API.Repositories.Interfaces;
-using Netflix.API.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Netflix.API.Models;
-using System.Text;
 using Netflix.API.Data;
+using Netflix.API.Models;
+using Netflix.API.Repositories;
+using Netflix.API.Repositories.FavoriteRepository;
+using Netflix.API.Repositories.Interfaces;
 using Netflix.API.Repositories.VideoRepository;
+using Netflix.API.Repositories.WatchProgressRepository;
 using Netflix.API.Services;
+using Netflix.API.Services.Interfaces;
+using System.Text;
+using Netflix.API.Repositories.FeedBack_rating_review_;
 
 namespace Netflix.API
 {
@@ -24,8 +28,15 @@ namespace Netflix.API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IVideoRepository, VideoRepository>();
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+            builder.Services.AddScoped<IWatchProgressRepository, WatchProgressRepository>();
+            builder.Services.AddScoped<IWatchProgressService, WatchProgressService>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

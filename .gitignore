@@ -15,6 +15,10 @@ Netflix.API/.vs/Netflix.API/
 Netflix.API/.vs/Netflix.API/CopilotIndices/
 **/bin/
 **/obj/
+*/.db
+*/.user
+*/.suo
+=======
 **/*.db
 **/*.user
 **/*.suo
@@ -22,6 +26,13 @@ Netflix.API/.vs/Netflix.API/CopilotIndices/
 **/.env
 **/.vs/
 **/CopilotIndices/
+
+.vs/
+bin/
+obj/
+
+
+
 
 # ========== Frontend: Angular ==========
 Netflix/node_modules/
@@ -37,4 +48,6 @@ Thumbs.db
 
 # ========== IDE/Editor Specific ==========
 .vscode/
+
 .idea/
+

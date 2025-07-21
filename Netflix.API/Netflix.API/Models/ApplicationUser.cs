@@ -12,5 +12,6 @@ namespace Netflix.API.Models
         public string? OtpCode { get; set; }
         public DateTime? OtpExpiry { get; set; }
         public bool IsEmailVerified { get; set; } = false;
+
     }
 }

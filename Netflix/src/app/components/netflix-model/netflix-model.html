@@ -1,0 +1,113 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="onClose()">
+  <div class="modal-dialog modal-xl modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content bg-dark text-white border-0 rounded-3">
+
+      <!-- Close Button -->
+      <button
+        type="button"
+        class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+        style="z-index: 1050;"
+        (click)="onClose()"
+        aria-label="Close">
+      </button>
+
+      <!-- Hero Section -->
+      <div class="hero-section position-relative" style="height: 320px;">
+        <!-- Background Image -->
+        <div
+          class="position-absolute w-100 h-100 bg-image"
+          style="background-image: url('https://images.unsplash.com/photo-1489599735396-45c7c3e78e47?w=1200&h=600&fit=crop&crop=center'); background-size: cover; background-position: center;">
+        </div>
+
+        <!-- Gradient Overlay -->
+        <div class="position-absolute w-100 h-100 gradient-overlay"></div>
+
+        <!-- Content Overlay -->
+        <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-end p-4">
+
+          <!-- Netflix Logo + Title -->
+          <div class="d-flex align-items-center mb-4">
+            <span class="netflix-logo bg-danger text-white px-2 py-1 rounded me-3 fw-bold small">N</span>
+            <span class="text-white small me-2">FILM</span>
+            <h1 class="display-4 fw-bold text-warning mb-0" style="letter-spacing: 2px;">THE UNION</h1>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <button class="btn btn-light btn-lg px-4 fw-bold" (click)="onPlay()">
+              <i class="fas fa-play me-2"></i>Play
+            </button>
+
+            <button class="btn btn-outline-light rounded-circle p-2" (click)="onAddToList()" style="width: 48px; height: 48px;">
+              <i class="fas fa-plus"></i>
+            </button>
+
+            <button class="btn btn-outline-light rounded-circle p-2" (click)="onDownload()" style="width: 48px; height: 48px;">
+              <i class="fas fa-download"></i>
+            </button>
+
+            <div class="flex-grow-1"></div>
+
+            <button class="btn btn-outline-light rounded-circle p-2" (click)="onVolumeToggle()" style="width: 48px; height: 48px;">
+              <i class="fas fa-volume-up"></i>
+            </button>
+          </div>
+
+          <!-- Cast Info -->
+          <div class="d-flex align-items-center gap-2 text-white">
+            <span class="text-muted small">Cast:</span>
+            <span class="small">Mark Wahlberg, Halle Berry,</span>
+            <span class="small">J.K. Simmons,</span>
+            <a href="#" class="text-primary small text-decoration-none">more</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Section -->
+      <div class="modal-body bg-dark p-4">
+        <div class="row">
+
+          <!-- Left Column - Year, Duration, Rating -->
+          <div class="col-md-4">
+            <div class="mb-3">
+              <div class="d-flex align-items-center gap-3 text-white mb-3">
+                <span class="h4 fw-bold mb-0">2024</span>
+                <span class="h6 mb-0">1h 49m</span>
+                <span class="badge bg-secondary">HD</span>
+                <span class="badge bg-secondary">📢</span>
+                <span class="badge bg-secondary">📱</span>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <span class="border border-secondary px-2 py-1 small text-white">13+</span>
+                <span class="text-muted small">violence, language, suggestive content</span>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- Right Column - Additional Info -->
+          <div class="col-md-4">
+            <div class="small">
+              <div class="text-muted mb-2">
+                Similar Titles: <span class="text-white">Comedy Movies, Action &</span>
+              </div>
+              <div class="text-muted">
+                Adventure Movies: <span class="text-white">Spy Movies</span>
+              </div>
+            </div>
+          </div>
+
+             <!-- Middle Column - Description -->
+          <div class="col-md-4">
+            <p class="text-muted mb-0 lh-base">
+              A construction worker goes undercover as a spy when his high school sweetheart recruits him for a dangerous intelligence mission.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
