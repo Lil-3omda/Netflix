@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MovieSlider } from './movie-slider';
+import { EventEmitter, output } from '@angular/core';
+
 
 describe('MovieSlider', () => {
   let component: MovieSlider;

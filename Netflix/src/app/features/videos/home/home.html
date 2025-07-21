@@ -1,6 +1,6 @@
 <section class="hero-section position-relative text-white" style="background-image: url('https://image.tmdb.org/t/p/original/your-banner.jpg'); background-size: cover; background-position: center; height: 100vh;">
   <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);"></div>
-  
+
   <div class="container h-100 position-relative d-flex align-items-center">
     <div class="hero-content">
       <h1 class="display-3 fw-bold mb-3">Stranger Things</h1>
@@ -17,11 +17,11 @@
   <div class="container">
     <h2 class="text-white mb-4">Top 10 in Egypt Today</h2>
 
-   
+
     <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
     <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
 
-   
+
     <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
       <div
         class="slide-item d-flex align-items-center me-4 flex-shrink-0"
@@ -33,6 +33,7 @@
 
         <div class="movie-card">
           <img
+          (click)="showModal = true"
             [src]="movie.image"
             class="img-fluid rounded"
             alt="{{ movie.title }}"
@@ -47,6 +48,14 @@
 
 
 
+<app-movie-slider (openModal)="openMovieModal()"></app-movie-slider>
+  <app-netflix-model
+    *ngIf="isModalOpen"
+    [isVisible]="selectedMovie !==null"
+    (closeModal)="closeMovieModal()">
+  </app-netflix-model>
+   <!-- [isVisible]="isModalOpen" -->
+<p>model open {{isModalOpen}}</p>
 <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
 
 
