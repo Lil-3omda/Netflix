@@ -30,7 +30,7 @@
               "src/styles.css"
             ],
             "scripts": [
-  "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+             "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
 ]
           },
           "configurations": {
@@ -96,5 +96,6 @@
   },
   "cli": {
     "analytics": "75564cc2-d282-4fef-be5e-793223c66187"
+
   }
 }
