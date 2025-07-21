@@ -1,5 +1,6 @@
+﻿using Netflix.API.Models;
+using Netflix.API.Repositories.FeedBack_rating_review_;
 ﻿using Netflix.API.Data;
-using Netflix.API.Models;
 using Netflix.API.Repositories.FavoriteRepository;
 using Netflix.API.Repositories.VideoRepository;
 using Netflix.API.Repositories.WatchProgressRepository;
@@ -12,6 +13,9 @@ namespace Netflix.API.Repositories.Interfaces
         IVideoRepository Videos { get; }
         IFavoriteRepository Favorites { get; }
         IWatchProgressRepository WatchProgress { get; }
+        IRatingRepository Ratings { get; }
+        IReviewRepository reviews { get; }
+        Task<bool> CompleteAsync(); 
         Task<int> SaveAsync();
     }
 }
