@@ -16,6 +16,7 @@ namespace Netflix.API.Data
         public DbSet<Video> Videos { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Review>Reviews { get; set; }
         public DbSet<WatchProgress> WatchProgresses { get; set; }
         public DbSet<SubscriptionPlan> Subscriptions { get; set; }
 
