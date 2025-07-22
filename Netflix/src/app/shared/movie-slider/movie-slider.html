@@ -1,23 +1,28 @@
-<!-- <div class="movie-slider-section py-4">
-  <h2 class="text-white mb-3">{{ sectionTitle }}</h2>
+<div class="movie-slider-section py-5" style="background-color: #1a1a1a; position: relative;">
+  <div class="container">
+    <h2 class="text-white mb-4">{{ title }}</h2>
 
-  <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
-  <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
+    
+    <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
+    <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
 
-  <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
-    <div
-      class="slide-item d-flex flex-column align-items-center me-4 flex-shrink-0"
-      *ngFor="let movie of movies"
-      style="width: 200px;"
-    >
-      <img
-        [src]="movie.image"
-        class="img-fluid rounded"
-        alt="{{ movie.title }}"
-        style="width: 200px; height: 300px; object-fit: cover"
-      />
-      <p class="text-white mt-2 mb-1">{{ movie.title }}</p>
-      <span class="badge bg-success">{{ movie.rating }}</span>
+    
+    <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
+      <div
+        class="slide-item d-flex flex-column align-items-center me-4 flex-shrink-0"
+        *ngFor="let movie of movies"
+      >
+        <div class="movie-card">
+          <img
+            [src]="movie.image"
+            alt="{{ movie.title }}"
+            class="img-fluid rounded"
+            style="width: 200px; height: 300px; object-fit: cover;"
+          />
+          <p class="text-white mt-2 text-center">{{ movie.title }}</p>
+          
+        </div>
+      </div>
     </div>
   </div>
-</div> -->
+</div>

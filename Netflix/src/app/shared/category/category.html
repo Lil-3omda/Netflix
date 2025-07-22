@@ -1,13 +1,15 @@
-<!-- <h2 class="text-white mb-4 text-capitalize">{{ categoryName }} Movies</h2>
-<div class="row">
-  <div class="col-md-3 mb-4" *ngFor="let movie of movies">
-    <div class="card bg-dark text-white">
-      <img [src]="movie.image" class="card-img-top" [alt]="movie.title">
-      <div class="card-body">
-        <h5 class="card-title">{{ movie.title }}</h5>
-        <span class="badge bg-success">{{ movie.rating }}</span>
+<div class="container py-5 text-white">
+  <h2 class="mb-4">{{ categoryName }}</h2>
+
+  <div class="row">
+    <div class="col-md-3 mb-4" *ngFor="let movie of movies">
+      <div class="card bg-dark text-white h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ movie.title }}</h5>
+          <p class="card-text">{{ movie.description }}</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
- -->
+

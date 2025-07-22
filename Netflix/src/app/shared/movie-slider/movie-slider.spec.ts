@@ -1,18 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovieSlider } from './movie-slider';
+import { MovieSliderSectionComponent } from './movie-slider';
+import { EventEmitter, output } from '@angular/core';
+
 
 describe('MovieSlider', () => {
-  let component: MovieSlider;
-  let fixture: ComponentFixture<MovieSlider>;
+  let component: MovieSliderSectionComponent;
+  let fixture: ComponentFixture<MovieSliderSectionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MovieSlider]
+      imports: [MovieSliderSectionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MovieSlider);
+    fixture = TestBed.createComponent(MovieSliderSectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
