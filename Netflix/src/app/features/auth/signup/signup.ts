@@ -786,7 +786,7 @@ export class SignupComponent implements OnInit {
   }
 
   completeSignup() {
-    this.router.navigate(['/browse']);
+    this.router.navigate(['/Home']);
   }
 
   goToLogin() {

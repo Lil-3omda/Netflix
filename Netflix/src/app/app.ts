@@ -1,10 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet,HttpClientModule],
 import { Navbar } from './layout/navbar/navbar';
 import { Home } from './features/videos/home/home';
 // import { MovieSlider } from './shared/movie-slider/movie-slider';
@@ -14,6 +10,11 @@ import { Category } from './shared/category/category';
   import { Login } from "./features/auth/login/login";
   import { NetflixModel } from './components/netflix-model/netflix-model';
 
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet,HttpClientModule],
+
+
 
 // @Component({
 //   selector: 'app-root',
@@ -22,7 +23,7 @@ import { Category } from './shared/category/category';
 //   import { Login } from "./features/auth/login/login";
 //   import { NetflixModel } from './components/netflix-model/netflix-model';
 
-  
+
 //     template: `
 //     <div class="container-fluid">
 //       <button class="btn btn-primary m-3" (click)="showModal = true">Open Netflix Modal</button>

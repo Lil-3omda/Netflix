@@ -465,7 +465,7 @@ export class Login {
       next: (response) => {
         this.isLoading = false;
         if (response.token && response.user) {
-          this.router.navigate(['/browse']);
+          this.router.navigate(['/Home']);
         } else {
           this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
         }

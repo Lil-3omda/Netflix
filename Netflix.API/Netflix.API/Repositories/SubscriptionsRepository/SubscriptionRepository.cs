@@ -14,7 +14,7 @@ namespace Netflix.API.Repositories.SubscriptionsRepository
             this.context = context;
         }
 
-        public async Task<IEnumerable<UserSubscription>> GetByUserIdAsync(int userId)
+        public async Task<IEnumerable<UserSubscription>> GetByUserIdAsync(string userId)
         {
             return await context.UserSubscriptions
                                  .Include(x => x.Plan)

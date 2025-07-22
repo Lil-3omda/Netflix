@@ -248,7 +248,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Favorite", b =>
@@ -271,7 +271,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("Favorites");
+                    b.ToTable("Favorites", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Profile", b =>
@@ -292,7 +292,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profiles", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Rating", b =>
@@ -318,7 +318,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.SubscriptionPlan", b =>
@@ -342,7 +342,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Video", b =>
@@ -380,7 +380,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("UploadedByUserId");
 
-                    b.ToTable("Videos");
+                    b.ToTable("Videos", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.WatchProgress", b =>
@@ -406,7 +406,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("WatchProgresses");
+                    b.ToTable("WatchProgresses", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
