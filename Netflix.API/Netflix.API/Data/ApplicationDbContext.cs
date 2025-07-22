@@ -18,6 +18,8 @@ namespace Netflix.API.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Review>Reviews { get; set; }
         public DbSet<WatchProgress> WatchProgresses { get; set; }
+        public DbSet<WatchHistory> WatchHistories { get; set; }
+
 
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
         public DbSet<UserSubscription> UserSubscriptions { get; set; }
@@ -102,6 +104,19 @@ namespace Netflix.API.Data
                 .WithMany()
                 .HasForeignKey(v => v.UploadedByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<WatchHistory>()
+            .HasOne(w => w.Profile)
+            .WithMany(p => p.WatchHistories)
+            .HasForeignKey(w => w.ProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<WatchHistory>()
+                .HasOne(w => w.Video)
+                .WithMany(v => v.WatchHistories)
+                .HasForeignKey(w => w.VideoId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
         }
     }
 }

@@ -20,6 +20,8 @@
         public List<Rating> Ratings { get; set; }
         public List<Favorite> Favorites { get; set; }
         public List<WatchProgress> WatchProgresses { get; set; }
+        public ICollection<WatchHistory> WatchHistories { get; set; }
+
 
         public string UploadedByUserId { get; set; }
         public ApplicationUser UploadedByUser { get; set; }
