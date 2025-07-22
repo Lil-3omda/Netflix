@@ -30,15 +30,16 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { MovieCategory } from '../../core/services/movie-category';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 
 @Component({
   selector: 'app-movie-slider',
   
   imports: [CommonModule],
- 
+  standalone: true,
   templateUrl: './movie-slider.html',
-  styleUrl: './movie-slider.css'
+  styleUrls: ['./movie-slider.css']
 })
 export class MovieSliderSectionComponent {
 
@@ -57,9 +58,18 @@ export class MovieSliderSectionComponent {
     });
   }
    
+  @Input() sectionTitle: string = '';
+  @Input() movies: any[] = [];
+  @Output() handleMovieClick = new EventEmitter<any>();
 
-  
- 
+  selectedMovie: any = null;
+
+  @ViewChild('slider', { static: false }) slider!: ElementRef;
+
+  closeModal() {
+    this.selectedMovie = null;
+  }
+
   scrollLeft() {
     this.slider.nativeElement.scrollBy({ left: -300, behavior: 'smooth' });
   }
