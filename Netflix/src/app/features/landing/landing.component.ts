@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule ],
   template: `
     <div class="netflix-landing">
       <!-- Hero Section -->
@@ -207,10 +207,10 @@ import { Router } from '@angular/router';
               <a href="#">Legal Notices</a>
             </div>
             <div class="footer-column">
-              <a href="#">Account</a>
-              <a href="#">Ways to Watch</a>
-              <a href="#">Corporate Information</a>
-              <a href="#">Only on Netflix</a>
+              <a [routerLink]="['/account']">Account</a>
+              <a [routerLink]="['/ways-to-watch']">Ways to Watch</a>
+              <a [routerLink]="['/corporate-information']">Corporate Information</a>
+              <a [routerLink]="['/only-on-netflix']">Only on Netflix</a>
             </div>
             <div class="footer-column">
               <a href="#">Media Center</a>

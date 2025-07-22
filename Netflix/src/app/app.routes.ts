@@ -19,6 +19,22 @@ export const routes: Routes = [
     path: 'Home',
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
+    {
+    path: 'only-on-netflix',
+    loadComponent: () => import('./features/Footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
+  },
+    {
+    path: 'account',
+    loadComponent: () => import('./features/Footer/account').then(m => m.AccountComponent)
+  },
+    {
+    path: 'corporate-information',
+    loadComponent: () => import('./features/Footer/corporate-info').then(m => m.CorporateInfoComponent)
+  },
+    {
+    path: 'ways-to-watch',
+    loadComponent: () => import('./features/Footer/ways-to-watch').then(m => m.WaysToWatchComponent)
+  },
   {
     path: 'browse',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
