@@ -25,16 +25,22 @@
               }
             ],
             "styles": [
-             "node_modules/bootstrap/dist/css/bootstrap.min.css",
-             "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "src/styles.css"
             ],
             "scripts": [
              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-]
+            ]
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -50,11 +56,13 @@
               "outputHashing": "all"
             },
             "development": {
+              "fileReplacements": [],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
             }
           },
+
           "defaultConfiguration": "production"
         },
         "serve": {
@@ -95,6 +103,7 @@
     }
   },
   "cli": {
-    "analytics": "95fb69b5-c134-499f-b089-abb8f000bbf2"
+    "analytics": "75564cc2-d282-4fef-be5e-793223c66187"
+
   }
 }
