@@ -36,6 +36,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/Footer/ways-to-watch').then(m => m.WaysToWatchComponent)
   },
   {
+    path: 'privacy',
+    loadComponent: () => import('./features/footer/privacy.component').then(m => m.PrivacyComponent)
+  },
+  {
+    path: 'speed-test',
+    loadComponent: () => import('./features/footer/speed-test.component').then(m => m.SpeedTestComponent)
+  },
+  {
     path: 'browse',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AuthGuard]
