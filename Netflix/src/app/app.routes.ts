@@ -3,6 +3,6 @@ import { Category } from './shared/category/category';
 import { Home } from './features/videos/home/home';
 
 export const routes: Routes = [
-{path: '', component: Home},
+    {path: '', component: Home},
     {path:'category/:categoryName',component:Category}
 ];
