@@ -10,7 +10,7 @@
         public int ProfileId { get; set; }
         public Profile Profile { get; set; }
 
-        public int Value { get; set; }
+        public int Stars { get; set; }
 
     }
 }

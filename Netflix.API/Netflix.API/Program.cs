@@ -14,6 +14,8 @@ using Netflix.API.Services;
 using Netflix.API.Services.Interfaces;
 using System.Text;
 
+using Netflix.API.Repositories.FeedBack_rating_review_;
+
 namespace Netflix.API
 {
     public class Program
@@ -33,6 +35,8 @@ namespace Netflix.API
             builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<IWatchProgressRepository, WatchProgressRepository>();
             builder.Services.AddScoped<IWatchProgressService, WatchProgressService>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

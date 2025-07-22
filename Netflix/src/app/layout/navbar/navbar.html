@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 fixed-top">
+  <a class="navbar-brand text-danger fw-bold" href="#">NETFLIX</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-5">
+      <li class="nav-item"><a class="nav-link active" [routerLink]="'/'">Home</a></li>
+      <li class="nav-item"><a class="nav-link" [routerLink]="['/category', 'drama']">Drama</a></li>
+      <li class="nav-item"><a class="nav-link" [routerLink]="['/category', 'action']">Action</a></li>
+      <li class="nav-item"><a class="nav-link" [routerLink]="['/category', 'comedy']">Comedy</a></li>
+      <li class="nav-item"><a class="nav-link" [routerLink]="['/category', 'romance']">Romance</a></li>
+      <li class="nav-item"><a class="nav-link" [routerLink]="['/category', 'horror']">Horror</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-3">
+      <a href=""><i class="bi bi-search fs-5 text-white cursor-pointer"></i></a>
+      <span class="text-white">Kids</span>
+      <i class="bi bi-bell fs-5 text-white cursor-pointer"></i>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" width="32" height="32" class="rounded" alt="avatar" />
+    </div>
+  </div>
+</nav>
+

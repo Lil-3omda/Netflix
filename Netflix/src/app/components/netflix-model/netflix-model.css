@@ -1,0 +1,37 @@
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.gradient-overlay {
+  background: linear-gradient(
+    to top,
+    rgb(33, 37, 41) 0%,
+    rgba(33, 37, 41, 0.5) 50%,
+    transparent 100%
+  );
+}
+
+.netflix-logo {
+  font-size: 0.8rem;
+}
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: black;
+}
+
+.bg-image {
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 250px !important;
+  }
+
+  .display-4 {
+    font-size: 2rem !important;
+  }
+}
+
+
