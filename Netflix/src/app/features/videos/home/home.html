@@ -46,7 +46,20 @@
   </div>
 </div>
 
+
 <!-- <app-movie-slider></app-movie-slider> -->
+
+
+
+
+<app-movie-slider (openModal)="openMovieModal()"></app-movie-slider>
+  <app-netflix-model
+    *ngIf="isModalOpen"
+    [isVisible]="selectedMovie !==null"
+    (closeModal)="closeMovieModal()">
+  </app-netflix-model>
+   <!-- [isVisible]="isModalOpen" -->
+<p>model open {{isModalOpen}}</p>
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
 
