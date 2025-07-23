@@ -59,7 +59,7 @@ namespace Netflix.API.Data
             // Video - Favorite
             builder.Entity<Favorite>()
                 .HasOne(f => f.Video)
-                .WithMany()
+                .WithMany(v => v.Favorites)
                 .HasForeignKey(f => f.VideoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
