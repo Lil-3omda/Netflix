@@ -52,5 +52,13 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             return await _context.Videos.CountAsync();
         }
+        // GetTopViewVideos
+        public async Task<List<Video>> GetTopVideosByViewsAsync(int count)
+        {
+            return await _context.Videos
+                .Include(v => v.Category)
+                .OrderByDescending(v => v.ViewCount)
+                .Take(count).ToListAsync();
+        }
     }
 }
