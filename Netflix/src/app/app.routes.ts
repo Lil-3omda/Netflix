@@ -37,11 +37,11 @@ export const routes: Routes = [
   },
   {
     path: 'privacy',
-    loadComponent: () => import('./features/footer/privacy.component').then(m => m.PrivacyComponent)
+    loadComponent: () => import('./features/Footer/privacy.component').then(m => m.PrivacyComponent)
   },
   {
     path: 'speed-test',
-    loadComponent: () => import('./features/footer/speed-test.component').then(m => m.SpeedTestComponent)
+    loadComponent: () => import('./features/Footer/speed-test.component').then(m => m.SpeedTestComponent)
   },
   {
     path: 'browse',

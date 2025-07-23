@@ -7,7 +7,7 @@
     <div
       class="card profile-card"
       *ngFor="let profile of profiles"
-      (click)="selectProfile(profile)"
+      (click)="selectProfile(profile.id)"
     >
       <img src="/assets/profile-icon.png" class="card-img-top" alt="Profile" />
       <div class="card-body">

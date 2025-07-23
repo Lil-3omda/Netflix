@@ -2,10 +2,11 @@ import { Component, OnInit, NgModule } from '@angular/core';
 import { IProfile, ProfilesService } from '../profiels';
 import { Route, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-choose-profile',
-  imports: [FormsModule],
+  imports: [FormsModule,CommonModule],
   templateUrl: './choose-profile.html',
   styleUrl: './choose-profile.css'
 })
@@ -62,8 +63,8 @@ export class ChooseProfile implements OnInit {
       }
     });
   }
-  
+
 }
 
 
-  
+

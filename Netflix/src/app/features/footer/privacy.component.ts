@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-privacy',
   standalone: true,
   imports: [CommonModule],
-  template: \`
+  template: `
     <div class="netflix-privacy">
       <!-- Header -->
       <header class="netflix-header">
@@ -40,7 +40,7 @@ import { CommonModule } from '@angular/common';
                 <li><a href="#" class="nav-link">Netflix Sensitive Personal Information</a></li>
               </ul>
             </div>
-            
+
             <div class="nav-section">
               <h3>Help Center</h3>
               <ul>
@@ -79,10 +79,10 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>How We Get Your Personal Information</h2>
                 <p>
-                  We collect information about you and devices you use to access our service in several ways. 
+                  We collect information about you and devices you use to access our service in several ways.
                   Such information may be obtained from external sources and stored by us so that we can provide you the Netflix service.
                 </p>
-                
+
                 <h3>Information you provide to us:</h3>
                 <ul>
                   <li>Account registration and profile information, including your name, email address, phone number, payment method, and account settings;</li>
@@ -103,7 +103,7 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Cookies & Other Technologies</h2>
                 <p>
-                  We use cookies and similar technologies to enhance your experience, analyze usage, and deliver personalized advertising. 
+                  We use cookies and similar technologies to enhance your experience, analyze usage, and deliver personalized advertising.
                   You can manage your cookie preferences through your browser settings or our Cookie Preferences center.
                 </p>
               </section>
@@ -136,7 +136,7 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Other Websites</h2>
                 <p>
-                  The Netflix service may be provided through and/or utilize features operated by third parties, 
+                  The Netflix service may be provided through and/or utilize features operated by third parties,
                   such as social networking services. These third parties may collect information about you when you use the Netflix service.
                 </p>
               </section>
@@ -144,8 +144,8 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Children</h2>
                 <p>
-                  You must be 18 years of age or older to subscribe to the Netflix service. 
-                  In certain jurisdictions, the age of majority may be older than 18, 
+                  You must be 18 years of age or older to subscribe to the Netflix service.
+                  In certain jurisdictions, the age of majority may be older than 18,
                   in which case you must satisfy that age in order to become a member.
                 </p>
               </section>
@@ -166,7 +166,7 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Security</h2>
                 <p>
-                  We use reasonable administrative, logical, physical and managerial measures to safeguard your personal information against loss, 
+                  We use reasonable administrative, logical, physical and managerial measures to safeguard your personal information against loss,
                   theft and unauthorized access, use and modification.
                 </p>
               </section>
@@ -174,7 +174,7 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Cross-Border Data Transfers</h2>
                 <p>
-                  Netflix is a global service. We may transfer your personal information to countries other than the one in which you live, 
+                  Netflix is a global service. We may transfer your personal information to countries other than the one in which you live,
                   including to the United States where Netflix is headquartered.
                 </p>
               </section>
@@ -182,7 +182,7 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Changes to This Privacy Statement</h2>
                 <p>
-                  We will update this Privacy Statement from time to time to reflect changes in our practices. 
+                  We will update this Privacy Statement from time to time to reflect changes in our practices.
                   When we make changes, we will revise the "Last Updated" date at the top of this statement.
                 </p>
               </section>
@@ -190,8 +190,8 @@ import { CommonModule } from '@angular/common';
               <section class="section">
                 <h2>Contact Us</h2>
                 <p>
-                  For questions specifically about this Privacy Statement, or our use of your personal information, 
-                  cookies or similar technologies, please contact our Data Protection Officer/Privacy Office at privacy@netflix.com.
+                  For questions specifically about this Privacy Statement, or our use of your personal information,
+                  cookies or similar technologies, please contact our Data Protection Officer/Privacy Office at privacynetflix.com.
                 </p>
               </section>
             </div>
@@ -199,8 +199,8 @@ import { CommonModule } from '@angular/common';
         </main>
       </div>
     </div>
-  \`,
-  styles: [\`
+  `,
+  styles: `
     * {
       margin: 0;
       padding: 0;
@@ -444,6 +444,6 @@ import { CommonModule } from '@angular/common';
     ::-webkit-scrollbar-thumb:hover {
       background: #555;
     }
-  \`]
+  `
 })
 export class PrivacyComponent {}

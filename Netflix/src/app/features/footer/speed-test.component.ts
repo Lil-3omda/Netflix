@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-speed-test',
   standalone: true,
   imports: [CommonModule],
-  template: \`
+  template: `
     <div class="speed-test-container">
       <!-- Header -->
       <header class="header">
@@ -37,7 +37,7 @@ import { CommonModule } from '@angular/common';
             <circle cx="60" cy="60" r="50" fill="none" stroke="url(#speedGradient)" stroke-width="8"/>
             <path d="M 25 60 A 35 35 0 0 1 95 60" fill="none" stroke="url(#speedGradient)" stroke-width="6"/>
             <circle cx="60" cy="60" r="8" fill="url(#speedGradient)"/>
-            <path d="M 60 60 L {{ getSpeedIndicatorX() }} {{ getSpeedIndicatorY() }}" 
+            <path [attr.d]="'M 60 60 L ' + getSpeedIndicatorX() + ' ' + getSpeedIndicatorY()"
                   stroke="url(#speedGradient)" stroke-width="4" stroke-linecap="round"/>
           </svg>
         </div>
@@ -106,8 +106,8 @@ import { CommonModule } from '@angular/common';
         </div>
       </footer>
     </div>
-  \`,
-  styles: [\`
+  `,
+  styles: [`
     * {
       margin: 0;
       padding: 0;
@@ -468,7 +468,7 @@ import { CommonModule } from '@angular/common';
         font-size: 16px;
       }
     }
-  \`]
+  `]
 })
 export class SpeedTestComponent implements OnInit, OnDestroy {
   currentSpeed: number = 0;
@@ -477,7 +477,7 @@ export class SpeedTestComponent implements OnInit, OnDestroy {
   testCompleted: boolean = false;
   testProgress: number = 0;
   currentYear: number = new Date().getFullYear();
-  
+
   private speedInterval: any;
   private progressInterval: any;
 
@@ -511,16 +511,16 @@ export class SpeedTestComponent implements OnInit, OnDestroy {
 
     this.speedInterval = setInterval(() => {
       currentStep++;
-      
+
       // Calculate progress
       this.testProgress = (currentStep / totalSteps) * 100;
-      
+
       // Simulate realistic speed progression with some fluctuation
       const progress = currentStep / totalSteps;
       const baseSpeed = this.finalSpeed * this.easeOutCubic(progress);
       const fluctuation = (Math.random() - 0.5) * 5; // Random fluctuation ±2.5 Mbps
       this.currentSpeed = Math.max(0, Math.round((baseSpeed + fluctuation) * 10) / 10);
-      
+
       if (currentStep >= totalSteps) {
         this.completeTest();
       }

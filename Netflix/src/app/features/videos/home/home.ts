@@ -10,12 +10,13 @@ import { MovieSliderSectionComponent } from '../../../shared/movie-slider/movie-
 import { NetflixModel } from '../../../components/netflix-model/netflix-model';
 import { FormsModule } from '@angular/forms';
 import { MovieCategory } from '../../../core/services/movie-category';
+import { Navbar } from "../../../layout/navbar/navbar";
 
 @Component({
   selector: 'app-home',
   standalone: true,
 
-  imports: [CommonModule,FormsModule,MovieSliderSectionComponent,NetflixModel],
+  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar],
 
 
   templateUrl: './home.html',

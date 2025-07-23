@@ -63,7 +63,7 @@ export class InvestorRelationsComponent {
   ];
 
   // HTML Template
-  public template = \`
+  public template = `
     <div class="investor-relations-container">
       <!-- Header Section -->
       <header class="header-section">
@@ -219,15 +219,15 @@ export class InvestorRelationsComponent {
     // Add event listeners for interactive elements
     document.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
-      
+
       if (target.classList.contains('view-results-btn')) {
         this.handleViewResults();
       }
-      
+
       if (target.classList.contains('quick-link-card')) {
         this.handleQuickLinkClick(target);
       }
-      
+
       if (target.classList.contains('financial-card')) {
         this.handleFinancialCardClick(target);
       }
@@ -283,15 +283,8 @@ export class InvestorRelationsComponent {
       container.innerHTML = '';
     }
   }
-}
+}`;
 
-// Export for use in other modules
-export default InvestorRelationsComponent;
-
-// Usage example:
-// const investorPage = new InvestorRelationsComponent();
-
-  // CSS Styles
   public styles = `
     .investor-relations-container {
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -719,4 +712,11 @@ export default InvestorRelationsComponent;
       }
     }
   `;
+
 }
+
+// Export for use in other modules
+export default InvestorRelationsComponent;
+
+// Usage example:
+// const investorPage = new InvestorRelationsComponent();

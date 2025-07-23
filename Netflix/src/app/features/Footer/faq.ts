@@ -47,9 +47,9 @@ import { Router } from '@angular/router';
             <h2>Ready to watch? Enter your email to create or restart your membership.</h2>
             <div class="email-form">
               <div class="input-group">
-                <input 
-                  type="email" 
-                  placeholder="Email address" 
+                <input
+                  type="email"
+                  placeholder="Email address"
                   [(ngModel)]="email"
                   class="email-input"
                 />
@@ -387,7 +387,7 @@ import { Router } from '@angular/router';
 })
 export class FaqComponent {
   email: string = '';
-  
+
   faqs = [
     {
       question: 'What is Netflix?',
@@ -416,7 +416,7 @@ export class FaqComponent {
     },
     {
       question: 'Is Netflix good for kids?',
-      answer: 'The Netflix Kids experience is included in your membership to give parents control while kids enjoy family-friendly TV shows and movies in their own space.<br><br>Kids profiles come with PIN-protected parental controls that let you restrict the maturity rating of content kids can watch and block specific titles you don't want kids to see.',
+      answer: 'The Netflix Kids experience is included in your membership to give parents control while kids enjoy family-friendly TV shows and movies in their own space.<br><br>Kids profiles come with PIN-protected parental controls that let you restrict the maturity rating of content kids can watch and block specific titles you don\'t want kids to see.',
       isOpen: false
     }
   ];
