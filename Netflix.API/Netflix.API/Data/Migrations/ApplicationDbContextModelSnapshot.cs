@@ -47,7 +47,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId1");
 
-                    b.ToTable("Favorites");
+                    b.ToTable("Favorites", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -276,7 +276,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Profile", b =>
@@ -297,7 +297,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profiles", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Rating", b =>
@@ -323,7 +323,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Review", b =>
@@ -355,7 +355,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.SubscriptionPlan", b =>
@@ -377,7 +377,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionPlans");
+                    b.ToTable("SubscriptionPlans", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.UserSubscription", b =>
@@ -406,7 +406,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSubscriptions");
+                    b.ToTable("UserSubscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Video", b =>
@@ -444,7 +444,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("UploadedByUserId");
 
-                    b.ToTable("Videos");
+                    b.ToTable("Videos", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.WatchHistory", b =>
@@ -470,7 +470,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("WatchHistories");
+                    b.ToTable("WatchHistories", (string)null);
                 });
 
             modelBuilder.Entity("Netflix.API.Models.WatchProgress", b =>
@@ -496,7 +496,7 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("WatchProgresses");
+                    b.ToTable("WatchProgresses", (string)null);
                 });
 
             modelBuilder.Entity("Favorite", b =>

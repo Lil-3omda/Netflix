@@ -72,7 +72,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
         //Add Video
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpPost]
        public async Task<IActionResult> AddVideo([FromBody] VideoUploadDto dto)
         {
