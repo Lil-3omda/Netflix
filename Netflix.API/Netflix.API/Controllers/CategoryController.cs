@@ -22,14 +22,14 @@ namespace Netflix.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var categories = await categoryService.GetAllAsync();
-            return Ok(new { data = categories });
+            return Ok(categories);
         }
 
         [HttpGet("paginated")]
         public async Task<IActionResult> GetAllPaginated([FromQuery] PaginationParams paginationParams)
         {
             var result = await categoryService.GetAllPaginatedAsync(paginationParams);
-            return Ok(new { data = result });
+            return Ok(result);
         }
 
         [HttpGet("{id:int}")]
@@ -39,7 +39,7 @@ namespace Netflix.API.Controllers
             if (category == null)
                 return NotFound(new { message = "Category not found." });
 
-            return Ok(new { data = category });
+            return Ok(category);
         }
         [HttpGet("{name:alpha}")]
         public async Task<IActionResult> GetByName(string name)
@@ -48,14 +48,14 @@ namespace Netflix.API.Controllers
             if (category == null)
                 return NotFound(new { message = "Category not found." });
 
-            return Ok(new { data = category });
+            return Ok(category);
         }
 
         [HttpGet("names")]
         public async Task<IActionResult> GetCategoryNames()
         {
             var names = await categoryService.GetCategoryNamesAsync();
-            return Ok(new { data = names });
+            return Ok(names);
         }
 
         [HttpPost]
