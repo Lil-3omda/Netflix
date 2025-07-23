@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Netflix.API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +32,9 @@ namespace Netflix.API.Data.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtpCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsEmailVerified = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -63,6 +66,21 @@ namespace Netflix.API.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubscriptionPlans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MaxProfiles = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubscriptionPlans", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,27 +210,6 @@ namespace Netflix.API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subscriptions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subscriptions_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Videos",
                 columns: table => new
                 {
@@ -223,6 +220,7 @@ namespace Netflix.API.Data.Migrations
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ViewCount = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     UploadedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -243,13 +241,42 @@ namespace Netflix.API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PlanId = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserSubscriptions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserSubscriptions_SubscriptionPlans_PlanId",
+                        column: x => x.PlanId,
+                        principalTable: "SubscriptionPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Favorites",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    VideoId = table.Column<int>(type: "int", nullable: false),
                     ProfileId = table.Column<int>(type: "int", nullable: false),
-                    VideoId = table.Column<int>(type: "int", nullable: false)
+                    VideoId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -266,6 +293,11 @@ namespace Netflix.API.Data.Migrations
                         principalTable: "Videos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Favorites_Videos_VideoId1",
+                        column: x => x.VideoId1,
+                        principalTable: "Videos",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -276,7 +308,7 @@ namespace Netflix.API.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VideoId = table.Column<int>(type: "int", nullable: false),
                     ProfileId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false)
+                    Stars = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -289,6 +321,62 @@ namespace Netflix.API.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ratings_Videos_VideoId",
+                        column: x => x.VideoId,
+                        principalTable: "Videos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProfileId = table.Column<int>(type: "int", nullable: false),
+                    VideoId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Profiles_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Videos_VideoId",
+                        column: x => x.VideoId,
+                        principalTable: "Videos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WatchHistories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProfileId = table.Column<int>(type: "int", nullable: false),
+                    VideoId = table.Column<int>(type: "int", nullable: false),
+                    WatchedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WatchHistories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WatchHistories_Profiles_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WatchHistories_Videos_VideoId",
                         column: x => x.VideoId,
                         principalTable: "Videos",
                         principalColumn: "Id",
@@ -372,6 +460,11 @@ namespace Netflix.API.Data.Migrations
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Favorites_VideoId1",
+                table: "Favorites",
+                column: "VideoId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
                 table: "Profiles",
                 column: "UserId");
@@ -387,8 +480,23 @@ namespace Netflix.API.Data.Migrations
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_UserId",
-                table: "Subscriptions",
+                name: "IX_Reviews_ProfileId",
+                table: "Reviews",
+                column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_VideoId",
+                table: "Reviews",
+                column: "VideoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_PlanId",
+                table: "UserSubscriptions",
+                column: "PlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_UserId",
+                table: "UserSubscriptions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -400,6 +508,16 @@ namespace Netflix.API.Data.Migrations
                 name: "IX_Videos_UploadedByUserId",
                 table: "Videos",
                 column: "UploadedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WatchHistories_ProfileId",
+                table: "WatchHistories",
+                column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WatchHistories_VideoId",
+                table: "WatchHistories",
+                column: "VideoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WatchProgresses_ProfileId",
@@ -437,13 +555,22 @@ namespace Netflix.API.Data.Migrations
                 name: "Ratings");
 
             migrationBuilder.DropTable(
-                name: "Subscriptions");
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "UserSubscriptions");
+
+            migrationBuilder.DropTable(
+                name: "WatchHistories");
 
             migrationBuilder.DropTable(
                 name: "WatchProgresses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "SubscriptionPlans");
 
             migrationBuilder.DropTable(
                 name: "Profiles");

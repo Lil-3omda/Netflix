@@ -41,7 +41,7 @@ namespace Netflix.API.Controllers
 
         // GET: api/profile/{id}
         [HttpGet("profile/{userId}")]
-        public IActionResult GetProfilesToUser([FromRoute] int userId)
+        public IActionResult GetProfilesToUser([FromRoute] string userId)
         {
             var profiles = _context.Profiles.Where(p => p.UserId == userId).ToList();
 

@@ -1,14 +1,24 @@
 import { CommonModule } from '@angular/common';
+
+
+
+
+
+
 import { Component, ViewChild, ElementRef,OnInit } from '@angular/core';
 import { MovieSliderSectionComponent } from '../../../shared/movie-slider/movie-slider';
 import { NetflixModel } from '../../../components/netflix-model/netflix-model';
 import { FormsModule } from '@angular/forms';
 import { MovieCategory } from '../../../core/services/movie-category';
+import { Navbar } from "../../../layout/navbar/navbar";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,FormsModule,MovieSliderSectionComponent,NetflixModel],
+
+  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar],
+
+
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -31,7 +41,7 @@ top10Movies: [] = [];
 //       }
 //     });
 //   }
-  
+
 staticTop10 = [
   { title: 'The Witcher', image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRQZEW7hJu7MDS6QpqfDOX52yPfeIVz930VHO2307XNHCWopEm8x8q93bJUa8DhrfCQE60v2QKlBJ5Q0VTfmERLkHEA9bzbd_2THBW0U-Y' },
   { title: 'Breaking Bad', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0fuh0v8nhzonJNIbXPfzfVNAW99AO8onvRQ&s' },

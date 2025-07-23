@@ -1,0 +1,36 @@
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(26, 25, 25, 0.8);
+  border: none;
+  font-size: 3rem;
+  padding: 0.5rem 1rem;
+  z-index: 10;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.slider-arrow:hover {
+  background-color: rgb(36, 35, 35);
+}
+
+.left-arrow {
+  left: 0;
+}
+
+.right-arrow {
+  right: 0;
+}
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

@@ -6,7 +6,8 @@ using Netflix.API.Repositories.Interfaces;
 using Netflix.API.Repositories.VideoRepository;
 using Netflix.API.Repositories.WatchProgressRepository;
 using Netflix.API.Repositories.FeedBack_rating_review_;
-using Netflix.API.Repositories.Interfaces;
+using Netflix.API.Repositories.SubscriptionsRepository;
+using Netflix.API.Repositories.WatchHistoryRepository;
 namespace Netflix.API.Repositories
 {
     public class UnitOfWork : IUnitOfWork
@@ -18,21 +19,29 @@ namespace Netflix.API.Repositories
         public IWatchProgressRepository WatchProgress { get; }
         public IRatingRepository Ratings { get; }
         public IReviewRepository reviews { get; }
+        public ISubscriptionRepository UserSubscriptions { get; private set; }
+        public IWatchingHistoryRepository WatchHistories { get; private set; }
 
         public UnitOfWork(
             ApplicationDbContext context,
-            IVideoRepository videorepo,
+            IVideoRepository videoRepo,
             IFavoriteRepository favoriteRepo,
-            IWatchProgressRepository watchProgressRepo)
-            {
+            IWatchProgressRepository watchProgressRepo,
+            IRatingRepository ratingRepo,
+            IReviewRepository reviewRepo,
+            ISubscriptionRepository subscriptionRepo,
+            IWatchingHistoryRepository watchHistoryRepo)
+        {
             this.context = context;
-            Videos = videorepo;
+            Videos = videoRepo;
             Favorites = favoriteRepo;
             WatchProgress = watchProgressRepo;
-            Videos = new VideoRepository.VideoRepository(context);
-            Ratings = new RatingRepository(context);
-            reviews = new ReviewRepository(context);
-            }
+            Ratings = ratingRepo;
+            reviews = reviewRepo;
+            UserSubscriptions = subscriptionRepo;
+            WatchHistories = watchHistoryRepo;
+        }
+
 
 
 
