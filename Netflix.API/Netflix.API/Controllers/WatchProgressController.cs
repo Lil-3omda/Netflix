@@ -22,7 +22,7 @@ namespace Netflix.API.Controllers
             var progress = await _watchProgressService.GetProgressAsync(profileId, videoId);
             if (progress == null)
                 return NotFound(new { message = "Progress not found" });
-            return Ok(new { data = progress });
+            return Ok(progress);
         }
 
         [HttpPost]

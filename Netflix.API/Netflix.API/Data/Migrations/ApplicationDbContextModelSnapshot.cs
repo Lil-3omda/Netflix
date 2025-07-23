@@ -36,18 +36,19 @@ namespace Netflix.API.Data.Migrations
                     b.Property<int>("VideoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VideoId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProfileId");
 
                     b.HasIndex("VideoId");
 
+<<<<<<< HEAD
                     b.HasIndex("VideoId1");
 
                     b.ToTable("Favorites", (string)null);
+=======
+                    b.ToTable("Favorites");
+>>>>>>> 694b87491565dad1801ab631ca2b9fca1ca30dd8
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -508,14 +509,10 @@ namespace Netflix.API.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Netflix.API.Models.Video", "Video")
-                        .WithMany()
+                        .WithMany("Favorites")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Netflix.API.Models.Video", null)
-                        .WithMany("Favorites")
-                        .HasForeignKey("VideoId1");
 
                     b.Navigation("Profile");
 

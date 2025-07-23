@@ -20,7 +20,7 @@ namespace Netflix.API.Controllers
         public async Task<IActionResult> GetByProfileId (int profileId)
         {
             var favorites = await _favoriteService.GetFavoritesByProfileIdAsync(profileId);
-            return Ok(new { data = favorites });
+            return Ok(favorites);
         }
 
         [HttpPost]
