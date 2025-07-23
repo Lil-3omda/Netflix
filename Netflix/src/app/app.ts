@@ -29,7 +29,7 @@ import { Category } from './shared/category/category';
       </app-netflix-modal>
     </div>
   `,
-  imports: [RouterOutlet,Navbar,Home,SignupComponent,Login,NetflixModel],
+  imports: [RouterOutlet],
 
 
 // @Component({

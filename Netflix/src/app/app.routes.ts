@@ -48,6 +48,30 @@ export const routes: Routes = [
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AuthGuard]
   },
+   {
+    path: 'admin/dashboard',
+    loadComponent: () => import('../app/admin/dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
+    path: 'admin/movies',
+    loadComponent: () => import('../app/admin/movies/movies.component').then(m => m.MoviesComponent)
+  },
+  {
+    path: 'admin/users',
+    loadComponent: () => import('../app/admin/users/users.component').then(m => m.UsersComponent)
+  },
+  {
+    path: 'admin/chat',
+    loadComponent: () => import('../app/admin/chat/chat.component').then(m => m.ChatComponent)
+  },
+  {
+    path: 'admin/analytics',
+    loadComponent: () => import('../app/admin/analytics/analytics.component').then(m => m.AnalyticsComponent)
+  },
+  {
+    path: 'admin/settings',
+    loadComponent: () => import('../app/admin/settings/settings.component').then(m => m.SettingsComponent)
+  },
   {
     path: '**',
     redirectTo: ''
