@@ -47,7 +47,7 @@ namespace Netflix.API.Controllers
 
             if (!profiles.Any())
             {
-                return NotFound( new {message = $"No profiles found for user ID: {userId}" });
+                return NotFound(new { message = $"No profiles found for user ID: {userId}" });
             }
 
             return Ok(profiles);
