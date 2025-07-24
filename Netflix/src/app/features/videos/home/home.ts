@@ -68,21 +68,23 @@ scrollRight() {
 // model
 
   isModalOpen:boolean = false;
-
-  openMovieModal() {
+  selectedMovie:any=null;
+  openMovieModal(movie:any) {
     console.log('modal opened!');
+    this.selectedMovie= movie;
     this.isModalOpen = true;
   }
-  selectedMovie:any=null;
 
-  handleMovieClick(movie:any){
-    this.selectedMovie= movie;
-    console.log('movie clicked:',movie);
-  }
+
+  // handleMovieClick(movie:any){
+  //   this.selectedMovie= movie;
+  //   console.log('movie clicked:',movie);
+  // }
 
 
   closeMovieModal() {
      console.log('modal close!');
+         this.isModalOpen = false;
          this.selectedMovie= null;
   }
     showModal = false;

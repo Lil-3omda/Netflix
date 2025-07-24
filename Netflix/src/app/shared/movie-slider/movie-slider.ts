@@ -15,6 +15,22 @@ export class MovieSliderSectionComponent {
 
   @Input() categoryName: string = '';
   @Input() sectionTitle: string = '';
+  @Input() movies: any[] = [];
+
+  @Output() movieClicked = new EventEmitter<any>();
+
+  // selectedMovie:any=null;
+  onMovieClick(movie:any){
+    console.log('movie clicked:',movie);
+      this.movieClicked.emit (movie);
+  }
+  //  closeModal(){
+  //   this.selectedMovie=null;
+  //  }
+  testFunction(){
+    console.log('button play');
+    this.movieClicked.emit({title:'test movie',image:'test.jpg'})
+  }
   @Output() handleMovieClick = new EventEmitter<any>();
 
   @ViewChild('slider', { static: false }) slider!: ElementRef;
