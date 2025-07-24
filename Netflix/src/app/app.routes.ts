@@ -19,39 +19,19 @@ export const routes: Routes = [
     path: 'Home',
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
-    {
+  {
     path: 'only-on-netflix',
     loadComponent: () => import('./features/footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
   },
-    {
+  {
     path: 'account',
     loadComponent: () => import('./features/footer/account').then(m => m.AccountComponent)
   },
-    {
+  {
     path: 'corporate-information',
     loadComponent: () => import('./features/footer/corporate-info').then(m => m.CorporateInfoComponent)
   },
-    {
-    path: 'ways-to-watch',
-    loadComponent: () => import('./features/footer/ways-to-watch').then(m => m.WaysToWatchComponent)
-  },
   {
-    path: 'privacy',
-    loadComponent: () => import('./features/footer/privacy.component').then(m => m.PrivacyComponent)
-  },
-  {
-    path: 'speed-test',
-    loadComponent: () => import('./features/footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
-  },
-    {
-    path: 'account',
-    loadComponent: () => import('./features/footer/account').then(m => m.AccountComponent)
-  },
-    {
-    path: 'corporate-information',
-    loadComponent: () => import('./features/footer/corporate-info').then(m => m.CorporateInfoComponent)
-  },
-    {
     path: 'ways-to-watch',
     loadComponent: () => import('./features/footer/ways-to-watch').then(m => m.WaysToWatchComponent)
   },
@@ -66,7 +46,46 @@ export const routes: Routes = [
   {
     path: 'browse',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./admin/pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      },
+      {
+        path: 'content',
+        loadComponent: () => import('./admin/pages/content-management/content-management.component').then(m => m.ContentManagementComponent)
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./admin/pages/user-management/user-management.component').then(m => m.UserManagementComponent)
+      },
+      {
+        path: 'analytics',
+        loadComponent: () => import('./admin/pages/analytics/analytics.component').then(m => m.AnalyticsComponent)
+      },
+      {
+        path: 'chatbot',
+        loadComponent: () => import('./admin/pages/chatbot/chatbot.component').then(m => m.ChatbotComponent)
+      },
+      {
+        path: 'communications',
+        loadComponent: () => import('./admin/pages/communications/communications.component').then(m => m.CommunicationsComponent)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./admin/pages/settings/settings.component').then(m => m.SettingsComponent)
+      }
+    ]
   },
   {
     path: 'support',
@@ -75,11 +94,10 @@ export const routes: Routes = [
   {
     path: 'admin/chat',
     loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: '**',
     redirectTo: ''
   }
-
 ];

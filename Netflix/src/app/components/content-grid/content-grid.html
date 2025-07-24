@@ -1,0 +1,46 @@
+<div class="movie-grid-container" style="background-color: #141414;" *ngIf="displayedMovies.length > 0">
+  <!-- Grid Title -->
+  <div class="grid-header mb-4">
+    <h4 class="text-white">{{ getFilterTitle() }}</h4>
+  </div>
+
+  <!-- Movies Grid -->
+  <div class="row g-3 mb-4">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-6"
+         *ngFor="let movie of displayedMovies; trackBy: trackByMovieId">
+      <div class="movie-card">
+        <!-- Netflix Logo -->
+        <div class="netflix-logo">
+          <span>N</span>
+        </div>
+
+        <!-- Movie Image -->
+        <div class="movie-image">
+          <img [src]="movie.imageUrl"
+               [alt]="movie.title"
+               class="img-fluid">
+        </div>
+
+        <!-- Movie Info Overlay -->
+        <div class="movie-overlay">
+          <h6 class="movie-title">{{ movie.title }}</h6>
+          <p class="movie-date">{{ movie.releaseDate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Show More Button -->
+  <div class="text-center" *ngIf="showMoreButton">
+    <button class="btn btn-outline-light show-more-btn"
+            (click)="showMore()">
+      Show {{ min(moviesPerPage, movies.length - displayedMovies.length) }} more in {{ getFilterTitle() }}
+    </button>
+    <!-- Show {{ Math.min(moviesPerPage, movies.length - displayedMovies.length) }} more in {{ getFilterTitle() }} -->
+  </div>
+</div>
+
+<!-- No Results Message -->
+<div class="no-results text-center py-5" *ngIf="displayedMovies.length === 0">
+  <h5 class="text-muted">No movies found for the selected filter</h5>
+</div>

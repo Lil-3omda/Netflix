@@ -67,17 +67,21 @@ namespace Netflix.API.Controllers.VideoController
         public async Task<IActionResult> Search([FromQuery] string keyword, [FromQuery] int pagenum, [FromQuery]  int pagesize)
         {
             var videos = await _unitOfWork.Videos.SearchAsync(keyword, pagenum, pagesize);
-            var result = _mapper.Map<VideoResponseDto>(videos);
+            var result = _mapper.Map<List<VideoResponseDto>>(videos);
+
             return Ok(result);
         }
 
         //Add Video
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpPost]
        public async Task<IActionResult> AddVideo([FromBody] VideoUploadDto dto)
         {
             var video = _mapper.Map<Video>(dto);
+
             video.ViewCount = 0;
+            video.TotalView = 0;
+            video.Ratings = new List<Rating>();
 
             await _unitOfWork.Videos.AddAsync(video);
             await _unitOfWork.SaveAsync();
@@ -90,7 +94,8 @@ namespace Netflix.API.Controllers.VideoController
         public async Task<IActionResult> GetByType(VideoType type, [FromQuery]int pagenum = 1, [FromQuery] int pagesize=10)
         {
             var videos = await _unitOfWork.Videos.GetByTypeAsync(type, pagenum, pagesize);
-            var result = _mapper.Map<VideoResponseDto>(videos);
+            var result = _mapper.Map<List<VideoResponseDto>>(videos);
+
             return Ok(result);
         }
 
@@ -130,7 +135,59 @@ namespace Netflix.API.Controllers.VideoController
             await _unitOfWork.SaveAsync();
 
             return Ok("Rating Added Successfully");
-        } 
+        }
+
+        //GetTopVideoViews
+        [AllowAnonymous]
+        [HttpGet("TopViews")]
+        public async Task<IActionResult> GetTopVideos([FromQuery] int count = 5)
+        {
+            var videos = await _unitOfWork.Videos.GetTopVideosByViewsAsync(count);
+            var mapp = _mapper.Map<List<VideoResponseDto>>(videos);
+            return Ok(mapp);
+        }
+        //SoftDeleted
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+            await _unitOfWork.Videos.SoftDeleteAsync(id);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Video soft deleted");
+        }
+
+        // Restore Video From Delete 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/restore")]
+        public async Task<IActionResult> RestoreVideo(int id)
+        {
+            await _unitOfWork.Videos.RestoreAsync(id);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Video restored successfully");
+        }
+
+        // Get ALL Videos Deleted
+        [Authorize(Roles = "Admin")]
+        [HttpGet("AllDeleted")]
+        public async Task<IActionResult> GetDeletedVideos()
+        {
+            var videos = await _unitOfWork.Videos.GetDeletedVideosAsync();
+            var result = _mapper.Map<List<VideoResponseDto>>(videos);
+
+            return Ok(result);
+        }
+
+
+//         [AllowAnonymous]
+//         [HttpGet("TopViews")]
+//         public async Task<IActionResult> GetTopVideos([FromQuery] int n=5)
+//         {
+//             var videos = await _unitOfWork.Videos.GetTopVideosByViewsAsync(n);
+//             var mapp = _mapper.Map<List<VideoResponseDto>>(videos);
+//             return Ok(mapp);
+//         }
 
     }
 }
