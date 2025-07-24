@@ -10,20 +10,21 @@ import { NetflixModel } from '../../components/netflix-model/netflix-model';
 export class MovieSliderSectionComponent {
   @Input() sectionTitle: string = '';
   @Input() movies: any[] = [];
-  // @Output() openModal= new EventEmitter <void>();
-  @Output()handleMovieClick= new EventEmitter <any>();
-  // emitModal(){
-  //   console.log('click to image');
-  //   this.openModal.emit();
-  // }
-  selectedMovie:any=null;
-  // handleMovieClick(movie:any){
-  //   this.selectedMovie = movie;
-  //   console.log('movie clicked:',movie)
-  // }
-   closeModal(){
-    this.selectedMovie=null;
-   }
+
+  @Output() movieClicked = new EventEmitter<any>();
+
+  // selectedMovie:any=null;
+  onMovieClick(movie:any){
+    console.log('movie clicked:',movie);
+      this.movieClicked.emit (movie);
+  }
+  //  closeModal(){
+  //   this.selectedMovie=null;
+  //  }
+  testFunction(){
+    console.log('button play');
+    this.movieClicked.emit({title:'test movie',image:'test.jpg'})
+  }
   @ViewChild('slider', { static: false }) slider!: ElementRef;
 
   scrollLeft() {

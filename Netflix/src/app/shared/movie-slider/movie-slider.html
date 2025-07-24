@@ -5,12 +5,13 @@
 
     <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
     <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
+    <button (click)="testFunction()" style="background: green; color: aliceblue;">test</button>
 
 
     <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
       <div
         class="slide-item d-flex align-items-center me-4 flex-shrink-0"
-        *ngFor="let movie of staticTop10; let i = index "(click)="handleMovieClick.emit(movie)"
+        *ngFor="let movie of staticTop10; let i = index "
       >
         <div class="rank-number d-flex align-items-center justify-content-center fw-bold text-black">
           {{ i + 1 }}
@@ -18,16 +19,17 @@
 
         <div class="movie-card">
           <img
-
+            (click)="onMovieClick(movie)"
             [src]="movie.image"
             class="img-fluid rounded"
             alt="{{ movie.title }}"
             style="width: 200px; height: 300px; object-fit: cover"
-              (click)="emitModal()"
+
           />
           <p class="text-white mt-2">{{ movie.title }} </p>
         </div>
-         <app-netflix-model [isVisible]="selectedMovie===movie" (closeModal)="closeModal"></app-netflix-model>
+        
+         <!-- <app-netflix-model [isVisible]="selectedMovie===movie" (closeModal)="closeModal"></app-netflix-model> -->
       </div>
 
     </div>

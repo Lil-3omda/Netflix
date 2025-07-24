@@ -1,0 +1,129 @@
+<div class="netflix-container">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-transparent  ">
+    <div class="container-fluid">
+      <!-- Netflix Logo and Media Center -->
+      <div class="navbar-brand d-flex align-items-center">
+        <span class="netflix-logo">NETFLIX</span>
+        <span class="media-center-text ms-3">Media Center</span>
+      </div>
+
+      <!-- Navigation Items -->
+      <div class="navbar-nav ms-auto d-flex flex-row align-items-center">
+        <!-- Language Dropdown -->
+        <div class="nav-item dropdown me-3">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+            English
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">English</a></li>
+            <li><a class="dropdown-item" href="#">العربية</a></li>
+          </ul>
+        </div>
+
+        <!-- Egypt Dropdown -->
+        <div class="nav-item dropdown me-3">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="country-flag text-dark">EG</span> Egypt
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Egypt</a></li>
+            <li><a class="dropdown-item" href="#">Other Countries</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsroom -->
+        <div class="nav-item me-3">
+          <a class="nav-link text-white d-flex align-items-center" href="#" (click)="onNewsroom()">
+            Newsroom
+            <i class="fas fa-external-link-alt ms-1 small"></i>
+          </a>
+        </div>
+
+        <!-- Resources Dropdown -->
+        <div class="nav-item dropdown me-3">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+            Resources
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Press Kits</a></li>
+            <li><a class="dropdown-item" href="#">Images</a></li>
+            <li><a class="dropdown-item" href="#">Videos</a></li>
+          </ul>
+        </div>
+
+        <!-- Apply Button -->
+        <button type="button" class="btn btn-outline-light me-2" (click)="onApply()">
+          Apply
+        </button>
+
+        <!-- Press Log In Button -->
+        <button type="button" class="btn btn-danger" (click)="onPressLogIn()">
+          Press Log In
+        </button>
+
+        <!-- Search Icon -->
+        <button class="btn btn-link text-white ms-2" data-bs-toggle="collapse" data-bs-target="#searchCollapse">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="main-content d-flex flex-column justify-content-center align-items-center text-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+          <!-- Main Heading -->
+          <h1 class="display-4 fw-bold text-white mb-4">
+            Discover stories and<br>
+            experiences to share with <span class="egypt-highlight">Egypt</span>.
+          </h1>
+
+          <!-- Search Bar -->
+          <div class="search-container">
+            <div class="input-group input-group-lg">
+              <span class="input-group-text bg-transparent border-secondary">
+                <i class="fas fa-search text-white"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control bg-transparent border-secondary text-white search-input"
+                placeholder="Search for Netflix titles and news"
+                (input)="onSearch($event)"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapsible Search (for mobile) -->
+  <div class="collapse" id="searchCollapse">
+    <div class="container mt-3">
+      <div class="input-group">
+        <span class="input-group-text bg-transparent border-secondary">
+          <i class="fas fa-search text-muted"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control bg-transparent border-secondary text-white"
+          placeholder="Search for Netflix titles and news"
+          (input)="onSearch($event)"
+        >
+      </div>
+
+    </div>
+    <app-netflix-category-filter
+      (filterChanged)="onFilterChanged($event)"
+      (monthChanged)="onMonthChanged($event)">
+    </app-netflix-category-filter>
+    <app-content-grid
+     [selectedFilter]="selectedFilter"
+      [selectedMonth]="selectedMonth">
+    </app-content-grid>
+    <app-news-section></app-news-section>
+    <app-netflix-center-banar></app-netflix-center-banar>
+    <app-footer></app-footer>

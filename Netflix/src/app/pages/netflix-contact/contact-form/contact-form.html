@@ -1,0 +1,55 @@
+<div class="contact-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-6">
+            <!-- Contact Us Header -->
+            <h1 class="contact-title">Contact us</h1>
+
+            <!-- Subtitle -->
+            <p class="contact-subtitle">Tell us more and we'll find the best solution for you</p>
+
+            <!-- Issue Description Input -->
+            <div class="mb-5">
+              <input
+                type="text"
+                class="form-control issue-input"
+                placeholder="Describe your issue"
+                [(ngModel)]="issueDescription">
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="quick-links">
+              <hr>
+              <h2 class="quick-links-title">Quick Links</h2>
+              <hr>
+              <div class="links-list">
+                <a href="#" class="link-item" (click)="handleLinkClick('reset-password', $event)">
+                  <i class="link-icon lock-icon"></i>
+                  <span class="link-text">Reset password</span>
+                </a>
+                  <hr>
+                <a href="#" class="link-item" (click)="handleLinkClick('update-email', $event)">
+                  <i class="link-icon email-icon"></i>
+                  <span class="link-text">Update email</span>
+                </a>
+                <hr>
+                <a href="#" class="link-item" (click)="handleLinkClick('help-signing-in', $event)">
+                  <i class="link-icon help-icon"></i>
+                  <span class="link-text">Get help signing in</span>
+                </a>
+               <hr>
+                <a href="#" class="link-item" (click)="handleLinkClick('update-payment', $event)">
+                  <i class="link-icon payment-icon"></i>
+                  <span class="link-text">Update payment method</span>
+                </a>
+                 <hr>
+                <a href="#" class="link-item" (click)="handleLinkClick('request-content', $event)">
+                  <i class="link-icon content-icon"></i>
+                  <span class="link-text">Request TV shows or movies</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

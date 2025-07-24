@@ -6,6 +6,16 @@ import { MovieSliderSectionComponent } from './shared/movie-slider/movie-slider'
 import { SignupComponent } from "./features/auth/signup/signup";
  import { Login } from "./features/auth/login/login";
 import { NetflixModel } from './components/netflix-model/netflix-model';
+import { NetflixCenter } from './pages/netflix-center/netflix-center';
+import { NetflixCategoryFilter } from './shared/netflix-category-filter/netflix-category-filter';
+import { ContentGrid } from './components/content-grid/content-grid';
+import { NewsSection } from './components/news-section/news-section';
+import { NetflixCenterBanar } from './components/netflix-center-banar/netflix-center-banar';
+import { Footer } from './pages/netflix-center/footer/footer';
+import { CustomerServiceCenter } from './pages/customer-service-center/customer-service-center';
+import { NetflixTerms } from './pages/customer-service-center/netflix-terms/netflix-terms';
+import { TermFooter } from './pages/customer-service-center/term-footer/term-footer';
+import { NetflixContact } from './pages/netflix-contact/netflix-contact';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +28,7 @@ import { NetflixModel } from './components/netflix-model/netflix-model';
       </app-netflix-modal>
     </div>
   `,
-  imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel],
+  imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel,NetflixCenter,NetflixCategoryFilter,ContentGrid,NewsSection,NetflixCenterBanar,Footer,CustomerServiceCenter,NetflixTerms,TermFooter,NetflixContact],
 
 
   templateUrl: './app.html',
