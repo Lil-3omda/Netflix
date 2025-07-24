@@ -5,7 +5,7 @@ using Netflix.API.Models;
 
 namespace Netflix.API.Mappings
 {
-    public class CommunicationMappingProfile : Profile
+    public class CommunicationMappingProfile : AutoMapper.Profile
     {
         public CommunicationMappingProfile()
         {

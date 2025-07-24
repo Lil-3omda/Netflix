@@ -124,35 +124,38 @@ namespace Netflix.API.Data
                 .HasOne(c => c.Customer)
                 .WithMany()
                 .HasForeignKey(c => c.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Conversation - AssignedAdmin
             builder.Entity<Conversation>()
                 .HasOne(c => c.AssignedAdmin)
                 .WithMany()
                 .HasForeignKey(c => c.AssignedAdminId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Message - Conversation
             builder.Entity<Message>()
                 .HasOne(m => m.Conversation)
                 .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ConversationId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             // Message - Sender
             builder.Entity<Message>()
                 .HasOne(m => m.Sender)
                 .WithMany()
                 .HasForeignKey(m => m.SenderId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             // Message - Receiver
             builder.Entity<Message>()
                 .HasOne(m => m.Receiver)
                 .WithMany()
                 .HasForeignKey(m => m.ReceiverId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
+
             
         }
     }

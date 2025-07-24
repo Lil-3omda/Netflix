@@ -1,0 +1,46 @@
+<div class="netflix-filter-container">
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <!-- Filter Header with Dropdown -->
+      <div class="col-12">
+        <div class="filter-header d-flex align-items-center">
+          <span class="filter-text">I'm interested in covering titles releasing in</span>
+
+          <!-- Month Dropdown -->
+          <div class="dropdown month-dropdown ms-2">
+            <button class="btn btn-dropdown dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ selectedMonth }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark"aria-labelledby="monthDropdown">
+              <li *ngFor="let month of monthOptions">
+                <a class="dropdown-item"
+                   [class.active]="isMonthSelected(month.id)"
+                   href="javascript:void(0)"
+                    (click)="onMonthSelect(month.id)">
+                   <!-- (click)="onMonthChange(month); $event.preventDefault()" -->
+                {{ month.label }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Buttons -->
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="filter-buttons d-flex flex-wrap gap-2">
+          <button
+            *ngFor="let filter of filterOptions"
+            type="button"
+            class="btn filter-btn"
+             [class.active]="isFilterSelected(filter.id)"
+            (click)="onFilterSelect(filter.id)">
+               <!-- [class.active]="category.active" -->
+                <!-- (click)="onCategoryClick(category)" -->
+            <!-- <i [class]="category.icon" aria-hidden="true"></i> -->
+               <i [class]="filter.icon" *ngIf="filter.icon"></i>
+            <!-- <span class="ms-2">{{ category.label }}</span> -->
+                    <span class="ms-2"> {{ filter.label }}</span>
+          </button>

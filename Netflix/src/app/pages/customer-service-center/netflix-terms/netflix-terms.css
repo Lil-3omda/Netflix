@@ -1,0 +1,121 @@
+.terms-container {
+  max-width: 1200px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+}
+
+/* Header styles */
+.btn-link:hover {
+  text-decoration: none !important;
+}
+
+.btn-link i {
+  font-size: 14px;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Typography styles */
+h1 {
+  color: #000;
+  font-weight: 700 !important;
+  margin-bottom: 2rem !important;
+}
+
+h2 {
+  color: #000;
+  font-weight: 600 !important;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+p {
+  color: #000;
+  margin-bottom: 1rem;
+  text-align: justify;
+  font-size: 16px;
+}
+
+/* Strong text styling */
+strong {
+  font-weight: 600;
+}
+
+/* Underlined text styling */
+u {
+  text-decoration: underline;
+}
+
+/* Section spacing */
+.mb-5:last-of-type {
+  margin-bottom: 3rem !important;
+}
+
+/* Indented paragraphs for sub-items */
+.ms-3 {
+  margin-left: 1.5rem !important;
+  margin-bottom: 0.5rem;
+}
+
+/* Last updated section */
+.border-top {
+  border-top: 1px solid #dee2e6 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Print styles */
+@media print {
+  .btn, .border-bottom {
+    display: none !important;
+  }
+
+  .terms-container {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  p, h1, h2 {
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .terms-container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .d-flex.justify-content-between > * {
+    align-self: flex-start;
+  }
+}

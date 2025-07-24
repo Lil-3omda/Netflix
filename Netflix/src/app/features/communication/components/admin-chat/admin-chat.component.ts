@@ -27,20 +27,20 @@ import { Conversation, Message, CreateMessage } from '../../models/conversation.
         </div>
 
         <div class="conversation-filters">
-          <button 
-            class="filter-btn" 
+          <button
+            class="filter-btn"
             [class.active]="selectedFilter === 'all'"
             (click)="setFilter('all')">
             All
           </button>
-          <button 
-            class="filter-btn" 
+          <button
+            class="filter-btn"
             [class.active]="selectedFilter === 'open'"
             (click)="setFilter('open')">
             Open
           </button>
-          <button 
-            class="filter-btn" 
+          <button
+            class="filter-btn"
             [class.active]="selectedFilter === 'assigned'"
             (click)="setFilter('assigned')">
             Assigned to Me
@@ -48,20 +48,20 @@ import { Conversation, Message, CreateMessage } from '../../models/conversation.
         </div>
 
         <div class="conversations-list">
-          <div 
-            class="conversation-item" 
+          <div
+            class="conversation-item"
             *ngFor="let conversation of filteredConversations"
             [class.active]="selectedConversation?.id === conversation.id"
             [class.unread]="conversation.unreadCount > 0"
             (click)="selectConversation(conversation)">
-            
+
             <div class="conversation-header">
               <h4>{{ conversation.customerName }}</h4>
               <span class="conversation-time">{{ formatTime(conversation.lastMessageAt || conversation.createdAt) }}</span>
             </div>
-            
+
             <p class="conversation-subject">{{ conversation.subject }}</p>
-            
+
             <div class="conversation-meta">
               <span class="status-badge" [class]="'status-' + conversation.status.toLowerCase()">
                 {{ conversation.status }}
@@ -84,9 +84,9 @@ import { Conversation, Message, CreateMessage } from '../../models/conversation.
             <h3>{{ selectedConversation.customerName }}</h3>
             <p>{{ selectedConversation.customerEmail }}</p>
           </div>
-          
+
           <div class="chat-actions">
-            <select 
+            <select
               class="status-select"
               [value]="selectedConversation.status"
               (change)="updateStatus($event)">
@@ -95,7 +95,7 @@ import { Conversation, Message, CreateMessage } from '../../models/conversation.
               <option value="Resolved">Resolved</option>
               <option value="Closed">Closed</option>
             </select>
-            
+
             <button class="action-btn" (click)="assignToMe()" *ngIf="!selectedConversation.assignedAdminName">
               Assign to Me
             </button>
@@ -104,13 +104,13 @@ import { Conversation, Message, CreateMessage } from '../../models/conversation.
 
         <div class="messages-area" *ngIf="selectedConversation">
           <div class="messages-container" #messagesContainer>
-            <div 
-              class="message" 
+            <div
+              class="message"
               *ngFor="let message of selectedConversation.messages"
               [class.customer-message]="message.type === 'CustomerToAdmin'"
               [class.admin-message]="message.type === 'AdminToCustomer'"
               [class.system-message]="message.type === 'SystemMessage'">
-              
+
               <div class="message-content">
                 <div class="message-header">
                   <span class="sender-name">{{ getSenderName(message) }}</span>
@@ -129,8 +129,8 @@ import { Conversation, Message, CreateMessage } from '../../models/conversation.
                 class="reply-input"
                 rows="3"
                 (keydown.ctrl.enter)="sendReply()"></textarea>
-              <button 
-                class="send-reply-btn" 
+              <button
+                class="send-reply-btn"
                 (click)="sendReply()"
                 [disabled]="!replyMessage.trim() || isLoading">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -582,7 +582,7 @@ export class AdminChatComponent implements OnInit {
 
   ngOnInit() {
     this.loadConversations();
-    
+
     // Refresh conversations every 30 seconds
     setInterval(() => {
       this.loadConversations();
@@ -621,12 +621,12 @@ export class AdminChatComponent implements OnInit {
 
   selectConversation(conversation: Conversation) {
     this.selectedConversation = conversation;
-    
+
     // Load full conversation with messages
     this.communicationService.getConversation(conversation.id).subscribe({
       next: (fullConversation) => {
         this.selectedConversation = fullConversation;
-        
+
         // Mark as read
         this.communicationService.markConversationAsRead(conversation.id).subscribe();
       },
@@ -666,8 +666,7 @@ export class AdminChatComponent implements OnInit {
   assignToMe() {
     if (!this.selectedConversation) return;
 
-    // In a real app, you'd get the current admin ID from auth service
-    const currentAdminId = 'current-admin-id'; // Replace with actual admin ID
+    const currentAdminId = '166f4eeb-135a-4067-b2f1-a76787c8acea'; // Replace with actual admin ID
 
     this.communicationService.assignConversation(this.selectedConversation.id, currentAdminId).subscribe({
       next: () => {
@@ -685,7 +684,7 @@ export class AdminChatComponent implements OnInit {
     if (!this.selectedConversation) return;
 
     const newStatus = event.target.value;
-    
+
     this.communicationService.updateConversationStatus(this.selectedConversation.id, newStatus).subscribe({
       next: () => {
         if (this.selectedConversation) {
