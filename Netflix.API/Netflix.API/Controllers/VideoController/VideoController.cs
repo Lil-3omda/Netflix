@@ -73,7 +73,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
         //Add Video
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpPost]
        public async Task<IActionResult> AddVideo([FromBody] VideoUploadDto dto)
         {
@@ -178,6 +178,16 @@ namespace Netflix.API.Controllers.VideoController
 
             return Ok(result);
         }
+
+
+//         [AllowAnonymous]
+//         [HttpGet("TopViews")]
+//         public async Task<IActionResult> GetTopVideos([FromQuery] int n=5)
+//         {
+//             var videos = await _unitOfWork.Videos.GetTopVideosByViewsAsync(n);
+//             var mapp = _mapper.Map<List<VideoResponseDto>>(videos);
+//             return Ok(mapp);
+//         }
 
     }
 }

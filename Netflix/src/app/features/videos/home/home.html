@@ -47,6 +47,8 @@
   </div>
 </div>
 
+<app-movie-slider (movieClicked)="openMovieModal($event)"></app-movie-slider>
+
 
 <!-- <app-movie-slider></app-movie-slider> -->
 
@@ -55,11 +57,13 @@
 
 <!-- <app-movie-slider (openModal)="openMovieModal()"></app-movie-slider>
   <app-netflix-model
-    *ngIf="isModalOpen"
-    [isVisible]="selectedMovie !==null"
+    *ngIf="isModalOpen && selectedMovie"
+
     (closeModal)="closeMovieModal()">
   </app-netflix-model>
    <!-- [isVisible]="isModalOpen" -->
+     <!-- [isVisible]="selectedMovie !==null" -->
+<!-- <p>model open {{isModalOpen}}</p> -->
 <p>model open {{isModalOpen}}</p>
 
 

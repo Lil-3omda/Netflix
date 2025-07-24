@@ -1,0 +1,178 @@
+.netflix-filter-container {
+  background-color: #141414;
+  padding: 20px 0;
+  border-bottom: 1px solid #333;
+}
+
+.filter-text {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* Month Dropdown Styling */
+.month-dropdown .btn-dropdown {
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.month-dropdown .btn-dropdown:hover {
+  color: #e50914;
+  background-color: transparent;
+  border: none;
+}
+
+.month-dropdown .btn-dropdown:focus {
+  box-shadow: none;
+  background-color: transparent;
+  border: none;
+}
+
+.month-dropdown .btn-dropdown::after {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.dropdown-menu-dark {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-menu-dark .dropdown-item {
+  color: #ffffff;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.dropdown-menu-dark .dropdown-item:hover {
+  background-color: #e50914;
+  color: #ffffff;
+}
+
+.dropdown-menu-dark .dropdown-item.active {
+  background-color: #e50914;
+  color: #ffffff;
+}
+
+/* Category Filter Buttons */
+.filter-buttons {
+  margin-top: 15px;
+}
+
+.filter-btn {
+  background-color: #333333;
+  border: 1px solid #555555;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.filter-btn:hover {
+  background-color: #444444;
+  border-color: #666666;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.filter-btn:focus {
+  box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3);
+  outline: none;
+}
+
+.filter-btn.active {
+  background-color: #3b82f6;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.filter-btn.active:hover {
+  background-color: #2563eb;
+  border-color: #1d4ed8;
+}
+
+.filter-btn i {
+  font-size: 14px;
+  width: 16px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+
+  .filter-text {
+    font-size: 14px;
+  }
+
+  .month-dropdown {
+    margin-left: 0 !important;
+  }
+
+  .filter-buttons {
+    justify-content: flex-start;
+  }
+
+  .filter-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .netflix-filter-container {
+    padding: 15px 0;
+  }
+
+  .filter-buttons {
+    gap: 8px;
+  }
+
+  .filter-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+    min-height: 36px;
+  }
+
+  .filter-btn i {
+    font-size: 12px;
+  }
+}
+
+/* Gap utility for older Bootstrap versions */
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* Flexbox utilities */
+.d-flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.align-items-center {
+  align-items: center;
+}
