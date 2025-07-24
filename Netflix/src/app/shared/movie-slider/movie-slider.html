@@ -1,70 +1,53 @@
 
 <div class="movie-slider-section py-5" style="background-color: #1a1a1a; position: relative;">
   <div class="container">
-    <h2 class="text-white mb-4">{{ ['title'] }}</h2>
+    <h2 class="text-white mb-4">{{ sectionTitle }}</h2>
 
-<div class="movie-slider-section py-4">
-  <h2 class="text-white mb-3">{{ sectionTitle }}</h2>
-
-  <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
-  <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
-
-  <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
-    <div
-      class="slide-item d-flex flex-column align-items-center me-4 flex-shrink-0"
-      *ngFor="let movie of movies"
-      style="width: 200px;"
-    >
-      <img
-        [src]="movie.image"
-        class="img-fluid rounded"
-        alt="{{ movie.title }}"
-        style="width: 200px; height: 300px; object-fit: cover"
-      />
-      <p class="text-white mt-2 mb-1">{{ movie.title }}</p>
-      <span class="badge bg-success">{{ movie.rating }}</span>
-
-
-
-
+    <!-- Navigation Arrows -->
     <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
     <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
-    <button (click)="testFunction()" style="background: green; color: aliceblue;">test</button>
 
-
+    <!-- Slider for Movies -->
     <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
       <div
-        class="slide-item d-flex align-items-center me-4 flex-shrink-0"
-        *ngFor="let movie of staticTop10; let i = index "
+        class="slide-item d-flex flex-column align-items-center me-4 flex-shrink-0"
+        *ngFor="let movie of movies"
+        style="width: 200px;"
+      >
+        <img
+          [src]="movie.image"
+          alt="{{ movie.title }}"
+          class="img-fluid rounded"
+          style="width: 200px; height: 300px; object-fit: cover;"
+        />
+        <p class="text-white mt-2 mb-1">{{ movie.title }}</p>
+        <span class="badge bg-success">{{ movie.rating }}</span>
+      </div>
+    </div>
 
+    <!-- Test Button -->
+    <button (click)="testFunction()" style="background: green; color: aliceblue;">Test</button>
+
+    <!-- Static Top 10 Slider -->
+    <div class="d-flex overflow-auto scrollbar-hide mt-5" #slider style="scroll-behavior: smooth;">
+      <div
+        class="slide-item d-flex align-items-center me-4 flex-shrink-0"
+        *ngFor="let movie of staticTop10; let i = index"
+        style="width: 200px;"
       >
         <div class="movie-card">
           <img
             (click)="onMovieClick(movie)"
-
             [src]="movie.image"
             alt="{{ movie.title }}"
-            style="width: 200px; height: 300px; object-fit: cover"
-
             class="img-fluid rounded"
             style="width: 200px; height: 300px; object-fit: cover;"
           />
           <p class="text-white mt-2 text-center">{{ movie.title }}</p>
-
         </div>
-        
-         <!-- <app-netflix-model [isVisible]="selectedMovie===movie" (closeModal)="closeModal"></app-netflix-model> -->
       </div>
-
-
-
-
     </div>
   </div>
-
-</div>
-
-</div>
 </div>
 
 
