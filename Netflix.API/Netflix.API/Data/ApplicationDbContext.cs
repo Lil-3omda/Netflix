@@ -140,6 +140,7 @@ namespace Netflix.API.Data
                 .HasForeignKey(m => m.ConversationId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+
             // Message - Sender
             builder.Entity<Message>()
                 .HasOne(m => m.Sender)
@@ -147,12 +148,14 @@ namespace Netflix.API.Data
                 .HasForeignKey(m => m.SenderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+
             // Message - Receiver
             builder.Entity<Message>()
                 .HasOne(m => m.Receiver)
                 .WithMany()
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.NoAction);
+
             
         }
     }

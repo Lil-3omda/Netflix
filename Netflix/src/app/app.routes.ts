@@ -41,6 +41,26 @@ export const routes: Routes = [
   },
   {
     path: 'speed-test',
+    loadComponent: () => import('./features/footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
+  },
+    {
+    path: 'account',
+    loadComponent: () => import('./features/footer/account').then(m => m.AccountComponent)
+  },
+    {
+    path: 'corporate-information',
+    loadComponent: () => import('./features/footer/corporate-info').then(m => m.CorporateInfoComponent)
+  },
+    {
+    path: 'ways-to-watch',
+    loadComponent: () => import('./features/footer/ways-to-watch').then(m => m.WaysToWatchComponent)
+  },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./features/footer/privacy.component').then(m => m.PrivacyComponent)
+  },
+  {
+    path: 'speed-test',
     loadComponent: () => import('./features/footer/speed-test.component').then(m => m.SpeedTestComponent)
   },
   {
