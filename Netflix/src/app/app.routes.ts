@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
+
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Main (Customer) Routes
   {
     path: '',
     loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
@@ -16,40 +16,38 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent)
   },
   {
-    path: 'home',
+    path: 'Home',
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
     path: 'only-on-netflix',
-    loadComponent: () => import('./features/Footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
+    loadComponent: () => import('./features/footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
   },
   {
     path: 'account',
-    loadComponent: () => import('./features/Footer/account').then(m => m.AccountComponent)
+    loadComponent: () => import('./features/footer/account').then(m => m.AccountComponent)
   },
   {
     path: 'corporate-information',
-    loadComponent: () => import('./features/Footer/corporate-info').then(m => m.CorporateInfoComponent)
+    loadComponent: () => import('./features/footer/corporate-info').then(m => m.CorporateInfoComponent)
   },
   {
     path: 'ways-to-watch',
-    loadComponent: () => import('./features/Footer/ways-to-watch').then(m => m.WaysToWatchComponent)
+    loadComponent: () => import('./features/footer/ways-to-watch').then(m => m.WaysToWatchComponent)
   },
   {
     path: 'privacy',
-    loadComponent: () => import('./features/Footer/privacy.component').then(m => m.PrivacyComponent)
+    loadComponent: () => import('./features/footer/privacy.component').then(m => m.PrivacyComponent)
   },
   {
     path: 'speed-test',
-    loadComponent: () => import('./features/Footer/speed-test.component').then(m => m.SpeedTestComponent)
+    loadComponent: () => import('./features/footer/speed-test.component').then(m => m.SpeedTestComponent)
   },
   {
     path: 'browse',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
-
-  // Admin Routes
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
@@ -89,8 +87,15 @@ export const routes: Routes = [
       }
     ]
   },
-
-  // Fallback
+  {
+    path: 'support',
+    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent)
+  },
+  {
+    path: 'admin/chat',
+    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
+    // canActivate: [AuthGuard]
+  },
   {
     path: '**',
     redirectTo: ''
