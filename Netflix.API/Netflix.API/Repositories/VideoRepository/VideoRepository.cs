@@ -17,6 +17,7 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             return await _context.Videos
                 .Include(v => v.Category)
+                .Where(v => !v.IsDeleted)
                 .OrderByDescending(v => v.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -28,7 +29,7 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             return await _context.Videos
                 .Include(v => v.Category)
-                .Where(v => v.Title.Contains(keyword))
+                .Where(v => !v.IsDeleted && v.Title.Contains(keyword))
                 .OrderByDescending(v => v.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -40,7 +41,7 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             return await _context.Videos
                 .Include(v => v.Category)
-                .Where(v => v.Type == type)
+                .Where(v => !v.IsDeleted && v.Type == type)
                 .OrderByDescending(v => v.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -50,7 +51,46 @@ namespace Netflix.API.Repositories.VideoRepository
         //  GetTotalCountAsync
         public async Task<int> GetTotalCountAsync()
         {
-            return await _context.Videos.CountAsync();
+            return await _context.Videos.CountAsync(v => !v.IsDeleted);
         }
+        // GetTopViewVideos
+        public async Task<List<Video>> GetTopVideosByViewsAsync(int count)
+        {
+            return await _context.Videos
+                .Include(v => v.Category)
+                .Where(v => !v.IsDeleted)
+                .OrderByDescending(v => v.ViewCount)
+                .Take(count).ToListAsync();
+        }
+        //softDeleted
+        public async Task SoftDeleteAsync(int id)
+        {
+            var video = await _context.Videos.FindAsync(id);
+            if (video == null) return;
+
+            video.IsDeleted = true;
+            _context.Videos.Update(video);
+        }
+        // Restore Video From Delete 
+        public async Task RestoreAsync(int id)
+        {
+            var video = await _context.Videos.FindAsync(id);
+            if (video != null && video.IsDeleted)
+            {
+                video.IsDeleted = false;
+                _context.Videos.Update(video);
+            }
+        }
+        // Get ALL Videos Deleted 
+        public async Task<List<Video>> GetDeletedVideosAsync()
+        {
+            return await _context.Videos
+                .Include(v => v.Category)
+                .Where(v => v.IsDeleted)
+                .OrderByDescending(v => v.Id)
+                .ToListAsync();
+        }
+
+
     }
 }

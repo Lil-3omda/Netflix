@@ -9,5 +9,11 @@ namespace Netflix.API.Repositories.VideoRepository
         Task<List<Video>> SearchAsync(string keyword, int pageNumber, int pageSize);
         Task<List<Video>> GetByTypeAsync(VideoType type, int pageNumber, int pageSize);
         Task<int> GetTotalCountAsync();
+        Task<List<Video>> GetTopVideosByViewsAsync(int count);
+        Task SoftDeleteAsync(int id);
+        Task RestoreAsync(int id);
+        Task<List<Video>> GetDeletedVideosAsync();
+
+
     }
 }
