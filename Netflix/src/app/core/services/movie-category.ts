@@ -9,12 +9,15 @@ import { Observable } from 'rxjs';
 export class MovieCategory {
   constructor(private http: HttpClient) {}
 
-
-   getTop10(): Observable<any[]> {
+ private baseUrl = 'https://localhost:7140/api/Category';
+  
+ 
+ getTop10(): Observable<any[]> {
     return this.http.get<any[]>('https://api.example.com/movies/top10');
   }
 
-  getMoviesByCategory(category: string): Observable<[]> {
-    return this.http.get<[]>(`https://api.example.com/movies?category=${category}`);
-  }
+  getMoviesByCategory(category: string): Observable<{ id: number, name: string, videos: any[] }> {
+  return this.http.get<{ id: number, name: string, videos: any[] }>(`https://localhost:7140/api/Category/${category}`);
+}
+
 }

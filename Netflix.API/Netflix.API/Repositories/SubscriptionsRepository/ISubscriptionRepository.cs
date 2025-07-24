@@ -5,6 +5,6 @@ namespace Netflix.API.Repositories.SubscriptionsRepository
 {
     public interface ISubscriptionRepository:IGenericRepository<UserSubscription>
     {
-        Task<IEnumerable<UserSubscription>> GetByUserIdAsync(int userId);
+        Task<IEnumerable<UserSubscription>> GetByUserIdAsync(string userId);
     }
 }

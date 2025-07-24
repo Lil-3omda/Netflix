@@ -1,18 +1,40 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './layout/navbar/navbar';
 import { Home } from './features/videos/home/home';
+
 // import { MovieSlider } from './shared/movie-slider/movie-slider';
 import { RouterModule } from '@angular/router';
 import { Category } from './shared/category/category';
   import { SignupComponent } from "./features/auth/signup/signup";
   import { Login } from "./features/auth/login/login";
   import { NetflixModel } from './components/netflix-model/netflix-model';
+  import { ChatbotComponent } from './features/communication/components/chatbot/chatbot.component';
 
+// @Component({
+//   selector: 'app-root',
+//   imports: [RouterOutlet,HttpClientModule],
+
+
+// import { MovieSliderSectionComponent } from './shared/movie-slider/movie-slider';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Navbar,Home,RouterModule,Category],
+    template: `
+    <router-outlet></router-outlet>
+    <app-chatbot></app-chatbot>
+  `,
+  imports: [RouterOutlet,Navbar,Home,SignupComponent,Login,NetflixModel,ChatbotComponent],
+
+
+// @Component({
+//   selector: 'app-root',
+//   imports: [RouterOutlet,Navbar,Home,MovieSlider,RouterModule,Category],
+//   import { SignupComponent } from "./features/auth/signup/signup";
+//   import { Login } from "./features/auth/login/login";
+//   import { NetflixModel } from './components/netflix-model/netflix-model';
+
 
 //     template: `
 //     <div class="container-fluid">
@@ -23,6 +45,8 @@ import { Category } from './shared/category/category';
 //       </app-netflix-modal>
 //     </div>
 //   `,
+//   imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel],
+
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -12,18 +12,41 @@ using Netflix.API.Data;
 namespace Netflix.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250719091133_init")]
-    partial class init
+    [Migration("20250724133234_com")]
+    partial class com
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VideoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("VideoId");
+
+                    b.ToTable("Favorites");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -183,6 +206,9 @@ namespace Netflix.API.Data.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -196,6 +222,12 @@ namespace Netflix.API.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("OtpCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OtpExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -245,7 +277,7 @@ namespace Netflix.API.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Netflix.API.Models.Favorite", b =>
+            modelBuilder.Entity("Netflix.API.Models.Conversation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -253,19 +285,89 @@ namespace Netflix.API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProfileId")
+                    b.Property<string>("AssignedAdminId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Priority")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("VideoId")
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedAdminId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AttachmentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AttachmentUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ConversationId");
 
-                    b.HasIndex("VideoId");
+                    b.HasIndex("ReceiverId");
 
-                    b.ToTable("Favorites");
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Profile", b =>
@@ -300,7 +402,7 @@ namespace Netflix.API.Data.Migrations
                     b.Property<int>("ProfileId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Value")
+                    b.Property<int>("Stars")
                         .HasColumnType("int");
 
                     b.Property<int>("VideoId")
@@ -315,7 +417,61 @@ namespace Netflix.API.Data.Migrations
                     b.ToTable("Ratings");
                 });
 
-            modelBuilder.Entity("Netflix.API.Models.Subscription", b =>
+            modelBuilder.Entity("Netflix.API.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VideoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("VideoId");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.SubscriptionPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MaxProfiles")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPlans");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.UserSubscription", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -326,6 +482,9 @@ namespace Netflix.API.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -334,9 +493,11 @@ namespace Netflix.API.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlanId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("UserSubscriptions");
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Video", b =>
@@ -356,6 +517,9 @@ namespace Netflix.API.Data.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.Property<string>("UploadedByUserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -372,6 +536,32 @@ namespace Netflix.API.Data.Migrations
                     b.HasIndex("UploadedByUserId");
 
                     b.ToTable("Videos");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.WatchHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VideoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("WatchedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("VideoId");
+
+                    b.ToTable("WatchHistories");
                 });
 
             modelBuilder.Entity("Netflix.API.Models.WatchProgress", b =>
@@ -398,6 +588,25 @@ namespace Netflix.API.Data.Migrations
                     b.HasIndex("VideoId");
 
                     b.ToTable("WatchProgresses");
+                });
+
+            modelBuilder.Entity("Favorite", b =>
+                {
+                    b.HasOne("Netflix.API.Models.Profile", "Profile")
+                        .WithMany("Favorites")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Netflix.API.Models.Video", "Video")
+                        .WithMany("Favorites")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
+
+                    b.Navigation("Video");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -451,23 +660,46 @@ namespace Netflix.API.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Netflix.API.Models.Favorite", b =>
+            modelBuilder.Entity("Netflix.API.Models.Conversation", b =>
                 {
-                    b.HasOne("Netflix.API.Models.Profile", "Profile")
-                        .WithMany("Favorites")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Netflix.API.Models.ApplicationUser", "AssignedAdmin")
+                        .WithMany()
+                        .HasForeignKey("AssignedAdminId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Netflix.API.Models.ApplicationUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("AssignedAdmin");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.Message", b =>
+                {
+                    b.HasOne("Netflix.API.Models.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Netflix.API.Models.Video", "Video")
-                        .WithMany("Favorites")
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Netflix.API.Models.ApplicationUser", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("Profile");
+                    b.HasOne("Netflix.API.Models.ApplicationUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("Video");
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Netflix.API.Models.Profile", b =>
@@ -499,12 +731,39 @@ namespace Netflix.API.Data.Migrations
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Netflix.API.Models.Subscription", b =>
+            modelBuilder.Entity("Netflix.API.Models.Review", b =>
                 {
+                    b.HasOne("Netflix.API.Models.Profile", "Profile")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Netflix.API.Models.Video", "Video")
+                        .WithMany()
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
+
+                    b.Navigation("Video");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.UserSubscription", b =>
+                {
+                    b.HasOne("Netflix.API.Models.SubscriptionPlan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Netflix.API.Models.ApplicationUser", "User")
                         .WithMany("Subscriptions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Plan");
 
                     b.Navigation("User");
                 });
@@ -525,6 +784,25 @@ namespace Netflix.API.Data.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("UploadedByUser");
+                });
+
+            modelBuilder.Entity("Netflix.API.Models.WatchHistory", b =>
+                {
+                    b.HasOne("Netflix.API.Models.Profile", "Profile")
+                        .WithMany("WatchHistories")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Netflix.API.Models.Video", "Video")
+                        .WithMany("WatchHistories")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
+
+                    b.Navigation("Video");
                 });
 
             modelBuilder.Entity("Netflix.API.Models.WatchProgress", b =>
@@ -558,11 +836,20 @@ namespace Netflix.API.Data.Migrations
                     b.Navigation("Videos");
                 });
 
+            modelBuilder.Entity("Netflix.API.Models.Conversation", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("Netflix.API.Models.Profile", b =>
                 {
                     b.Navigation("Favorites");
 
                     b.Navigation("Ratings");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("WatchHistories");
 
                     b.Navigation("WatchProgresses");
                 });
@@ -572,6 +859,8 @@ namespace Netflix.API.Data.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Ratings");
+
+                    b.Navigation("WatchHistories");
 
                     b.Navigation("WatchProgresses");
                 });

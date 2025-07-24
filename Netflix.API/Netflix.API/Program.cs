@@ -13,11 +13,11 @@ using Netflix.API.Repositories.WatchProgressRepository;
 using Netflix.API.Services;
 using Netflix.API.Services.Interfaces;
 using System.Text;
-
 using Netflix.API.Repositories.FeedBack_rating_review_;
 using Netflix.API.Repositories.SubscriptionsRepository;
 using Netflix.API.Repositories.WatchHistoryRepository;
-
+using Netflix.API.Repositories.ConversationRepository;
+using Netflix.API.Repositories.MessageRepository;
 namespace Netflix.API
 {
     public class Program
@@ -33,6 +33,7 @@ namespace Netflix.API
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<IWatchProgressRepository, WatchProgressRepository>();
@@ -41,6 +42,9 @@ namespace Netflix.API
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<IWatchingHistoryRepository, WatchingHistoryRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+            builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+            builder.Services.AddScoped<ICommunicationService, CommunicationService>();
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>

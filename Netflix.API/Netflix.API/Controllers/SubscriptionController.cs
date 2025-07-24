@@ -33,7 +33,7 @@ namespace Netflix.API.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<UserSubscription>> GetUserSubscription(int userId)
+        public async Task<ActionResult<UserSubscription>> GetUserSubscription(string userId)
         {
             var subscription = await unitOfWork.UserSubscriptions.GetByUserIdAsync(userId);
 

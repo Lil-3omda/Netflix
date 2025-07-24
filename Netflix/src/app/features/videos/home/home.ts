@@ -1,14 +1,24 @@
 import { CommonModule } from '@angular/common';
+
+
+
+
+
+
 import { Component, ViewChild, ElementRef,OnInit } from '@angular/core';
 import { MovieSliderSectionComponent } from '../../../shared/movie-slider/movie-slider';
 import { NetflixModel } from '../../../components/netflix-model/netflix-model';
 import { FormsModule } from '@angular/forms';
 import { MovieCategory } from '../../../core/services/movie-category';
+import { Navbar } from "../../../layout/navbar/navbar";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,FormsModule,NetflixModel],
+
+  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar],
+
+
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
