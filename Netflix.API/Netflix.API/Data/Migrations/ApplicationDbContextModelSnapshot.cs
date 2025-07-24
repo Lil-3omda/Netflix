@@ -511,7 +511,22 @@ namespace Netflix.API.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Duration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalView")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TrailerUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
@@ -520,7 +535,7 @@ namespace Netflix.API.Data.Migrations
                     b.Property<string>("UploadedByUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("VideoUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ViewCount")
