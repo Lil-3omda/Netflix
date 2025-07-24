@@ -180,14 +180,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
 
-//         [AllowAnonymous]
-//         [HttpGet("TopViews")]
-//         public async Task<IActionResult> GetTopVideos([FromQuery] int n=5)
-//         {
-//             var videos = await _unitOfWork.Videos.GetTopVideosByViewsAsync(n);
-//             var mapp = _mapper.Map<List<VideoResponseDto>>(videos);
-//             return Ok(mapp);
-//         }
+
 
     }
 }
