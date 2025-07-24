@@ -9,6 +9,7 @@ export interface User {
   joinDate: string;
   lastActive: string;
   region: string;
+  avatar?: string;
 }
 
 export interface Content {
@@ -22,6 +23,9 @@ export interface Content {
   releaseDate: string;
   seasons?: number;
   duration?: string;
+  thumbnail?: string;
+  description?: string;
+  trailer?: string;
 }
 
 export interface ChatMessage {
@@ -45,14 +49,40 @@ export interface StatCardData {
   title: string;
   value: string;
   change: string;
-  icon: any;
+  icon: string;
   color: string;
+  trend: 'up' | 'down' | 'neutral';
 }
 
 export interface Platform {
   id: string;
   name: string;
-  icon: any;
+  icon: string;
   color: string;
   active: number;
+}
+
+export interface MenuItem {
+  id: AdminPageType;
+  label: string;
+  icon: string;
+  route: string;
+}
+
+export interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor?: string[] | string;
+    borderColor?: string;
+    borderWidth?: number;
+  }[];
+}
+
+export interface AnalyticsData {
+  revenue: ChartData;
+  users: ChartData;
+  content: ChartData;
+  engagement: ChartData;
 }

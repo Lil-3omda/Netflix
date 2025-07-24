@@ -1,4 +1,4 @@
-import type { User, Content } from '../types';
+import type { User, Content } from '../models/admin.interfaces';
 
 export const formatUserStats = (users: User[]) => {
   const total = users.length;
