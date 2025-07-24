@@ -16,9 +16,10 @@ namespace Netflix.API.Repositories
             this.dbset = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync() => await dbset.ToListAsync();
+        public  virtual async Task<IEnumerable<T>> GetAllAsync() => await dbset.ToListAsync();
 
-        public async Task<T?> GetByIdAsync(int id) => await dbset.FindAsync(id);
+        public virtual async Task<T?> GetByIdAsync(int id) => await dbset.FindAsync(id);
+
 
         public async Task AddAsync(T entity) => await dbset.AddAsync(entity);
 
