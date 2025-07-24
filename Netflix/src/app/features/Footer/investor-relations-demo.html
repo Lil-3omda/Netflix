@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Investor Relations - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Root container for the component -->
+    <div id="investor-relations-root"></div>
+
+    <!-- Load the TypeScript component (converted to JavaScript) -->
+    <script type="module">
+        // Import and initialize the component
+        import InvestorRelationsComponent from './investor-relations.js';
+        
+        // Initialize the component when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const investorPage = new InvestorRelationsComponent();
+            console.log('Netflix Investor Relations page loaded successfully!');
+        });
+    </script>
+
+    <!-- Alternative: Direct implementation without modules -->
+    <script>
+        // If you want to include the component directly without modules
+        // You can copy the class definition here and initialize it
+        /*
+        class InvestorRelationsComponent {
+            // ... (copy the entire class from investor-relations.ts)
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const investorPage = new InvestorRelationsComponent();
+        });
+        */
+    </script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <section class="hero-section position-relative text-white" style="background-image: url('https://image.tmdb.org/t/p/original/your-banner.jpg'); background-size: cover; background-position: center; height: 100vh;">
   <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);"></div>
 
@@ -47,6 +48,14 @@
 </div>
 
 <app-movie-slider (movieClicked)="openMovieModal($event)"></app-movie-slider>
+
+
+<!-- <app-movie-slider></app-movie-slider> -->
+
+
+
+
+<!-- <app-movie-slider (openModal)="openMovieModal()"></app-movie-slider>
   <app-netflix-model
     *ngIf="isModalOpen && selectedMovie"
 
@@ -55,20 +64,17 @@
    <!-- [isVisible]="isModalOpen" -->
      <!-- [isVisible]="selectedMovie !==null" -->
 <!-- <p>model open {{isModalOpen}}</p> -->
+<p>model open {{isModalOpen}}</p>
+
+
 <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
 
 
-<!-- <app-movie-slider-section
-  [sectionTitle]="'Top 10'"
-  [movies]="top10Movies"
-></app-movie-slider-section>
+<!-- <app-movie-category categoryName="top10"></app-movie-category>
+<app-movie-category categoryName="action"></app-movie-category>
+<app-movie-category categoryName="drama"></app-movie-category>
+<app-movie-category categoryName="comedy"></app-movie-category> -->
 
-<app-movie-slider-section
-  [sectionTitle]="'Drama'"
-  [movies]="dramaMovies"
-></app-movie-slider-section>
+<app-movie-slider category="action" title="Top Adventure Movies"></app-movie-slider>
 
-<app-movie-slider-section
-  [sectionTitle]="'Comedy'"
-  [movies]="comedyMovies"
-></app-movie-slider-section> -->
+<app-movie-slider category="action" title="Top Action Movies"></app-movie-slider>

@@ -19,22 +19,19 @@ import { NetflixContact } from './pages/netflix-contact/netflix-contact';
 
 @Component({
   selector: 'app-root',
-    template: `
-    <div class="container-fluid">
-      <button class="btn btn-primary m-3" (click)="showModal = true">Open Netflix Modal</button>
-      <app-netflix-modal
-        [isVisible]="showModal"
-        (closeModal)="showModal = false">
-      </app-netflix-modal>
-    </div>
-  `,
+//     template: `
+//     <div class="container-fluid">
+//       <button class="btn btn-primary m-3" (click)="showModal = true">Open Netflix Modal</button>
+//       <app-netflix-modal
+//         [isVisible]="showModal"
+//         (closeModal)="showModal = false">
+//       </app-netflix-modal>
+//     </div>
+//   `,
   imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel,NetflixCenter,NetflixCategoryFilter,ContentGrid,NewsSection,NetflixCenterBanar,Footer,CustomerServiceCenter,NetflixTerms,TermFooter,NetflixContact],
-
-
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
   protected title = 'Netflix';
-    showModal = false;
 }

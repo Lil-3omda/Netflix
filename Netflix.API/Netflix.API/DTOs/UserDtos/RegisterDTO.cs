@@ -1,4 +1,4 @@
-﻿namespace Netflix.API.DTOs.UserDtos
+namespace Netflix.API.DTOs.UserDtos
 {
     public class RegisterDTO
     {

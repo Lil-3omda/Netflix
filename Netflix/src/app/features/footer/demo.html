@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Privacy & Speed Test - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .demo-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .netflix-logo {
+            color: #e50914;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-selector {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .privacy-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .privacy-link:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background-color: #111;
+            padding: 20px 0;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 50px;
+            text-align: center;
+        }
+
+        .nav-title {
+            font-size: 28px;
+            color: #e50914;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            background: linear-gradient(145deg, #e50914, #cc0000);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Demo Content */
+        .demo-content {
+            flex: 1;
+            padding: 40px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-section {
+            background-color: #111;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #e50914;
+        }
+
+        .demo-section h2 {
+            color: #e50914;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .demo-section p {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            color: #ccc;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            color: #e50914;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000;
+            border-top: 1px solid #333;
+            padding: 20px 0;
+            text-align: center;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content,
+            .nav-content,
+            .demo-content {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-button {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="netflix-logo">NETFLIX</div>
+                <div class="header-right">
+                    <select class="language-selector">
+                        <option value="en">English (US)</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                    <a href="#" class="privacy-link">Privacy</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-container">
+            <div class="nav-content">
+                <h1 class="nav-title">Netflix Tools Demo</h1>
+                <div class="nav-buttons">
+                    <a href="privacy-demo.html" class="nav-button">🔒 Privacy Statement</a>
+                    <a href="speed-test-demo.html" class="nav-button">⚡ Speed Test</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="demo-content">
+            <div class="demo-section">
+                <h2>🔒 Privacy Statement Page</h2>
+                <p>A complete clone of Netflix's Privacy Statement page with:</p>
+                <ul class="feature-list">
+                    <li>Interactive sidebar navigation</li>
+                    <li>Complete privacy policy content</li>
+                    <li>Netflix-style design and branding</li>
+                    <li>Responsive layout for all devices</li>
+                    <li>Smooth animations and transitions</li>
+                </ul>
+            </div>
+
+            <div class="demo-section">
+                <h2>⚡ Speed Test Page</h2>
+                <p>A functional internet speed test tool similar to fast.com:</p>
+                <ul class="feature-list">
+                    <li>Real-time speed measurement simulation</li>
+                    <li>Animated speed indicator</li>
+                    <li>Progress tracking during test</li>
+                    <li>Connection quality assessment</li>
+                    <li>Beautiful Netflix-inspired design</li>
+                    <li>Mobile-friendly interface</li>
+                </ul>
+            </div>
+
+            <div class="demo-section">
+                <h2>🎯 Technical Features</h2>
+                <p>Both pages are built with modern web technologies:</p>
+                <ul class="feature-list">
+                    <li>Pure HTML, CSS, and TypeScript</li>
+                    <li>Angular standalone components</li>
+                    <li>Responsive design principles</li>
+                    <li>Modern CSS animations</li>
+                    <li>Accessible UI components</li>
+                    <li>Performance optimized</li>
+                </ul>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Netflix Clone - Demo Pages</p>
+        </footer>
+    </div>
+</body>
+</html>

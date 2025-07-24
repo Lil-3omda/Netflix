@@ -37,7 +37,7 @@ namespace Netflix.API.Controllers
         {
             var category = await categoryService.GetByIdAsync(id);
             if (category == null)
-                return NotFound();
+                return NotFound(new { message = "Category not found." });
 
             return Ok(category);
         }
@@ -46,7 +46,7 @@ namespace Netflix.API.Controllers
         {
             var category = await categoryService.GetByNameAsync(name);
             if (category == null)
-                return NotFound();
+                return NotFound(new { message = "Category not found." });
 
             return Ok(category);
         }
@@ -65,7 +65,7 @@ namespace Netflix.API.Controllers
                 return BadRequest(ModelState);
 
             await categoryService.AddAsync(dto);
-            return StatusCode(201);
+            return StatusCode(201, new { message = "Category created successfully." });
         }
 
         [HttpPut("{id}")]
@@ -76,9 +76,9 @@ namespace Netflix.API.Controllers
 
             var updated = await categoryService.UpdateAsync(id, dto);
             if (!updated)
-                return NotFound();
+                return NotFound(new { message = "Category not found." });
 
-            return NoContent();
+            return Ok(new { message = "Category updated successfully." });
         }
 
         [HttpDelete("{id}")]
@@ -87,7 +87,7 @@ namespace Netflix.API.Controllers
             var deleted = await categoryService.DeleteAsync(id);
             if (!deleted)
                 return BadRequest(new { message = "Cannot delete category that contains videos or category not found." });
-            return NoContent();
+            return Ok(new { message = "Category deleted successfully." });
         }
     }
 }
