@@ -41,6 +41,9 @@ namespace Netflix.API
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<IWatchingHistoryRepository, WatchingHistoryRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+            builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+            builder.Services.AddScoped<ICommunicationService, CommunicationService>();
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -10,6 +10,7 @@ import { Category } from './shared/category/category';
   import { SignupComponent } from "./features/auth/signup/signup";
   import { Login } from "./features/auth/login/login";
   import { NetflixModel } from './components/netflix-model/netflix-model';
+  import { ChatbotComponent } from './features/communication/components/chatbot/chatbot.component';
 
 // @Component({
 //   selector: 'app-root',
@@ -21,15 +22,10 @@ import { Category } from './shared/category/category';
 @Component({
   selector: 'app-root',
     template: `
-    <div class="container-fluid">
-      <button class="btn btn-primary m-3" (click)="showModal = true">Open Netflix Modal</button>
-      <app-netflix-modal
-        [isVisible]="showModal"
-        (closeModal)="showModal = false">
-      </app-netflix-modal>
-    </div>
+    <router-outlet></router-outlet>
+    <app-chatbot></app-chatbot>
   `,
-  imports: [RouterOutlet,Navbar,Home,SignupComponent,Login,NetflixModel],
+  imports: [RouterOutlet,Navbar,Home,SignupComponent,Login,NetflixModel,ChatbotComponent],
 
 
 // @Component({

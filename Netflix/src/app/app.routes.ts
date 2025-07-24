@@ -49,6 +49,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'support',
+    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent)
+  },
+  {
+    path: 'admin/chat',
+    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**',
     redirectTo: ''
   }
