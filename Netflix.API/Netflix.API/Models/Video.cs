@@ -20,6 +20,7 @@
         public int TotalView { get; set; }
 
         public bool IsDeleted { get; set; }
+        public string Duration { get; set; }
 
         public int CategoryId { get; set; }
         public VideoType Type { get; set; }
