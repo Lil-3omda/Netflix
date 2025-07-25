@@ -20,28 +20,32 @@ export const routes: Routes = [
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
+    path: 'Profile',
+    loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
+  },
+  {
     path: 'only-on-netflix',
-    loadComponent: () => import('./features/footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
+    loadComponent: () => import('./features/Footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
   },
   {
     path: 'account',
-    loadComponent: () => import('./features/footer/account').then(m => m.AccountComponent)
+    loadComponent: () => import('./features/Footer/account').then(m => m.AccountComponent)
   },
   {
     path: 'corporate-information',
-    loadComponent: () => import('./features/footer/corporate-info').then(m => m.CorporateInfoComponent)
+    loadComponent: () => import('./features/Footer/corporate-info').then(m => m.CorporateInfoComponent)
   },
   {
     path: 'ways-to-watch',
-    loadComponent: () => import('./features/footer/ways-to-watch').then(m => m.WaysToWatchComponent)
+    loadComponent: () => import('./features/Footer/ways-to-watch').then(m => m.WaysToWatchComponent)
   },
   {
     path: 'privacy',
-    loadComponent: () => import('./features/footer/privacy.component').then(m => m.PrivacyComponent)
+    loadComponent: () => import('./features/Footer/privacy.component').then(m => m.PrivacyComponent)
   },
   {
     path: 'speed-test',
-    loadComponent: () => import('./features/footer/speed-test.component').then(m => m.SpeedTestComponent)
+    loadComponent: () => import('./features/Footer/speed-test.component').then(m => m.SpeedTestComponent)
   },
   {
     path: 'browse',
