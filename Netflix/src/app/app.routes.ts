@@ -20,6 +20,18 @@ export const routes: Routes = [
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
+    path: 'favorites',
+    loadComponent: () => import('./features/favorites/favorites-page.component').then(m => m.FavoritesPageComponent)
+  },
+  {
+    path: 'watch/:id',
+    loadComponent: () => import('./features/video-player/video-player.component').then(m => m.VideoPlayerComponent)
+  },
+  {
+    path: 'demo',
+    loadComponent: () => import('./features/examples/components-demo.component').then(m => m.ComponentsDemoComponent)
+  },
+  {
     path: 'only-on-netflix',
     loadComponent: () => import('./features/footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
   },
