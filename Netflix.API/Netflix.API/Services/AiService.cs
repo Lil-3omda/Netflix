@@ -98,23 +98,23 @@ namespace Netflix.API.Services
                 var topMovies = await GetTopRatedMoviesByUserPreferencesAsync(userId);
 
                 var prompt = $@"
-Based on the user's watch history analysis: {watchHistoryAnalysis}
+                Based on the user's watch history analysis: {watchHistoryAnalysis}
 
-User message: {userMessage}
+                User message: {userMessage}
 
-Available top-rated movies: {JsonSerializer.Serialize(topMovies)}
+                Available top-rated movies: {JsonSerializer.Serialize(topMovies)}
 
-Please recommend 3-5 movies from the available list that best match the user's preferences. 
-For each recommendation, provide a brief reason why it matches their taste.
-Respond in JSON format:
-{{
-  ""recommendations"": [
-    {{
-      ""movieId"": 1,
-      ""reason"": ""explanation""
-    }}
-  ]
-}}";
+                Please recommend 3-5 movies from the available list that best match the user's preferences. 
+                For each recommendation, provide a brief reason why it matches their taste.
+                Respond in JSON format:
+                {{
+                  ""recommendations"": [
+                    {{
+                      ""movieId"": 1,
+                      ""reason"": ""explanation""
+                    }}
+                  ]
+                }}";
 
                 var aiResponse = await GenerateResponseAsync(prompt, new List<ChatMessageDto>(), "movie_recommendation");
                 
@@ -161,11 +161,11 @@ Respond in JSON format:
                 var recentMovies = watchHistory.Take(10).Select(wh => wh.Video.Title).ToList();
 
                 return $@"
-User's top category: {topCategory?.Category} ({topCategory?.Count} movies watched)
-Recent movies: {string.Join(", ", recentMovies)}
-Category preferences: {string.Join(", ", categoryStats.Take(3).Select(cs => $"{cs.Category} ({cs.Count})"))}
-Average rating preference: {categoryStats.Average(cs => cs.AverageRating):F1}/5
-";
+                User's top category: {topCategory?.Category} ({topCategory?.Count} movies watched)
+                Recent movies: {string.Join(", ", recentMovies)}
+                Category preferences: {string.Join(", ", categoryStats.Take(3).Select(cs => $"{cs.Category} ({cs.Count})"))}
+                Average rating preference: {categoryStats.Average(cs => cs.AverageRating):F1}/5
+                ";
             }
             catch (Exception ex)
             {
@@ -276,20 +276,20 @@ Average rating preference: {categoryStats.Average(cs => cs.AverageRating):F1}/5
         private string GetSystemPrompt(string? context = null)
         {
             var basePrompt = @"
-You are a helpful Netflix customer support assistant. You can help users with:
-- Account and billing questions
-- Technical issues with streaming
-- Content recommendations
-- General Netflix features
+                You are a helpful Netflix customer support assistant. You can help users with:
+                - Account and billing questions
+                - Technical issues with streaming
+                - Content recommendations
+                - General Netflix features
 
-Be friendly, concise, and helpful. If you don't know something, admit it and suggest contacting human support.
-";
+                Be friendly, concise, and helpful. If you don't know something, admit it and suggest contacting human support.
+                ";
 
             if (context == "movie_recommendation")
             {
                 basePrompt += @"
-You are specifically helping with movie recommendations. Analyze the provided data and suggest movies that match the user's viewing patterns and preferences.
-";
+                    You are specifically helping with movie recommendations. Analyze the provided data and suggest movies that match the user's viewing patterns and preferences.
+                    ";
             }
 
             return basePrompt;
