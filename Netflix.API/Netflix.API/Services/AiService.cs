@@ -26,69 +26,202 @@ namespace Netflix.API.Services
         {
             try
             {
-                var apiKey = _configuration["OpenAI:ApiKey"];
-                var model = _configuration["OpenAI:Model"] ?? "gpt-3.5-turbo";
+                var apiKey = _configuration["HuggingFace:ApiKey"];
+                var model = _configuration["HuggingFace:Model"];
+                var baseUrl = _configuration["HuggingFace:BaseUrl"] ?? "https://router.huggingface.co/v1/chat/completions";
 
                 _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
-                var messages = new List<object>
+                var messages = new List<object>();
+
+                // Optional: Add system prompt
+                var systemPrompt = GetSystemPrompt(userContext);
+                if (!string.IsNullOrWhiteSpace(systemPrompt))
                 {
-                    new
+                    messages.Add(new
                     {
                         role = "system",
-                        content = GetSystemPrompt(userContext)
-                    }
-                };
+                        content = systemPrompt
+                    });
+                }
 
-                // Add conversation history (last 10 messages)
+                // Add previous conversation (last 10 messages)
                 foreach (var msg in conversationHistory.TakeLast(10))
                 {
                     messages.Add(new
                     {
-                        role = msg.Role.ToLower(),
+                        role = msg.Role.ToLower(), // "user" or "assistant"
                         content = msg.Content
                     });
                 }
 
-                // Add current user message
+                // Add current message
                 messages.Add(new
                 {
                     role = "user",
                     content = userMessage
                 });
 
-                var requestBody = new
+                var payload = new
                 {
                     model = model,
                     messages = messages,
-                    max_tokens = 500,
-                    temperature = 0.7
+                    stream = false
                 };
 
-                var json = JsonSerializer.Serialize(requestBody);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync("https://api.openai.com/v1/chat/completions", content);
-                
+                var response = await _httpClient.PostAsync(baseUrl, content);
+
+                var responseText = await response.Content.ReadAsStringAsync();
+
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogError($"OpenAI API error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                    return "I'm sorry, I'm having trouble processing your request right now. Please try again later.";
+                    _logger.LogError("Hugging Face API error {Status}: {Body}", response.StatusCode, responseText);
+                    return "I'm sorry, I'm having trouble processing your request right now.";
                 }
 
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var openAiResponse = JsonSerializer.Deserialize<OpenAiResponse>(responseJson);
+                var json = JsonDocument.Parse(responseText);
+                var reply = json.RootElement
+                                .GetProperty("choices")[0]
+                                .GetProperty("message")
+                                .GetProperty("content")
+                                .GetString();
 
-                return openAiResponse?.choices?.FirstOrDefault()?.message?.content ?? 
-                       "I'm sorry, I couldn't generate a response. Please try again.";
+                return reply?.Trim() ?? "No response generated.";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error generating AI response");
-                return "I'm experiencing technical difficulties. Please try again later.";
+                _logger.LogError(ex, "Error using Hugging Face Chat API");
+                return "Internal error while talking to the AI model.";
             }
         }
+
+
+
+        //public async Task<string> GenerateResponseAsync(string userMessage, List<ChatMessageDto> conversationHistory, string? userContext = null)
+        //{
+        //    try
+        //    {
+        //        var apiKey = _configuration["HuggingFace:ApiKey"];
+        //        var model = _configuration["HuggingFace:Model"];
+
+        //        _httpClient.DefaultRequestHeaders.Clear();
+        //        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+        //        var inputPrompt = new StringBuilder();
+
+        //        inputPrompt.AppendLine(GetSystemPrompt(userContext));
+        //        inputPrompt.AppendLine();
+
+        //        // Add chat history
+        //        foreach (var msg in conversationHistory.TakeLast(10))
+        //        {
+        //            inputPrompt.AppendLine($"{msg.Role}: {msg.Content}");
+        //        }
+
+        //        inputPrompt.AppendLine($"User: {userMessage}");
+        //        inputPrompt.AppendLine("Assistant:");
+
+        //        var body = JsonSerializer.Serialize(new { inputs = inputPrompt.ToString() });
+        //        var content = new StringContent(body, Encoding.UTF8, "application/json");
+
+        //        var response = await _httpClient.PostAsync($"https://api-inference.huggingface.co/models/{model}", content);
+
+        //        if (!response.IsSuccessStatusCode)
+        //        {
+        //            _logger.LogError("Hugging Face error: {0} - {1}", response.StatusCode, await response.Content.ReadAsStringAsync());
+        //            return "I'm sorry, I'm having trouble processing your request right now.";
+        //        }
+
+        //        var responseText = await response.Content.ReadAsStringAsync();
+
+        //        using var doc = JsonDocument.Parse(responseText);
+        //        var result = doc.RootElement[0].GetProperty("generated_text").GetString();
+
+        //        // Extract response after "Assistant:" if needed
+        //        var reply = result?.Split("Assistant:").LastOrDefault()?.Trim();
+        //        return string.IsNullOrEmpty(reply) ? "No response generated." : reply;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error using Hugging Face API");
+        //        return "Internal error while talking to the AI model.";
+        //    }
+        //}
+
+
+        //public async Task<string> GenerateResponseAsync(string userMessage, List<ChatMessageDto> conversationHistory, string? userContext = null)
+        //{
+        //    try
+        //    {
+        //        var apiKey = _configuration["OpenAI:ApiKey"];
+        //        var model = _configuration["OpenAI:Model"] ?? "gpt-3.5-turbo";
+
+        //        _httpClient.DefaultRequestHeaders.Clear();
+        //        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+        //        var messages = new List<object>
+        //        {
+        //            new
+        //            {
+        //                role = "system",
+        //                content = GetSystemPrompt(userContext)
+        //            }
+        //        };
+
+        //        // Add conversation history (last 10 messages)
+        //        foreach (var msg in conversationHistory.TakeLast(10))
+        //        {
+        //            messages.Add(new
+        //            {
+        //                role = msg.Role.ToLower(),
+        //                content = msg.Content
+        //            });
+        //        }
+
+        //        // Add current user message
+        //        messages.Add(new
+        //        {
+        //            role = "user",
+        //            content = userMessage
+        //        });
+
+        //        var requestBody = new
+        //        {
+        //            model = model,
+        //            messages = messages,
+        //            max_tokens = 500,
+        //            temperature = 0.7
+        //        };
+
+        //        var json = JsonSerializer.Serialize(requestBody);
+        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //        //var response = await _httpClient.PostAsync("https://api.openai.com/v1/chat/completions", content);
+        //        var response = await _httpClient.PostAsync(
+        //            "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct",
+        //            content);
+
+        //        if (!response.IsSuccessStatusCode)
+        //        {
+        //            _logger.LogError($"OpenAI API error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+        //            return "I'm sorry, I'm having trouble processing your request right now. Please try again later.";
+        //        }
+
+        //        var responseJson = await response.Content.ReadAsStringAsync();
+        //        var openAiResponse = JsonSerializer.Deserialize<OpenAiResponse>(responseJson);
+
+        //        return openAiResponse?.choices?.FirstOrDefault()?.message?.content ?? 
+        //               "I'm sorry, I couldn't generate a response. Please try again.";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error generating AI response");
+        //        return "I'm experiencing technical difficulties. Please try again later.";
+        //    }
+        //}
 
         public async Task<List<MovieRecommendation>> GenerateMovieRecommendationsAsync(string userId, string userMessage)
         {
