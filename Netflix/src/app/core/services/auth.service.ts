@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment'; 
+import { environment } from '../../../environments/environment';
 import { tap } from 'rxjs/operators';
 
 export interface User {
@@ -11,6 +11,8 @@ export interface User {
   fullName?: string;
   plan?: string;
   isEmailVerified?: boolean;
+  // Add role if you want to support Role-Based UI logic
+  role?: string;
 }
 
 @Injectable({
@@ -23,7 +25,7 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private apiUrl = environment.apiUrl; 
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkAuthStatus();
@@ -53,17 +55,17 @@ export class AuthService {
   }
 
   signup(fullName: string, email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/register`, { 
-      fullName, 
-      email, 
-      password 
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, {
+      fullName,
+      email,
+      password
     });
   }
 
   verifyOtp(email: string, otpCode: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/verify-otp`, { 
-      email, 
-      otpCode 
+    return this.http.post<any>(`${this.apiUrl}/auth/verify-otp`, {
+      email,
+      otpCode
     }).pipe(
       tap(response => {
         if (response.token && response.user) {

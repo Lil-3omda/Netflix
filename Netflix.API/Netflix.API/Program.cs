@@ -16,6 +16,10 @@ using System.Text;
 using Netflix.API.Repositories.FeedBack_rating_review_;
 using Netflix.API.Repositories.SubscriptionsRepository;
 using Netflix.API.Repositories.WatchHistoryRepository;
+using Netflix.API.Repositories.ConversationRepository;
+using Netflix.API.Repositories.MessageRepository;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Security.Claims;
 
 namespace Netflix.API
 {
@@ -41,6 +45,12 @@ namespace Netflix.API
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<IWatchingHistoryRepository, WatchingHistoryRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+            builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+            builder.Services.AddScoped<ICommunicationService, CommunicationService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IAiService, AiService>();
+            builder.Services.AddHttpClient<AiService>();
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -70,7 +80,9 @@ namespace Netflix.API
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    RoleClaimType = ClaimTypes.Role
+
                 };
             });
 
@@ -84,6 +96,19 @@ namespace Netflix.API
                           .AllowCredentials();
                 });
             });
+
+            // Add rate limiting for AI endpoints
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.AddFixedWindowLimiter("ChatPolicy", opt =>
+                {
+                    opt.PermitLimit = 10;
+                    opt.Window = TimeSpan.FromMinutes(1);
+                    opt.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+                    opt.QueueLimit = 5;
+                });
+            });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             var app = builder.Build();
@@ -98,6 +123,7 @@ namespace Netflix.API
             app.UseCors("AllowAngularApp");
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRateLimiter();
 
 
             app.MapControllers();

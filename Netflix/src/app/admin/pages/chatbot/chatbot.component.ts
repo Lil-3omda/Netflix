@@ -5,7 +5,7 @@ import { AdminService } from '../../services/admin.service';
 import { ChatMessage, Conversation } from '../../models/admin.interfaces';
 
 @Component({
-  selector: 'app-chatbot',
+  selector: 'app-chatbotAdmin',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -97,21 +97,21 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
           <div class="p-6 border-b border-gray-700">
             <h3 class="text-xl font-semibold text-white mb-4">Recent Conversations</h3>
             <div class="flex space-x-2">
-              <button 
+              <button
                 [class.bg-red-600]="selectedFilter === 'all'"
                 [class.bg-gray-700]="selectedFilter !== 'all'"
                 (click)="selectedFilter = 'all'"
                 class="px-3 py-1 text-white rounded-lg text-sm font-medium transition-all duration-300">
                 All
               </button>
-              <button 
+              <button
                 [class.bg-red-600]="selectedFilter === 'pending'"
                 [class.bg-gray-700]="selectedFilter !== 'pending'"
                 (click)="selectedFilter = 'pending'"
                 class="px-3 py-1 text-white rounded-lg text-sm font-medium transition-all duration-300">
                 Pending
               </button>
-              <button 
+              <button
                 [class.bg-red-600]="selectedFilter === 'high'"
                 [class.bg-gray-700]="selectedFilter !== 'high'"
                 (click)="selectedFilter = 'high'"
@@ -120,9 +120,9 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
               </button>
             </div>
           </div>
-          
+
           <div class="max-h-96 overflow-y-auto">
-            <div 
+            <div
               *ngFor="let conversation of filteredConversations; trackBy: trackByConversation"
               class="p-4 border-b border-gray-700 hover:bg-gray-800 hover:bg-opacity-50 cursor-pointer transition-all duration-300"
               [class.bg-gray-800]="selectedConversation?.id === conversation.id"
@@ -132,7 +132,7 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
                 <div class="flex-1">
                   <div class="flex items-center space-x-2 mb-1">
                     <h4 class="font-medium text-white text-sm">{{ conversation.user }}</h4>
-                    <span 
+                    <span
                       class="px-2 py-1 rounded-full text-xs font-medium"
                       [ngClass]="{
                         'bg-red-100 text-red-800': conversation.priority === 'high',
@@ -146,7 +146,7 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
                   <p class="text-gray-300 text-sm line-clamp-2">{{ conversation.lastMessage }}</p>
                 </div>
                 <div class="text-right ml-2">
-                  <span 
+                  <span
                     class="px-2 py-1 rounded-full text-xs font-medium"
                     [ngClass]="{
                       'bg-blue-100 text-blue-800': conversation.status === 'unread',
@@ -187,12 +187,12 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
             <!-- Messages -->
             <div class="flex-1 p-6 overflow-y-auto">
               <div class="space-y-4">
-                <div 
+                <div
                   *ngFor="let message of messages; trackBy: trackByMessage"
                   class="flex"
                   [class.justify-end]="message.type === 'user'"
                   [class.justify-start]="message.type === 'bot'">
-                  <div 
+                  <div
                     class="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl"
                     [ngClass]="{
                       'bg-red-600 text-white': message.type === 'user',
@@ -214,17 +214,17 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
                   (keyup.enter)="sendMessage()"
                   placeholder="Type your response..."
                   class="flex-1 px-4 py-3 bg-gray-900 bg-opacity-50 text-white rounded-xl border border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-500 focus:ring-opacity-20 transition-all duration-300">
-                <button 
+                <button
                   (click)="sendMessage()"
                   [disabled]="!newMessage.trim()"
                   class="px-6 py-3 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-white font-medium transition-all duration-300">
                   Send
                 </button>
               </div>
-              
+
               <!-- Quick Responses -->
               <div class="flex flex-wrap gap-2 mt-4">
-                <button 
+                <button
                   *ngFor="let response of quickResponses"
                   (click)="sendQuickResponse(response)"
                   class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg text-sm transition-all duration-300">
@@ -254,33 +254,33 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
     .netflix-page {
       animation: fadeInUp 0.8s ease-out;
     }
-    
+
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     .netflix-title {
       text-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
     }
-    
+
     .netflix-card {
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       transition: all 0.5s ease;
     }
-    
+
     .netflix-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 20px 40px rgba(220, 38, 38, 0.2);
     }
-    
+
     .netflix-btn {
       position: relative;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
     }
-    
+
     .netflix-btn::before {
       content: '';
       position: absolute;
@@ -291,32 +291,32 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
       transition: left 0.5s ease;
     }
-    
+
     .netflix-btn:hover::before {
       left: 100%;
     }
-    
+
     .line-clamp-2 {
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    
+
     /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
-    
+
     ::-webkit-scrollbar-track {
       background: #1a1a1a;
     }
-    
+
     ::-webkit-scrollbar-thumb {
       background: #dc2626;
       border-radius: 4px;
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
       background: #b91c1c;
     }
@@ -331,10 +331,10 @@ export class ChatbotComponent implements OnInit {
   selectedFilter = 'all';
   selectedConversation: Conversation | null = null;
   newMessage = '';
-  
+
   conversations: Conversation[] = [];
   messages: ChatMessage[] = [];
-  
+
   quickResponses = [
     'Thank you for contacting Netflix support',
     'I understand your concern',
@@ -382,10 +382,10 @@ export class ChatbotComponent implements OnInit {
         content: this.newMessage.trim(),
         timestamp: new Date().toISOString()
       };
-      
+
       this.messages.push(message);
       this.newMessage = '';
-      
+
       // Update conversation's last message
       this.selectedConversation.lastMessage = message.content;
       this.selectedConversation.timestamp = message.timestamp;
@@ -409,7 +409,7 @@ export class ChatbotComponent implements OnInit {
     const date = new Date(timestamp);
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;

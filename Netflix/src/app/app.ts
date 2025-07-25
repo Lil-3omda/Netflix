@@ -1,37 +1,31 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Navbar } from './layout/navbar/navbar';
-import { Home } from './features/videos/home/home';
-import { MovieSliderSectionComponent } from './shared/movie-slider/movie-slider';
-import { SignupComponent } from "./features/auth/signup/signup";
- import { Login } from "./features/auth/login/login";
-import { NetflixModel } from './components/netflix-model/netflix-model';
-import { NetflixCenter } from './pages/netflix-center/netflix-center';
-import { NetflixCategoryFilter } from './shared/netflix-category-filter/netflix-category-filter';
-import { ContentGrid } from './components/content-grid/content-grid';
-import { NewsSection } from './components/news-section/news-section';
-import { NetflixCenterBanar } from './components/netflix-center-banar/netflix-center-banar';
-import { Footer } from './pages/netflix-center/footer/footer';
-import { CustomerServiceCenter } from './pages/customer-service-center/customer-service-center';
-import { NetflixTerms } from './pages/customer-service-center/netflix-terms/netflix-terms';
-import { TermFooter } from './pages/customer-service-center/term-footer/term-footer';
-import { NetflixContact } from './pages/netflix-contact/netflix-contact';
+import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
+
+import { AiChatbotComponent } from './features/communication/components/ai-chatbot/ai-chatbot.component';
 
 @Component({
   selector: 'app-root',
-//     template: `
-//     <div class="container-fluid">
-//       <button class="btn btn-primary m-3" (click)="showModal = true">Open Netflix Modal</button>
-//       <app-netflix-modal
-//         [isVisible]="showModal"
-//         (closeModal)="showModal = false">
-//       </app-netflix-modal>
-//     </div>
-//   `,
-  imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel,NetflixCenter,NetflixCategoryFilter,ContentGrid,NewsSection,NetflixCenterBanar,Footer,CustomerServiceCenter,NetflixTerms,TermFooter,NetflixContact],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    AiChatbotComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'Netflix';
+  title = 'Netflix';
+  hideChatbot = false;
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      const url = event.urlAfterRedirects;
+      this.hideChatbot = ['/admin', '/login', '/signup'].some(path => url.startsWith(path));
+    });
+  }
 }

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
+
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Main (Customer) Routes
   {
     path: '',
     loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
@@ -16,8 +16,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent)
   },
   {
-    path: 'home',
+    path: 'Home',
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
+  },
+  {
+    path: 'Profile',
+    loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
   },
   {
     path: 'only-on-netflix',
@@ -46,10 +50,8 @@ export const routes: Routes = [
   {
     path: 'browse',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
-
-  // Admin Routes
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
@@ -80,8 +82,12 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/pages/chatbot/chatbot.component').then(m => m.ChatbotComponent)
       },
       {
+        path: 'chatbot1',
+        loadComponent: () => import('./features/communication/components/chatbot/chatbot.component').then(m => m.ChatbotComponent)
+      },
+      {
         path: 'communications',
-        loadComponent: () => import('./admin/pages/communications/communications.component').then(m => m.CommunicationsComponent)
+        loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent)
       },
       {
         path: 'settings',
@@ -89,8 +95,15 @@ export const routes: Routes = [
       }
     ]
   },
-
-  // Fallback
+  {
+    path: 'support',
+    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent)
+  },
+  {
+    path: 'admin/chat',
+    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
+    // canActivate: [AuthGuard]
+  },
   {
     path: '**',
     redirectTo: ''
