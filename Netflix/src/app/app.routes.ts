@@ -5,6 +5,7 @@ import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
 import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
 import { HomePage } from './features/admin/pages/home-page/home-page';
 import { AdminMovies } from './features/admin/pages/admin-movies/admin-movies';
+import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movie';
 
 export const routes: Routes = [
   {
@@ -125,6 +126,10 @@ export const routes: Routes = [
       {
         path: 'Movies',
         component:AdminMovies
+      },
+      {
+        path: 'movies/add',
+        component:AddMovie
       }
 
     ]
