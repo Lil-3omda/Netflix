@@ -21,16 +21,18 @@ export class ProfilesService {
     return this.http.get<IProfile[]>(this.apiUrl);
   }
 
-  getProfilesByUserId(userId: number): Observable<IProfile[]> {
-    return this.http.get<IProfile[]>(`${this.apiUrl}/profile/${userId}`);
-  }
 
   getProfileById(id: number): Observable<IProfile> {
     return this.http.get<IProfile>(`${this.apiUrl}/id?id=${id}`);
   }
 
-  createProfile(profile: { name: string; userId: number }): Observable<IProfile> {
-    return this.http.post<IProfile>(this.apiUrl, profile);
+
+  getProfilesByUserId(userId: string): Observable<IProfile[]> {
+    return this.http.get<IProfile[]>(`${this.apiUrl}/profile/${userId}`);
+  }
+
+  createProfile(profile: { name: string; userId: string }): Observable<IProfile> {
+      return this.http.post<IProfile>(`${this.apiUrl}/profile`, profile);
   }
 
   updateProfile(id: number, profile: { name: string; userId: number }): Observable<IProfile> {

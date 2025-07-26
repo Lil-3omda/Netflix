@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Netflix.API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MOAZ : Migration
+    public partial class chatbot : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -190,6 +190,60 @@ namespace Netflix.API.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatConversations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastMessageAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatConversations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatConversations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastMessageAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    AssignedAdminId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CustomerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Priority = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Conversations_AspNetUsers_AssignedAdminId",
+                        column: x => x.AssignedAdminId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Conversations_AspNetUsers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Profiles",
                 columns: table => new
                 {
@@ -217,8 +271,12 @@ namespace Netflix.API.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TrailerUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ViewCount = table.Column<int>(type: "int", nullable: false),
+                    TotalView = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     UploadedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -266,6 +324,67 @@ namespace Netflix.API.Data.Migrations
                         principalTable: "SubscriptionPlans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConversationId = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TokenCount = table.Column<int>(type: "int", nullable: true),
+                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_ChatConversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "ChatConversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReadAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ConversationId = table.Column<int>(type: "int", nullable: false),
+                    AttachmentUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachmentType = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -444,6 +563,26 @@ namespace Netflix.API.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatConversations_UserId",
+                table: "ChatConversations",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_ConversationId",
+                table: "ChatMessages",
+                column: "ConversationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Conversations_AssignedAdminId",
+                table: "Conversations",
+                column: "AssignedAdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Conversations_CustomerId",
+                table: "Conversations",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Favorites_ProfileId",
                 table: "Favorites",
                 column: "ProfileId");
@@ -452,6 +591,21 @@ namespace Netflix.API.Data.Migrations
                 name: "IX_Favorites_VideoId",
                 table: "Favorites",
                 column: "VideoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ConversationId",
+                table: "Messages",
+                column: "ConversationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ReceiverId",
+                table: "Messages",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_SenderId",
+                table: "Messages",
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
@@ -538,7 +692,13 @@ namespace Netflix.API.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ChatMessages");
+
+            migrationBuilder.DropTable(
                 name: "Favorites");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Ratings");
@@ -557,6 +717,12 @@ namespace Netflix.API.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ChatConversations");
+
+            migrationBuilder.DropTable(
+                name: "Conversations");
 
             migrationBuilder.DropTable(
                 name: "SubscriptionPlans");

@@ -10,7 +10,6 @@ namespace Netflix.API.Data
             : base(options) { }
 
         // DbSets
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Video> Videos { get; set; }
@@ -21,6 +20,9 @@ namespace Netflix.API.Data
         public DbSet<WatchHistory> WatchHistories { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        public DbSet<ChatConversation> ChatConversations { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
 
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
@@ -156,6 +158,19 @@ namespace Netflix.API.Data
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            // ChatConversation - User
+            builder.Entity<ChatConversation>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ChatMessage - Conversation
+            builder.Entity<ChatMessage>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
             
         }
     }

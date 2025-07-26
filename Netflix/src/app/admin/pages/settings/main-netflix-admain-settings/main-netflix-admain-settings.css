@@ -1,0 +1,103 @@
+/* Main Background */
+.netflix-admin-bg {
+  background-color: #000;
+}
+
+/* Header Styles */
+.netflix-header {
+  background: linear-gradient(90deg, #dc2626, #b91c1c);
+  color: white;
+  padding: 2rem;
+}
+
+.header-icon {
+  font-size: 2rem;
+}
+
+/* Form Controls Focus States */
+.form-control:focus,
+.form-select:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25) !important;
+}
+
+/* Form Check Input Styles */
+.form-check-input:checked {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+/* Button Transitions */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Navigation Button Styles */
+.nav-btn {
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Hover Effects */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.main-content-card:hover {
+  transform: none;
+}
+
+/* Save Button Styles */
+.save-btn {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .netflix-header {
+    padding: 1rem;
+  }
+
+  .header-icon {
+    font-size: 1.5rem;
+  }
+
+  .display-5 {
+    font-size: 1.75rem;
+  }
+}

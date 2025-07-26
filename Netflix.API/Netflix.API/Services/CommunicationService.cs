@@ -7,6 +7,9 @@ using Netflix.API.Models;
 using Netflix.API.Repositories.ConversationRepository;
 using Netflix.API.Repositories.MessageRepository;
 using Netflix.API.Services.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Netflix.API.Services
 {
@@ -29,7 +32,31 @@ namespace Netflix.API.Services
             _mapper = mapper;
         }
 
-        public async Task<ConversationDto> CreateConversationAsync(string customerId, CreateConversationDto dto)
+        private async Task<string?> GetLeastBusyAdminIdAsync()
+        {
+                
+                var query = await _context.Users
+                    .Where(u => u.IsAdmin) 
+                    .Select(u => new
+                    {
+                        u.Id,
+                        OpenCount = _context.Conversations.Count(c =>
+                            c.AssignedAdminId == u.Id &&
+                           (c.Status == ConversationStatus.Open || c.Status == ConversationStatus.InProgress)),
+                        LastAssignedAt = _context.Conversations
+                            .Where(c => c.AssignedAdminId == u.Id)
+                            .Max(c => (DateTime?)c.CreatedAt) 
+                    })
+                    .OrderBy(x => x.OpenCount)                                   
+                    .ThenBy(x => x.LastAssignedAt ?? DateTime.MinValue)          
+                    .ThenBy(x => x.Id)                                          
+                    .FirstOrDefaultAsync();
+
+                return query?.Id;
+        }
+
+
+    public async Task<ConversationDto> CreateConversationAsync(string customerId, CreateConversationDto dto)
         {
             var customer = await _context.Users.FindAsync(customerId);
             if (customer == null)
@@ -41,6 +68,7 @@ namespace Netflix.API.Services
                 CustomerId = customerId,
                 CustomerEmail = customer.Email,
                 CustomerName = customer.FullName,
+                AssignedAdminId = await GetLeastBusyAdminIdAsync(),
                 Priority = dto.Priority,
                 Status = ConversationStatus.Open
             };
@@ -103,16 +131,29 @@ namespace Netflix.API.Services
 
         public async Task<bool> AssignConversationToAdminAsync(int conversationId, string adminId)
         {
-            try
-            {
-                await _conversationRepository.AssignToAdminAsync(conversationId, adminId);
-                return true;
-            }
-            catch
-            {
+            var conversation = await _context.Conversations.FindAsync(conversationId);
+            if (conversation == null)
                 return false;
+
+            conversation.AssignedAdminId = adminId;
+
+            var messages = await _context.Messages
+                .Where(m => m.ConversationId == conversationId && m.ReceiverId == null)
+                .ToListAsync();
+
+            foreach (var msg in messages)
+            {
+                if (msg.Type == MessageType.CustomerToAdmin)
+                {
+                    msg.ReceiverId = adminId;
+                }
             }
+
+            _context.Conversations.Update(conversation);
+            await _context.SaveChangesAsync();
+            return true;
         }
+
 
         public async Task<bool> UpdateConversationStatusAsync(int conversationId, string status)
         {
@@ -144,10 +185,14 @@ namespace Netflix.API.Services
                 conversation = await _context.Conversations.FindAsync(dto.ConversationId.Value);
                 if (conversation == null)
                     throw new ArgumentException("Conversation not found");
+                if (sender.IsAdmin && string.IsNullOrEmpty(conversation.AssignedAdminId))
+                {
+                    conversation.AssignedAdminId = senderId;
+                    _context.Conversations.Update(conversation);
+                }
             }
             else
             {
-                // Create new conversation
                 conversation = new Conversation
                 {
                     Subject = dto.Subject ?? "New Support Request",
@@ -161,9 +206,38 @@ namespace Netflix.API.Services
                 await _context.SaveChangesAsync();
             }
 
-            var messageType = sender.IsAdmin ? MessageType.AdminToCustomer : MessageType.CustomerToAdmin;
-            var receiverId = sender.IsAdmin ? conversation.CustomerId : conversation.AssignedAdminId;
+            string receiverId;
+            MessageType messageType;
 
+            if (sender.IsAdmin)
+            {
+                messageType = MessageType.AdminToCustomer;
+
+                if (string.IsNullOrEmpty(conversation.AssignedAdminId))
+                {
+                    conversation.AssignedAdminId = senderId;
+                    _context.Conversations.Update(conversation);
+                }
+
+                receiverId = conversation.CustomerId;
+            }
+            else
+            {
+                messageType = MessageType.CustomerToAdmin;
+
+                // Auto-assign an available admin if not yet assigned
+                if (string.IsNullOrEmpty(conversation.AssignedAdminId))
+                {
+                    var admin = await _context.Users.FirstOrDefaultAsync(u => u.IsAdmin);
+                    if (admin != null)
+                    {
+                        conversation.AssignedAdminId = admin.Id;
+                        _context.Conversations.Update(conversation);
+                    }
+                }
+
+                receiverId = conversation.AssignedAdminId;
+            }
             var message = new Message
             {
                 Content = dto.Content,
@@ -176,10 +250,10 @@ namespace Netflix.API.Services
             };
 
             await _messageRepository.AddAsync(message);
-            
-            // Update conversation last message time
             conversation.LastMessageAt = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
+
 
             return _mapper.Map<MessageDto>(message);
         }
