@@ -1,16 +1,12 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from './core/guards/auth.guard';
-import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
-import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
-import { HomePage } from './features/admin/pages/home-page/home-page';
-import { AdminMovies } from './features/admin/pages/admin-movies/admin-movies';
-import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movie';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
+    redirectTo: 'Home',
+    pathMatch: 'full'
   },
   {
     path: 'login',
@@ -24,6 +20,17 @@ export const routes: Routes = [
     path: 'Home',
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
+  {
+  path: 'category/:name',
+  loadComponent: () =>
+    import('./shared/category/category').then(m => m.Category)
+},
+{
+  path: 'moviedetails/:id',
+  loadComponent: () =>
+    import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis)
+},
+
   {
     path: 'only-on-netflix',
     loadComponent: () => import('./features/Footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
@@ -83,60 +90,14 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/pages/chatbot/chatbot.component').then(m => m.ChatbotComponent)
       },
       {
-        path: 'chatbot1',
-        loadComponent: () => import('./features/communication/components/chatbot/chatbot.component').then(m => m.ChatbotComponent)
-      },
-      {
-        path: 'support',
-        loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent)
+        path: 'communications',
+        loadComponent: () => import('./admin/pages/communications/communications.component').then(m => m.CommunicationsComponent)
       },
       {
         path: 'settings',
-        loadComponent: () => import('./admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings').then(m => m.MainNetflixAdmainSettings)
-      },
-
-    ]
-  },
-  {
-    path: 'support',
-    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent)
-  },
-  {
-    path: 'admin/chat',
-    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'AdminTest',
-    component: AdminLayout,
-    children: [
-      {
-        path: '',
-        redirectTo:'home',
-        pathMatch: 'full'
-      },
-      {
-        path: 'home',
-        component: HomePage,
-      },
-      {
-        path: 'Movies',
-        component:AdminMovies
-      },
-      {
-        path: 'movies/add',
-        component:AddMovie
+        loadComponent: () => import('./admin/pages/settings/settings.component').then(m => m.SettingsComponent)
       }
-
     ]
-  },
-  {
-    path: 'admin/movies',
-    loadComponent: () => import('./features/admin/pages/admin-movies/admin-movies').then(m => m.AdminMovies)
-  },
-  {
-    path: 'admin/Home-page',
-    loadComponent: () => import('./features/admin/pages/home-page/home-page').then(m => m.HomePage)
   },
   {
     path: 'support',
