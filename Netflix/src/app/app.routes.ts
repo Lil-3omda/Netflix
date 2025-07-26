@@ -5,7 +5,8 @@ import { AuthGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
+    redirectTo: 'Home',
+    pathMatch: 'full'
   },
   {
     path: 'login',
