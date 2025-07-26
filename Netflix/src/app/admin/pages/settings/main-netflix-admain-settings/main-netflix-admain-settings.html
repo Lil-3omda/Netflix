@@ -1,0 +1,94 @@
+
+<div class="min-vh-100 netflix-admin-bg">
+  <!-- Header -->
+  <div class="netflix-header">
+    <div class="container-fluid">
+      <h1 class="display-5 fw-bold d-flex align-items-center mb-2">
+        <i class="bi bi-gear-fill me-3 header-icon"></i>
+        Netflix Admin Settings
+      </h1>
+      <p class="lead mb-0 opacity-75">Manage your Netflix platform settings and configurations</p>
+    </div>
+  </div>
+
+  <div class="container-fluid p-4">
+    <div class="row g-4">
+      <!-- Sidebar -->
+      <div class="col-lg-3">
+        <div class="card bg-dark border-secondary">
+          <div class="card-body p-3">
+            <nav class="nav flex-column">
+              <button
+                *ngFor="let tab of tabs"
+                type="button"
+                (click)="activeTab = tab.id"
+                class="btn text-start d-flex align-items-center p-3 mb-2 rounded transition-all nav-btn"
+                [class.btn-danger]="activeTab === tab.id"
+                [class.btn-outline-secondary]="activeTab !== tab.id"
+                [class.text-white]="activeTab === tab.id"
+                [class.text-light]="activeTab !== tab.id">
+                <i [class]="'bi bi-' + tab.icon + ' me-3'"></i>
+                {{ tab.label }}
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9">
+        <div class="card bg-dark border-secondary main-content-card">
+          <div class="card-body p-4">
+            <!-- Dynamic Component Loading -->
+            <app-general-settings
+              *ngIf="activeTab === 'general'"
+              [settings]="settings"
+              (settingsChange)="updateSettings($event)">
+            </app-general-settings>
+
+            <app-user-management
+              *ngIf="activeTab === 'users'"
+              [settings]="settings"
+              (settingsChange)="updateSettings($event)">
+            </app-user-management>
+
+            <app-security-settings
+              *ngIf="activeTab === 'security'"
+              [settings]="settings"
+              (settingsChange)="updateSettings($event)">
+            </app-security-settings>
+
+            <app-content-management
+              *ngIf="activeTab === 'content'"
+              [settings]="settings"
+              (settingsChange)="updateSettings($event)">
+            </app-content-management>
+
+            <app-notification-settings
+              *ngIf="activeTab === 'notifications'"
+              [settings]="settings"
+              (settingsChange)="updateSettings($event)">
+            </app-notification-settings>
+
+            <app-system-settings
+              *ngIf="activeTab === 'system'"
+              [settings]="settings"
+              (settingsChange)="updateSettings($event)">
+            </app-system-settings>
+
+            <!-- Save Button -->
+            <div class="d-flex justify-content-end mt-4 pt-4 border-top border-secondary">
+              <button
+                type="button"
+                class="btn btn-danger d-flex align-items-center px-4 py-2 save-btn"
+                (click)="handleSave()">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                Save Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

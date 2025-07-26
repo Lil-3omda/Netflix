@@ -165,7 +165,8 @@ namespace Netflix.API.Controllers
                     id = user.Id,
                     email = user.Email,
                     fullName = user.FullName,
-                    isEmailVerified = user.IsEmailVerified
+                    isEmailVerified = user.IsEmailVerified,
+                    isAdmin = user.IsAdmin
                 }
             });
         }
