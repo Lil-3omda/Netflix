@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterLink } from '@angular/router';
+import { NavBar } from '../../shared/nav-bar/nav-bar';
 
 @Component({
   selector: 'app-admin-movies',
-  imports: [CommonModule, FormsModule, NgxPaginationModule, RouterLink],
+  imports: [CommonModule, FormsModule,NavBar  , NgxPaginationModule, RouterLink],
   templateUrl: './admin-movies.html',
   styleUrl: './admin-movies.css'
 })

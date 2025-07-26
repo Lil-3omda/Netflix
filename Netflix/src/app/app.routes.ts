@@ -10,7 +10,7 @@ import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movi
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
+    loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
     path: 'login',
