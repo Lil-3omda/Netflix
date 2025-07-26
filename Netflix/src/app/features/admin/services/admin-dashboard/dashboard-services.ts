@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DashboardServices {
-  
+
   constructor(private http: HttpClient) {}
   getDashboardData() {
     return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/statistics`);

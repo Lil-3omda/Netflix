@@ -1,24 +1,17 @@
 import { CommonModule } from '@angular/common';
-
-
-
-
-
-
 import { Component, ViewChild, ElementRef,OnInit } from '@angular/core';
 import { MovieSliderSectionComponent } from '../../../shared/movie-slider/movie-slider';
 import { NetflixModel } from '../../../components/netflix-model/netflix-model';
 import { FormsModule } from '@angular/forms';
 import { MovieCategory } from '../../../core/services/movie-category';
 import { Navbar } from "../../../layout/navbar/navbar";
+import { Category } from "../../../shared/category/category";
 
 @Component({
   selector: 'app-home',
   standalone: true,
 
-  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar],
-
-
+  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar, NetflixModel, Category],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -26,21 +19,21 @@ export class Home  {
 @ViewChild('slider', { static: false }) slider!: ElementRef;
 
 
-top10Movies: [] = [];
+top10Movies: any[] = [];
 
 
-// constructor(private movieService: MovieCategory) {}
+constructor(private movieService: MovieCategory) {}
 
-//   ngOnInit(): void {
-//     this.movieService.getTop10().subscribe({
-//       next: (data:any) => {
-//         this.top10Movies = data;
-//       },
-//       error: (err:any) => {
-//         console.error('Error fetching top 10:', err);
-//       }
-//     });
-//   }
+  ngOnInit(): void {
+    this.movieService.getTop10().subscribe({
+      next: (data:any) => {
+        this.top10Movies = data;
+      },
+      error: (err:any) => {
+        console.error('Error fetching top 10:', err);
+      }
+    });
+  }
 
 staticTop10 = [
   { title: 'The Witcher', image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRQZEW7hJu7MDS6QpqfDOX52yPfeIVz930VHO2307XNHCWopEm8x8q93bJUa8DhrfCQE60v2QKlBJ5Q0VTfmERLkHEA9bzbd_2THBW0U-Y' },
@@ -76,16 +69,16 @@ scrollRight() {
   }
 
 
-  // handleMovieClick(movie:any){
-  //   this.selectedMovie= movie;
-  //   console.log('movie clicked:',movie);
-  // }
+  handleMovieClick(movie:any){
+    this.selectedMovie= movie;
+    console.log('movie clicked:',movie);
+  }
 
 
-  closeMovieModal() {
-     console.log('modal close!');
-         this.isModalOpen = false;
-         this.selectedMovie= null;
+closeMovieModal() {
+    console.log('modal close!');
+    this.isModalOpen = false;
+    this.selectedMovie= null;
   }
     showModal = false;
     // this.isModalOpen = false;

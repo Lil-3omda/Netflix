@@ -47,7 +47,7 @@ namespace Netflix.API.Controllers
 
             if (!profiles.Any())
             {
-                return NotFound(new { message = $"No profiles found for user ID: {userId}" });
+                return NotFound(new { message = $"No profiles found for user ID: {userId} omda" });
             }
 
             return Ok(profiles);
@@ -69,7 +69,7 @@ namespace Netflix.API.Controllers
             // Get active subscription
             var activeSubscription = _context.UserSubscriptions
                 .Include(us => us.Plan)
-                .FirstOrDefault(us => us.UserId == ProDTO.UserId && us.IsActive);
+                .FirstOrDefault(us => us.UserId == ProDTO.UserId);
 
             if (activeSubscription == null)
             {

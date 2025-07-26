@@ -56,10 +56,12 @@ namespace Netflix.API.Controllers
         {
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
-            // If no adminId specified, use current user's ID
+
             var targetAdminId = adminId ?? currentUserId;
 
             var conversations = await _communicationService.GetAdminConversationsAsync(targetAdminId);
+            Console.WriteLine($"Found {conversations?.Count()} conversations for admin ID: {targetAdminId}");
+
             return Ok(conversations);
         }
 
