@@ -1,54 +1,48 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { MovieCategory } from '../../core/services/movie-category';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-movie-slider',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule , RouterLink],
   templateUrl: './movie-slider.html',
-  styleUrls: ['./movie-slider.css']
+  styleUrl: './movie-slider.css'
 })
-export class MovieSliderSectionComponent {
-  @Input() categoryName: string = '';
-  @Input() sectionTitle: string = '';
-  @Input() movies: any[] = [];
-
-  @Input() staticTop10: any[] = []; // ✅ Add this line
-
-  @Output() movieClicked = new EventEmitter<any>();
-
+export class MovieSliderSectionComponent implements OnInit {
   @ViewChild('slider', { static: false }) slider!: ElementRef;
 
-  selectedMovie: any = null;
+  @Input() title: string = '';
+  @Input() categoryName: string = '';
+  @Input() isTop10: boolean = false; // ✅ جديدة
 
-  constructor(private movieService: MovieCategory) {}
+  movies: any[] = [];
+
+  constructor(private movieService: MovieCategory, private http: HttpClient) {}
 
   ngOnInit(): void {
-    if (this.categoryName) {
-      this.movieService.getMoviesByCategory(this.categoryName).subscribe(data => {
-        this.movies = data.videos;
-      });
+    if (this.isTop10) {
+      // ✅ جلب التوب 10
+      this.http.get<any[]>('https://localhost:7140/api/Videos/TopViews?count=10')
+        .subscribe(data => {
+          this.movies = data;
+        });
+    } else if (this.categoryName) {
+      // ✅ جلب حسب الكاتيجوري
+      this.movieService.getMoviesByCategory(this.categoryName)
+        .subscribe(data => {
+          this.movies = data.videos;
+        });
     }
   }
 
-  onMovieClick(movie: any): void {
-    this.movieClicked.emit(movie);
-  }
-
-  testFunction(): void {
-    this.movieClicked.emit({ title: 'test movie', image: 'test.jpg' });
-  }
-
-  scrollLeft(): void {
+  scrollLeft() {
     this.slider.nativeElement.scrollBy({ left: -300, behavior: 'smooth' });
   }
 
-  scrollRight(): void {
+  scrollRight() {
     this.slider.nativeElement.scrollBy({ left: 300, behavior: 'smooth' });
-  }
-
-  closeModal(): void {
-    this.selectedMovie = null;
   }
 }

@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { Navbar } from './layout/navbar/navbar';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-root',
+
+  
   imports: [
-    RouterOutlet,
+    RouterOutlet,Navbar,RouterModule,
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   protected title = 'Netflix';

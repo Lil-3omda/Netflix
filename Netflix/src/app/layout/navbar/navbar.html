@@ -4,18 +4,17 @@
     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse gap-3" id="navbarNav">
-    <ul class="nav ">
-      
-  <li *ngFor="let cat of categories" class="nav-item">
+    <ul class="navbar-nav">
+      <li *ngFor="let cat of categories" class="nav-item">
+        <a [routerLink]="['/category', cat]" class="nav-link text-white">
+          {{ cat }}
+        </a>
+      </li>
+    </ul>
 
-    <a [routerLink]="['/category', cat]" class="nav-link text-white">
-      {{ cat }}
-    </a>
-  </li>
-</ul>
-
-    <div class="d-flex align-items-center gap-3" style="margin-left: auto; display: flex; gap: 1rem;">
+    <div class="d-flex align-items-center gap-3 ms-auto">
       <a href=""><i class="bi bi-search fs-5 text-white cursor-pointer"></i></a>
       <span class="text-white">Kids</span>
       <i class="bi bi-bell fs-5 text-white cursor-pointer"></i>
@@ -23,4 +22,3 @@
     </div>
   </div>
 </nav>
-
