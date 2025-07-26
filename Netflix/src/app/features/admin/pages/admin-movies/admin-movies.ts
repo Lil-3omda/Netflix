@@ -3,12 +3,12 @@ import { AdminService } from '../../../../admin/services/admin.service';
 import { DashboardServices } from '../../services/admin-dashboard/dashboard-services';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
-import { subscribeOn } from 'rxjs';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-movies',
-  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, RouterLink],
   templateUrl: './admin-movies.html',
   styleUrl: './admin-movies.css'
 })
