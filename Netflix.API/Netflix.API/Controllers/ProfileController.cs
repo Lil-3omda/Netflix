@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.Data;
@@ -53,20 +53,17 @@ namespace Netflix.API.Controllers
             return Ok(profiles);
         }
 
-        // POST: api/profile
         [HttpPost]
         public IActionResult CreateProfile([FromBody] CreateProfileDTO ProDTO)
         {
             if (ProDTO == null)
                 return BadRequest(new { message = "Profile data is required." });
 
-            // Check if the profile name already exists for this user
             if (_context.Profiles.Any(p => p.UserId == ProDTO.UserId && p.Name == ProDTO.Name))
             {
                 return BadRequest(new { message = "Profile with the same name already exists for this user." });
             }
 
-            // Get active subscription
             var activeSubscription = _context.UserSubscriptions
                 .Include(us => us.Plan)
                 .FirstOrDefault(us => us.UserId == ProDTO.UserId);
@@ -76,7 +73,6 @@ namespace Netflix.API.Controllers
                 return BadRequest(new { message = "No active subscription found for this user." });
             }
 
-            // Check how many profiles the user already has
             int currentProfileCount = _context.Profiles.Count(p => p.UserId == ProDTO.UserId);
 
             if (currentProfileCount >= activeSubscription.Plan.MaxProfiles)
@@ -95,6 +91,44 @@ namespace Netflix.API.Controllers
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(GetProfilesToUser), new { userId = ProDTO.UserId }, newProfile);
+        }
+
+        [HttpPost("create-default-profiles")]
+        public IActionResult CreateDefaultProfiles([FromBody] CreateDefaultProfilesDTO dto)
+        {
+            if (dto == null || string.IsNullOrEmpty(dto.UserId))
+                return BadRequest(new { message = "User ID is required." });
+
+            // Check if user already has profiles
+            if (_context.Profiles.Any(p => p.UserId == dto.UserId))
+            {
+                return BadRequest(new { message = "User already has profiles." });
+            }
+
+            // Get active subscription
+            var activeSubscription = _context.UserSubscriptions
+                .Include(us => us.Plan)
+                .FirstOrDefault(us => us.UserId == dto.UserId);
+
+            if (activeSubscription == null)
+            {
+                return BadRequest(new { message = "No active subscription found for this user." });
+            }
+
+            // Create default profiles
+            var defaultProfiles = new List<Models.Profile>
+            {
+                new Models.Profile { UserId = dto.UserId, Name = "Main Profile" },
+                new Models.Profile { UserId = dto.UserId, Name = "Kids" }
+            };
+
+            // Only add profiles up to the subscription limit
+            var profilesToAdd = defaultProfiles.Take(activeSubscription.Plan.MaxProfiles).ToList();
+
+            _context.Profiles.AddRange(profilesToAdd);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Default profiles created successfully.", profiles = profilesToAdd });
         }
 
 
