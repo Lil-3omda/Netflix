@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
+import { Navbar } from './layout/navbar/navbar';
+import { HttpClient } from '@angular/common/http';
+
+import { Router, NavigationEnd, RouterOutlet,RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
@@ -8,13 +11,12 @@ import { AiChatbotComponent } from './features/communication/components/ai-chatb
 @Component({
   selector: 'app-root',
   standalone: true,
+
   imports: [
-    CommonModule,
-    RouterOutlet,
-    AiChatbotComponent
+    RouterOutlet,Navbar,RouterModule,CommonModule,AiChatbotComponent
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   title = 'Netflix';
