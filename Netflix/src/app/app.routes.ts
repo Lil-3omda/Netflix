@@ -86,7 +86,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/communication/components/chatbot/chatbot.component').then(m => m.ChatbotComponent)
       },
       {
-        path: 'communications',
+        path: 'support',
         loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent)
       },
       {
@@ -94,6 +94,14 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/pages/settings/settings.component').then(m => m.SettingsComponent)
       }
     ]
+  },
+  {
+    path: 'admin/movies',
+    loadComponent: () => import('./features/admin/pages/admin-movies/admin-movies').then(m => m.AdminMovies)
+  },
+  {
+    path: 'admin/Home-page',
+    loadComponent: () => import('./features/admin/pages/home-page/home-page').then(m => m.HomePage)
   },
   {
     path: 'support',
