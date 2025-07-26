@@ -87,14 +87,18 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/pages/chatbot/chatbot.component').then(m => m.ChatbotComponent)
       },
       {
-        path: 'communications',
-        loadComponent: () => import('./admin/pages/communications/communications.component').then(m => m.CommunicationsComponent)
+        path: 'chatbot1',
+        loadComponent: () => import('./features/communication/components/chatbot/chatbot.component').then(m => m.ChatbotComponent)
+      },
+      {
+        path: 'support',
+        loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent)
       },
       {
         path: 'settings',
-        loadComponent: () => import('./admin/pages/settings/settings.component').then(m => m.SettingsComponent)
+        loadComponent: () => import('./admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings').then(m => m.MainNetflixAdmainSettings)
       },
-      
+
     ]
   },
   {
@@ -127,8 +131,25 @@ export const routes: Routes = [
         path: 'movies/add',
         component:AddMovie
       }
-      
+
     ]
+  },
+  {
+    path: 'admin/movies',
+    loadComponent: () => import('./features/admin/pages/admin-movies/admin-movies').then(m => m.AdminMovies)
+  },
+  {
+    path: 'admin/Home-page',
+    loadComponent: () => import('./features/admin/pages/home-page/home-page').then(m => m.HomePage)
+  },
+  {
+    path: 'support',
+    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent)
+  },
+  {
+    path: 'admin/chat',
+    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
+    // canActivate: [AuthGuard]
   },
   {
     path: '**',

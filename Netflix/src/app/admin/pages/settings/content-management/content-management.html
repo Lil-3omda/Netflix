@@ -1,0 +1,29 @@
+<div class="animate-fade-in">
+  <h3 class="text-white fw-bold mb-4">Content Management</h3>
+
+  <app-toggle-switch
+    label="Content Approval Required"
+    description="New content must be approved before publishing"
+    [checked]="settings.contentApproval"
+    (checkedChange)="updateSetting('contentApproval', $event)">
+  </app-toggle-switch>
+
+  <div class="card bg-secondary border-0 p-4 mb-4">
+    <h5 class="text-white fw-medium mb-3 d-flex align-items-center">
+      <i class="bi bi-upload me-2"></i>
+      Upload Settings
+    </h5>
+    <ul class="list-unstyled text-muted mb-0">
+      <li class="mb-1" *ngFor="let setting of uploadSettings">{{ setting }}</li>
+    </ul>
+  </div>
+
+  <div class="card bg-secondary border-0 p-4">
+    <h5 class="text-white fw-medium mb-3">Content Statistics</h5>
+    <div class="row g-3">
+      <div class="col-6" *ngFor="let stat of contentStats">
+        <div class="text-muted">{{ stat.label }}: <span class="text-white fw-bold">{{ stat.value }}</span></div>
+      </div>
+    </div>
+  </div>
+</div>

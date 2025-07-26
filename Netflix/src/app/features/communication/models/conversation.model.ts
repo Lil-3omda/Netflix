@@ -20,6 +20,7 @@ export interface Conversation {
   lastMessageAt?: string;
   customerName: string;
   customerEmail: string;
+  assignedAdminId?: string;
   assignedAdminName?: string;
   priority: string;
   unreadCount: number;

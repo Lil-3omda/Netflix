@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Netflix.API.DTOs;
 using Netflix.API.Models;
 using Netflix.API.Repositories.Interfaces;
 
@@ -16,21 +17,39 @@ namespace Netflix.API.Controllers
         }
 
         [HttpGet("Profile/{profileId}")]
-        public async Task<ActionResult<IEnumerable<WatchHistory>>> GetHistoryByProfile(int profileId)
+        public async Task<ActionResult<IEnumerable<WatchHistoryDTO>>> GetHistoryByProfile(int profileId)
         {
-            var history = await unitOfWork.WatchHistories.GetByProfileIdAsync(profileId);
-            return Ok(history);
+            var histories = await unitOfWork.WatchHistories.GetByProfileIdAsync(profileId);
+
+            var result = histories.Select(h => new WatchHistoryDTO
+            {
+                VideoId = h.VideoId,
+                Title = h.Video.Title,
+                WatchedAt = h.WatchedAt,
+                ThumbnailPath = h.Video.ImageUrl 
+            });
+
+            return Ok(result);
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> AddToHistory([FromBody] WatchHistory history)
+        public async Task<IActionResult> AddToHistory([FromBody] AddWatchHistoryDTO dto)
         {
-            if (history == null || history.ProfileId <= 0 || history.VideoId <= 0)
+            if (dto == null || dto.ProfileId <= 0 || dto.VideoId <= 0)
                 return BadRequest("Invalid watch history data.");
 
-            await unitOfWork.WatchHistories.AddAsync(history);
+            var watchHistory = new WatchHistory
+            {
+                ProfileId = dto.ProfileId,
+                VideoId = dto.VideoId,
+                WatchedAt = dto.WatchedAt
+            };
+
+            await unitOfWork.WatchHistories.AddAsync(watchHistory);
             await unitOfWork.CompleteAsync();
-            return Ok(history);
+
+            return Ok(new { message = "Watch history added successfully." });
         }
 
 

@@ -20,9 +20,9 @@ export class AdminMovies implements OnInit {
   categories: any[] = []; // Populate from API
   movies: any[] = [];     // Full list
   MoviesStatistics: any;
-  
+
   page: number = 1;
-  constructor(private dashboaedServices:DashboardServices){}
+  constructor(private dashboardServices: DashboardServices) {}
 
   ngOnInit(): void {
     this.loadMoviesStatistics();
@@ -31,7 +31,7 @@ export class AdminMovies implements OnInit {
   }
 
   loadMoviesStatistics(): void {
-    this.dashboaedServices.getMoviesStatistics().subscribe({
+    this.dashboardServices.getMoviesStatistics().subscribe({
       next: data=>{
         this.MoviesStatistics = data;
         console.log(this.MoviesStatistics);
@@ -44,7 +44,7 @@ export class AdminMovies implements OnInit {
   }
 
   loadMovies(): void {
-    this.dashboaedServices.getAllMovies().subscribe({
+    this.dashboardServices.getAllMovies().subscribe({
       next: data => {
         this.movies = data;
         this.filteredMovies = this.movies; // Initialize with all movies
@@ -57,9 +57,9 @@ export class AdminMovies implements OnInit {
       }
     })
   }
-  
+
   loadCategories(): void {
-    this.dashboaedServices.getCategoriesNames().subscribe({
+    this.dashboardServices.getCategoriesNames().subscribe({
       next: data => {
         this.categories = data;
         console.log(this.categories);
@@ -75,7 +75,7 @@ export class AdminMovies implements OnInit {
     console.log('Category changed:', this.selectedCategory);
     this.applyFilters();
     // Filter movies based on selected category
-    
+
   }
 
   onSearch(): void {
@@ -83,7 +83,7 @@ export class AdminMovies implements OnInit {
     this.applyFilters();
     // Filter movies based on search term
   }
-  
+
 applyFilters() {
   this.filteredMovies = this.movies.filter(movie =>
     (this.selectedCategory === '' || movie.categoryName === this.selectedCategory) &&
