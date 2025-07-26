@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from './core/guards/auth.guard';
+import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
+import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
+import { HomePage } from './features/admin/pages/home-page/home-page';
+import { AdminMovies } from './features/admin/pages/admin-movies/admin-movies';
 
 export const routes: Routes = [
   {
@@ -88,7 +92,8 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadComponent: () => import('./admin/pages/settings/settings.component').then(m => m.SettingsComponent)
-      }
+      },
+      
     ]
   },
   {
@@ -99,6 +104,26 @@ export const routes: Routes = [
     path: 'admin/chat',
     loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
     // canActivate: [AuthGuard]
+  },
+  {
+    path: 'AdminTest',
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        redirectTo:'home',
+        pathMatch: 'full'
+      },
+      {
+        path: 'home',
+        component: HomePage,
+      },
+      {
+        path: 'Movies',
+        component:AdminMovies
+      }
+      
+    ]
   },
   {
     path: '**',

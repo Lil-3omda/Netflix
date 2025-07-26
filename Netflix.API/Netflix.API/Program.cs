@@ -102,7 +102,7 @@ namespace Netflix.API
             app.UseCors("AllowAngularApp");
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
 

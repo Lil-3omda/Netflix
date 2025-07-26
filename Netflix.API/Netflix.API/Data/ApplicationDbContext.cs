@@ -10,7 +10,6 @@ namespace Netflix.API.Data
             : base(options) { }
 
         // DbSets
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Video> Videos { get; set; }
