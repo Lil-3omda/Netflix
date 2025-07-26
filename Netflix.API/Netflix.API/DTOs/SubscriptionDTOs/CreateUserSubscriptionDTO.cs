@@ -2,7 +2,7 @@
 {
     public class CreateUserSubscriptionDTO
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int PlanId { get; set; }
     }
 }

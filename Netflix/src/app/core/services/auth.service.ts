@@ -12,7 +12,7 @@ export interface User {
   plan?: string;
   isEmailVerified?: boolean;
   // Add role if you want to support Role-Based UI logic
-  role?: string;
+  isAdmin?: boolean;
 }
 
 @Injectable({

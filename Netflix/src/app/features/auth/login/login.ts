@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -438,7 +438,17 @@ export class Login {
   emailError: string = '';
   passwordError: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  // constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
+
+  ngOnInit() {
+    // Get email from query params if coming from landing page
+    this.route.queryParams.subscribe(params => {
+      if (params['email']) {
+        this.email = params['email'];
+      }
+    });
+  }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -465,7 +475,12 @@ export class Login {
       next: (response) => {
         this.isLoading = false;
         if (response.token && response.user) {
-          this.router.navigate(['/Profile']);
+          // Check if user is admin
+          if (response.user.isAdmin) {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/Profile']);
+          }
         } else {
           this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
         }
