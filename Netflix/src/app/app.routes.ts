@@ -85,7 +85,7 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        loadComponent: () => import('./admin/pages/settings/settings.component').then(m => m.SettingsComponent)
+        loadComponent: () => import('./admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings').then(m => m.MainNetflixAdmainSettings)
       }
     ]
   },

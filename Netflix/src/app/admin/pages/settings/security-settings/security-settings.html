@@ -1,0 +1,30 @@
+<div class="animate-fade-in">
+  <h3 class="text-white fw-bold mb-4">Security Settings</h3>
+
+  <app-toggle-switch
+    label="Two-Factor Authentication"
+    description="Require 2FA for admin accounts"
+    [checked]="settings.twoFactorAuth"
+    (checkedChange)="updateSetting('twoFactorAuth', $event)">
+  </app-toggle-switch>
+
+  <div class="card bg-secondary border-0 p-4 mb-4">
+    <h5 class="text-white fw-medium mb-3 d-flex align-items-center">
+      <i class="bi bi-lock-fill me-2"></i>
+      Password Policy
+    </h5>
+    <ul class="list-unstyled text-muted mb-0">
+      <li class="mb-1">• Minimum 8 characters</li>
+      <li class="mb-1">• At least one uppercase letter</li>
+      <li class="mb-1">• At least one number</li>
+      <li class="mb-1">• At least one special character</li>
+    </ul>
+  </div>
+
+  <div class="card bg-secondary border-0 p-4">
+    <h5 class="text-white fw-medium mb-3">Recent Security Events</h5>
+    <div class="small text-muted">
+      <div class="mb-2" *ngFor="let event of securityEvents">{{ event }}</div>
+    </div>
+  </div>
+</div>

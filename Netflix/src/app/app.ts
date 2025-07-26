@@ -16,6 +16,7 @@ import { CustomerServiceCenter } from './pages/customer-service-center/customer-
 import { NetflixTerms } from './pages/customer-service-center/netflix-terms/netflix-terms';
 import { TermFooter } from './pages/customer-service-center/term-footer/term-footer';
 import { NetflixContact } from './pages/netflix-contact/netflix-contact';
+import { MainNetflixAdmainSettings } from './admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ import { NetflixContact } from './pages/netflix-contact/netflix-contact';
 //       </app-netflix-modal>
 //     </div>
 //   `,
-  imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel,NetflixCenter,NetflixCategoryFilter,ContentGrid,NewsSection,NetflixCenterBanar,Footer,CustomerServiceCenter,NetflixTerms,TermFooter,NetflixContact],
+  imports: [RouterOutlet,Navbar,Home,MovieSliderSectionComponent,SignupComponent,Login,NetflixModel,NetflixCenter,NetflixCategoryFilter,ContentGrid,NewsSection,NetflixCenterBanar,Footer,CustomerServiceCenter,NetflixTerms,TermFooter,NetflixContact,MainNetflixAdmainSettings],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

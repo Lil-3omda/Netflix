@@ -1,0 +1,10 @@
+.custom-input,
+.custom-select {
+  border-color: #6c757d !important;
+}
+
+.custom-input:focus,
+.custom-select:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25) !important;
+}
