@@ -27,4 +27,10 @@
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\videos\" />
+  </ItemGroup>
+
 </Project>
