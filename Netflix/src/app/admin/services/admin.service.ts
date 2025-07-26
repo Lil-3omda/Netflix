@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AdminPageType, User, Content, StatCardData, AnalyticsData, ChatMessage, Conversation } from '../models/admin.interfaces';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +10,12 @@ import { AdminPageType, User, Content, StatCardData, AnalyticsData, ChatMessage,
 export class AdminService {
   private currentPageSubject = new BehaviorSubject<AdminPageType>('dashboard');
   private sidebarOpenSubject = new BehaviorSubject<boolean>(true);
+  private apiUrl = environment.apiUrl;
 
   currentPage$ = this.currentPageSubject.asObservable();
   sidebarOpen$ = this.sidebarOpenSubject.asObservable();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   setCurrentPage(page: AdminPageType): void {
     this.currentPageSubject.next(page);
@@ -26,7 +29,36 @@ export class AdminService {
     this.sidebarOpenSubject.next(open);
   }
 
-  // Mock data methods
+  // API methods
+  getUsers(page: number = 1, pageSize: number = 10, search: string = ''): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/users?page=${page}&pageSize=${pageSize}&search=${search}`);
+  }
+
+  getUserById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/users/${id}`);
+  }
+
+  updateUserStatus(id: string, status: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/users/${id}/status`, status);
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/admin/users/${id}`);
+  }
+
+  getContentStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/content/statistics`);
+  }
+
+  getAnalyticsOverview(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/analytics/overview`);
+  }
+
+  getConversationStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/conversations/stats`);
+  }
+
+  // Mock data methods (keep for fallback)
   getStats(): StatCardData[] {
     return [
       {
@@ -64,33 +96,33 @@ export class AdminService {
     ];
   }
 
-  getUsers(): User[] {
-    return [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@email.com',
-        subscription: 'Premium',
-        status: 'Active',
-        joinDate: '2023-01-15',
-        lastActive: '2024-01-20',
-        region: 'North America',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-      },
-      {
-        id: 2,
-        name: 'Jane Smith',
-        email: 'jane.smith@email.com',
-        subscription: 'Standard',
-        status: 'Active',
-        joinDate: '2023-03-22',
-        lastActive: '2024-01-19',
-        region: 'Europe',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b2e4a9ca?w=150'
-      },
-      // Add more mock users...
-    ];
-  }
+  // getUsers(): User[] {
+  //   return [
+  //     {
+  //       id: 1,
+  //       name: 'John Doe',
+  //       email: 'john.doe@email.com',
+  //       subscription: 'Premium',
+  //       status: 'Active',
+  //       joinDate: '2023-01-15',
+  //       lastActive: '2024-01-20',
+  //       region: 'North America',
+  //       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
+  //     },
+  //     {
+  //       id: 2,
+  //       name: 'Jane Smith',
+  //       email: 'jane.smith@email.com',
+  //       subscription: 'Standard',
+  //       status: 'Active',
+  //       joinDate: '2023-03-22',
+  //       lastActive: '2024-01-19',
+  //       region: 'Europe',
+  //       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b2e4a9ca?w=150'
+  //     },
+  //     // Add more mock users...
+  //   ];
+  // }
 
   getContent(): Content[] {
     return [
