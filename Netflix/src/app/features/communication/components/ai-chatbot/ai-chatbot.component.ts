@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -99,11 +100,17 @@ import { Subject, takeUntil } from 'rxjs';
                   </svg>
                   Account Help
                 </button>
-                  <button class="quick-action" (click)="sendQuickMessage(&quot;I'm having playback issues&quot;)">
+                <button class="quick-action" (click)="sendQuickMessage(&quot;I'm having playback issues&quot;)">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
                   </svg>
                   Playback Issues
+                </button>
+                <button class="quick-action" (click)="goToSupport()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                  </svg>
+                  Support Center
                 </button>
                 <button class="quick-action recommendation-btn" (click)="getRecommendations()">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -409,6 +416,12 @@ import { Subject, takeUntil } from 'rxjs';
       padding: 16px;
       overflow-y: auto;
       background: #141414;
+      .chatbot-messages {
+
+  min-height: 100px;
+  max-height: 400px;
+}
+
     }
 
     .chatbot-messages.with-conversations {
@@ -813,7 +826,8 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   constructor(
     private chatApiService: ChatApiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -960,7 +974,9 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.currentMessage = message;
     this.sendMessage();
   }
-
+  goToSupport() {
+    this.router.navigate(['/support']);
+  }
   async loadConversations() {
     if (!this.isAuthenticated) return;
 
