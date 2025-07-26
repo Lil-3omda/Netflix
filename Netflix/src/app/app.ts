@@ -1,20 +1,16 @@
 import { Component } from '@angular/core';
-import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { AiChatbotComponent } from './features/communication/components/ai-chatbot/ai-chatbot.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
-    CommonModule,
     RouterOutlet,
-    AiChatbotComponent
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   title = 'Netflix';

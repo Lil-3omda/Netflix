@@ -36,7 +36,7 @@ body {
 }
 
 /* Netflix Sans Font */
-@font-face {
+/* @font-face {
   font-family: 'Netflix Sans';
   font-weight: 300;
   font-display: optional;
@@ -55,7 +55,7 @@ body {
   font-weight: 700;
   font-display: optional;
   src: url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/NetflixSans-Bold.woff2) format("woff2"), url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/NetflixSans-Bold.woff) format("woff");
-}
+} */
 
 /* Scrollbar styles */
 ::-webkit-scrollbar {

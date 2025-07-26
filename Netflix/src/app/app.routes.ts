@@ -25,10 +25,6 @@ export const routes: Routes = [
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
-    path: 'Profile',
-    loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
-  },
-  {
     path: 'only-on-netflix',
     loadComponent: () => import('./features/Footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
   },
