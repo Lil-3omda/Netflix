@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Netflix.API.Data;
 using Netflix.API.Models;
 using Netflix.API.Repositories.FavoriteRepository;
@@ -8,6 +8,8 @@ using Netflix.API.Repositories.WatchProgressRepository;
 using Netflix.API.Repositories.FeedBack_rating_review_;
 using Netflix.API.Repositories.SubscriptionsRepository;
 using Netflix.API.Repositories.WatchHistoryRepository;
+using Netflix.API.Repositories.MessageRepository;
+using Netflix.API.Repositories.ConversationRepository;
 namespace Netflix.API.Repositories
 {
     public class UnitOfWork : IUnitOfWork
@@ -21,6 +23,8 @@ namespace Netflix.API.Repositories
         public IReviewRepository reviews { get; }
         public ISubscriptionRepository UserSubscriptions { get; private set; }
         public IWatchingHistoryRepository WatchHistories { get; private set; }
+        public IMessageRepository Messages { get; private set; }
+        public IConversationRepository Conversations { get; private set; }
 
         public UnitOfWork(
             ApplicationDbContext context,
@@ -30,7 +34,9 @@ namespace Netflix.API.Repositories
             IRatingRepository ratingRepo,
             IReviewRepository reviewRepo,
             ISubscriptionRepository subscriptionRepo,
-            IWatchingHistoryRepository watchHistoryRepo)
+            IWatchingHistoryRepository watchHistoryRepo,
+            IMessageRepository messageRepo,
+            IConversationRepository conversationRepo)
         {
             this.context = context;
             Videos = videoRepo;
@@ -40,6 +46,8 @@ namespace Netflix.API.Repositories
             reviews = reviewRepo;
             UserSubscriptions = subscriptionRepo;
             WatchHistories = watchHistoryRepo;
+            Messages = messageRepo;
+            Conversations = conversationRepo;
         }
 
 

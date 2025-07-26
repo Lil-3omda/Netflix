@@ -1,29 +1,48 @@
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IProfile, ProfilesService } from '../profiels';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-choose-profile',
-  imports: [FormsModule,CommonModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule],
   templateUrl: './choose-profile.html',
-  styleUrl: './choose-profile.css'
+  styleUrls: ['./choose-profile.css']  // use styleUrls, not styleUrl
 })
 export class ChooseProfile implements OnInit {
-  profiles:IProfile[] = [];
-  userId:number = Number(localStorage.getItem('userId')) || 0;
+  profiles: IProfile[] = [];
+  user: any = null;
+  userId: string = '';
   newprofileName: string = '';
   error: string = '';
 
-  constructor(private profilesService: ProfilesService, private router:Router ) {}
+  constructor(private profilesService: ProfilesService, private router: Router) {}
+
   ngOnInit(): void {
+    const stored = localStorage.getItem('netflix_user');
+    if (stored) {
+      try {
+        this.user = JSON.parse(stored);
+        this.userId = String(this.user.id ?? this.user.userId ?? '');
+      } catch (e) {
+        console.error('Invalid user JSON:', e);
+        this.userId = '';
+      }
+    }
+
+    if (!this.userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.loadProfiles();
   }
 
-  loadProfiles():void{
+  loadProfiles(): void {
     this.profilesService.getProfilesByUserId(this.userId).subscribe({
-      next:(res) =>{
+      next: (res) => {
         this.profiles = res;
       },
       error: (err) => {
@@ -35,11 +54,11 @@ export class ChooseProfile implements OnInit {
   }
 
   selectProfile(profileId: number): void {
-    localStorage.setItem('profileId',JSON.stringify(profileId));
-    this.router.navigate(['/home']);
-  };
+    localStorage.setItem('profileId', JSON.stringify(profileId));
+    this.router.navigate(['/Home']);
+  }
 
-  createProfile():void {
+  createProfile(): void {
     if (this.newprofileName.trim() === '') {
       this.error = 'Profile name cannot be empty.';
       return;
@@ -47,7 +66,7 @@ export class ChooseProfile implements OnInit {
 
     const newProfile = {
       name: this.newprofileName,
-      userId: this.userId
+      userId: this.userId   // now a string
     };
 
     this.profilesService.createProfile(newProfile).subscribe({
@@ -63,8 +82,4 @@ export class ChooseProfile implements OnInit {
       }
     });
   }
-
 }
-
-
-

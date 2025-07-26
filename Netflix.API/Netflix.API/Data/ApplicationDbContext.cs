@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.Models;
 
@@ -10,7 +10,6 @@ namespace Netflix.API.Data
             : base(options) { }
 
         // DbSets
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Video> Videos { get; set; }
@@ -19,6 +18,8 @@ namespace Netflix.API.Data
         public DbSet<Review>Reviews { get; set; }
         public DbSet<WatchProgress> WatchProgresses { get; set; }
         public DbSet<WatchHistory> WatchHistories { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
@@ -116,6 +117,44 @@ namespace Netflix.API.Data
                 .WithMany(v => v.WatchHistories)
                 .HasForeignKey(w => w.VideoId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Conversation - Customer
+            builder.Entity<Conversation>()
+                .HasOne(c => c.Customer)
+                .WithMany()
+                .HasForeignKey(c => c.CustomerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Conversation - AssignedAdmin
+            builder.Entity<Conversation>()
+                .HasOne(c => c.AssignedAdmin)
+                .WithMany()
+                .HasForeignKey(c => c.AssignedAdminId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Message - Conversation
+            builder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            // Message - Sender
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            // Message - Receiver
+            builder.Entity<Message>()
+                .HasOne(m => m.Receiver)
+                .WithMany()
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             
         }
     }
