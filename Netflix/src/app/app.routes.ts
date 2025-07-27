@@ -30,6 +30,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
+
   path: 'category/:name',
   loadComponent: () =>
     import('./shared/category/category').then(m => m.Category)
@@ -75,7 +76,6 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [AuthGuard],
     children: [
       {
         path: '',
