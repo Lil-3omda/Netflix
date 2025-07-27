@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
 import { HttpEventType } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-add-movie',
