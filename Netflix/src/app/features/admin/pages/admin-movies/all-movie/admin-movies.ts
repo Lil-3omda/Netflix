@@ -84,11 +84,14 @@ export class AdminMovies implements OnInit {
     // Filter movies based on search term
   }
 
-applyFilters() {
+  applyFilters() {
   this.filteredMovies = this.movies.filter(movie =>
     (this.selectedCategory === '' || movie.categoryName === this.selectedCategory) &&
     movie.title.toLowerCase().includes(this.searchTerm.toLowerCase())
   );
+  console.log('Filtered movies:', this.filteredMovies);
+  console.log('movies:', this.movies);
+ 
 }
 
 

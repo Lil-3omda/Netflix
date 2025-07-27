@@ -9,6 +9,7 @@ import { PublishedMovies  } from './features/admin/pages/admin-movies/published-
 import { DeletedMovies  } from './features/admin/pages/admin-movies/Archived-movies/DeletedMovies';
 import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movie';
 import { MoviesStatistics } from './features/admin/pages/admin-movies/movies-statistics/movies-statistics';
+import { MovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/movie-deatils';
 
 export const routes: Routes = [
   {
@@ -160,6 +161,10 @@ export const routes: Routes = [
             component: DeletedMovies,
           }
         ]
+      },
+      {
+        path:'movie/:id',
+        component: MovieDeatils
       },
       {
         path: 'movies/add',

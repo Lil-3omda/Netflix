@@ -44,6 +44,8 @@ export class DashboardServices {
     return this.http.post<any>('https://localhost:7140/api/AdminDashboard/upload',data)
   }
 
-  
+  getMovieById(id: number): Observable<any> {
+    return this.http.get<any>(`https://localhost:7140/api/videos/${id}`);
+  }
 
 }
