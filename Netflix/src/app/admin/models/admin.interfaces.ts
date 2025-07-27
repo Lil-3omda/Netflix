@@ -86,3 +86,23 @@ export interface AnalyticsData {
   content: ChartData;
   engagement: ChartData;
 }
+
+export type Stars = 1 | 2 | 3 | 4 | 5;
+
+
+export interface Review {
+  id: number;
+  profileName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  videoId: number;
+  videoTitle?: string;
+}
+
+
+export interface ReviewStatistics {
+  totalReviews: number;
+  averageRating: number;
+  ratingDistribution: Partial<Record<Stars, number>>;
+}

@@ -32,8 +32,6 @@ namespace Netflix.API.Services
             _mapper = mapper;
         }
 
-
-
         private async Task<string?> GetLeastBusyAdminIdAsync()
         {
                 
@@ -187,7 +185,6 @@ namespace Netflix.API.Services
                 conversation = await _context.Conversations.FindAsync(dto.ConversationId.Value);
                 if (conversation == null)
                     throw new ArgumentException("Conversation not found");
-
                 if (sender.IsAdmin && string.IsNullOrEmpty(conversation.AssignedAdminId))
                 {
                     conversation.AssignedAdminId = senderId;
@@ -241,8 +238,6 @@ namespace Netflix.API.Services
 
                 receiverId = conversation.AssignedAdminId;
             }
-
-
             var message = new Message
             {
                 Content = dto.Content,

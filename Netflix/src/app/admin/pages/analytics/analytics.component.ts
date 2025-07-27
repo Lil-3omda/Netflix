@@ -38,19 +38,19 @@ import { AdminService } from '../../services/admin.service';
 
       <!-- Key Metrics -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div 
+        <div
           *ngFor="let metric of keyMetrics; trackBy: trackByMetric"
           class="group relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl border border-gray-700 hover:border-netflix-red transition-all duration-500 hover:scale-105 cursor-pointer p-6">
-          
+
           <!-- Background Pattern -->
           <div class="absolute inset-0 opacity-5">
             <div class="absolute inset-0 bg-gradient-to-br from-netflix-red to-transparent"></div>
           </div>
-          
+
           <!-- Content -->
           <div class="relative z-10">
             <div class="flex items-center justify-between mb-4">
-              <div 
+              <div
                 class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
                 [ngClass]="metric.iconBg">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@ import { AdminService } from '../../services/admin.service';
                 </svg>
               </div>
               <div class="text-right">
-                <div 
+                <div
                   class="text-sm font-medium flex items-center"
                   [ngClass]="{
                     'text-green-400': metric.trend === 'up',
@@ -66,33 +66,33 @@ import { AdminService } from '../../services/admin.service';
                     'text-gray-400': metric.trend === 'neutral'
                   }">
                   {{ metric.change }}
-                  <svg 
+                  <svg
                     *ngIf="metric.trend === 'up'"
-                    class="w-4 h-4 ml-1" 
-                    fill="none" 
-                    stroke="currentColor" 
+                    class="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l10-10M17 7v10M17 7H7"></path>
                   </svg>
-                  <svg 
+                  <svg
                     *ngIf="metric.trend === 'down'"
-                    class="w-4 h-4 ml-1" 
-                    fill="none" 
-                    stroke="currentColor" 
+                    class="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17l-10-10M7 7v10M7 7h10"></path>
                   </svg>
                 </div>
               </div>
             </div>
-            
+
             <h3 class="text-gray-400 text-sm font-medium mb-2">{{ metric.title }}</h3>
             <p class="text-3xl font-bold text-white group-hover:text-netflix-red transition-colors duration-300">
               {{ metric.value }}
             </p>
             <p class="text-sm text-gray-500 mt-1">{{ metric.description }}</p>
           </div>
-          
+
           <!-- Hover Effect -->
           <div class="absolute inset-0 bg-gradient-to-r from-netflix-red to-red-700 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
         </div>
@@ -116,18 +116,18 @@ import { AdminService } from '../../services/admin.service';
               <button class="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg text-sm hover:bg-gray-600 transition-colors duration-300">Yearly</button>
             </div>
           </div>
-          
+
           <!-- Chart Placeholder -->
           <div class="h-80 bg-gray-800 bg-opacity-50 rounded-xl p-4 border border-gray-600 relative overflow-hidden">
             <!-- Simulated Chart Background -->
             <div class="absolute inset-0 bg-gradient-to-t from-netflix-red/10 to-transparent"></div>
-            
+
             <!-- Chart Content -->
             <div class="relative h-full flex items-end justify-between px-4">
-              <div 
+              <div
                 *ngFor="let bar of revenueData; let i = index"
                 class="flex flex-col items-center space-y-2">
-                <div 
+                <div
                   class="bg-gradient-to-t from-netflix-red to-red-400 rounded-t-lg transition-all duration-1000 hover:from-red-400 hover:to-netflix-red cursor-pointer"
                   [style.height.%]="bar.value"
                   [style.width]="'24px'">
@@ -135,7 +135,7 @@ import { AdminService } from '../../services/admin.service';
                 <span class="text-xs text-gray-400">{{ bar.label }}</span>
               </div>
             </div>
-            
+
             <!-- Chart Legend -->
             <div class="absolute top-4 right-4 bg-gray-900 bg-opacity-80 rounded-lg p-3">
               <div class="text-sm text-white font-semibold mb-2">Total Revenue</div>
@@ -161,14 +161,14 @@ import { AdminService } from '../../services/admin.service';
               <button class="px-3 py-1 bg-gray-700 text-gray-300 rounded-lg text-sm hover:bg-gray-600 transition-colors duration-300">Weekly</button>
             </div>
           </div>
-          
+
           <!-- Engagement Metrics -->
           <div class="space-y-4">
-            <div 
+            <div
               *ngFor="let engagement of engagementData"
               class="flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 rounded-xl hover:bg-opacity-70 transition-all duration-300">
               <div class="flex items-center space-x-4">
-                <div 
+                <div
                   class="w-10 h-10 rounded-lg flex items-center justify-center"
                   [ngClass]="engagement.iconBg">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@ import { AdminService } from '../../services/admin.service';
               </div>
               <div class="text-right">
                 <div class="font-bold text-white">{{ engagement.value }}</div>
-                <div 
+                <div
                   class="text-sm"
                   [ngClass]="{
                     'text-green-400': engagement.trend === 'up',
@@ -208,24 +208,24 @@ import { AdminService } from '../../services/admin.service';
             </div>
             Content Performance
           </h3>
-          
+
           <div class="space-y-4">
-            <div 
+            <div
               *ngFor="let content of topContent; trackBy: trackByContent"
               class="flex items-center p-4 bg-gray-800 bg-opacity-30 rounded-xl hover:bg-opacity-60 transition-all duration-300 group">
-              
+
               <!-- Rank -->
               <div class="w-12 h-12 bg-gradient-to-br from-netflix-red to-red-700 rounded-xl flex items-center justify-center mr-4 font-bold text-white shadow-lg">
                 {{ content.rank }}
               </div>
-              
+
               <!-- Thumbnail Placeholder -->
               <div class="w-20 h-14 bg-gradient-to-br from-gray-700 to-gray-600 rounded-lg mr-4 flex items-center justify-center">
                 <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011 1v18a1 1 0 01-1 1H8a1 1 0 01-1-1V4m8 0H8m0 0v16h8V4M8 8h8m-8 4h8"></path>
                 </svg>
               </div>
-              
+
               <!-- Content Info -->
               <div class="flex-1">
                 <h4 class="font-semibold text-white group-hover:text-netflix-red transition-colors duration-300">
@@ -237,7 +237,7 @@ import { AdminService } from '../../services/admin.service';
                   <span class="text-xs text-gray-500">{{ content.rating }} ⭐</span>
                 </div>
               </div>
-              
+
               <!-- Performance Metrics -->
               <div class="text-right">
                 <p class="font-bold text-white">{{ content.views }}</p>
@@ -258,9 +258,9 @@ import { AdminService } from '../../services/admin.service';
             </div>
             Top Regions
           </h3>
-          
+
           <div class="space-y-4">
-            <div 
+            <div
               *ngFor="let region of topRegions"
               class="flex items-center justify-between p-3 bg-gray-800 bg-opacity-50 rounded-lg hover:bg-opacity-70 transition-all duration-300">
               <div class="flex items-center space-x-3">
@@ -275,7 +275,7 @@ import { AdminService } from '../../services/admin.service';
               <div class="text-right">
                 <div class="font-bold text-white">{{ region.percentage }}%</div>
                 <div class="w-16 h-2 bg-gray-700 rounded-full overflow-hidden mt-1">
-                  <div 
+                  <div
                     class="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all duration-1000"
                     [style.width.%]="region.percentage">
                   </div>
@@ -296,12 +296,12 @@ import { AdminService } from '../../services/admin.service';
           </div>
           Device & Platform Usage
         </h3>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div 
+          <div
             *ngFor="let device of deviceData"
             class="bg-gray-800 bg-opacity-50 rounded-xl p-4 hover:bg-opacity-70 transition-all duration-300 text-center">
-            <div 
+            <div
               class="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3"
               [ngClass]="device.iconBg">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,10 +311,10 @@ import { AdminService } from '../../services/admin.service';
             <h4 class="font-semibold text-white mb-2">{{ device.name }}</h4>
             <p class="text-2xl font-bold text-netflix-red mb-1">{{ device.percentage }}%</p>
             <p class="text-sm text-gray-400">{{ device.users }} users</p>
-            
+
             <!-- Usage Bar -->
             <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden mt-3">
-              <div 
+              <div
                 class="h-full bg-gradient-to-r from-netflix-red to-red-400 rounded-full transition-all duration-1000"
                 [style.width.%]="device.percentage">
               </div>
@@ -328,23 +328,23 @@ import { AdminService } from '../../services/admin.service';
     .bg-netflix-black {
       background-color: #000000;
     }
-    
+
     .bg-netflix-red {
       background-color: #e50914;
     }
-    
+
     .bg-netflix-red-dark {
       background-color: #b81d24;
     }
-    
+
     .text-netflix-red {
       color: #e50914;
     }
-    
+
     .border-netflix-red {
       border-color: #e50914;
     }
-    
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -355,25 +355,25 @@ import { AdminService } from '../../services/admin.service';
         transform: translateY(0);
       }
     }
-    
+
     .analytics-dashboard {
       animation: fadeInUp 0.8s ease-out;
     }
-    
+
     /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
-    
+
     ::-webkit-scrollbar-track {
       background: #1a1a1a;
     }
-    
+
     ::-webkit-scrollbar-thumb {
       background: #e50914;
       border-radius: 4px;
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
       background: #b81d24;
     }
@@ -560,12 +560,77 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
-    // Initialize analytics data
+    this.loadAnalyticsData();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private loadAnalyticsData(): void {
+    this.adminService.getAnalyticsOverview()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          // Update key metrics with real data
+          this.keyMetrics = [
+            {
+              title: 'Total Users',
+              value: data.totalUsers.toLocaleString(),
+              change: '+12.5%',
+              trend: 'up',
+              description: 'Registered users',
+              icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
+              iconBg: 'bg-gradient-to-br from-netflix-red to-red-700'
+            },
+            {
+              title: 'Active Users',
+              value: data.activeUsers.toLocaleString(),
+              change: '+8.3%',
+              trend: 'up',
+              description: 'Verified users',
+              icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
+              iconBg: 'bg-gradient-to-br from-blue-600 to-blue-800'
+            },
+            {
+              title: 'Total Content',
+              value: data.totalContent.toLocaleString(),
+              change: '+15.7%',
+              trend: 'up',
+              description: 'Videos available',
+              icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+              iconBg: 'bg-gradient-to-br from-green-600 to-green-800'
+            },
+            {
+              title: 'Total Views',
+              value: data.totalViews.toLocaleString(),
+              change: '+25.1%',
+              trend: 'up',
+              description: 'Total video views',
+              icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+              iconBg: 'bg-gradient-to-br from-purple-600 to-purple-800'
+            }
+          ];
+
+          // Update top content with real data
+          this.topContent = data.topContent.map((content: any, index: number) => ({
+            rank: index + 1,
+            title: content.title,
+            type: content.type === 1 ? 'Movie' : 'Series',
+            genre: content.categoryName,
+            views: content.totalView.toLocaleString(),
+            engagement: Math.floor(Math.random() * 30) + 70, // You can calculate real engagement
+            watchTime: Math.floor(Math.random() * 30) + 60 + '%',
+            duration: 'N/A', // You can add duration to your video model
+            rating: (Math.random() * 2 + 7).toFixed(1)
+          }));
+        },
+        error: (error) => {
+          console.error('Error loading analytics data:', error);
+          // Keep existing mock data as fallback
+        }
+      });
   }
 
   trackByMetric(index: number, metric: any): string {

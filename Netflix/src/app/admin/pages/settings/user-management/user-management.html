@@ -1,0 +1,47 @@
+<div class="animate-fade-in">
+  <h3 class="text-white fw-bold mb-4">User Management</h3>
+
+  <app-toggle-switch
+    label="User Registration"
+    description="Allow new users to register"
+    [checked]="settings.registrationEnabled"
+    (checkedChange)="updateSetting('registrationEnabled', $event)">
+  </app-toggle-switch>
+
+  <div class="row">
+    <div class="col-md-6">
+      <app-input-field
+        label="Maximum Login Attempts"
+        type="number"
+        [value]="settings.maxLoginAttempts"
+        (valueChange)="updateSetting('maxLoginAttempts', $event)">
+      </app-input-field>
+    </div>
+    <div class="col-md-6">
+      <app-input-field
+        label="Session Timeout (minutes)"
+        type="number"
+        [value]="settings.sessionTimeout"
+        (valueChange)="updateSetting('sessionTimeout', $event)">
+      </app-input-field>
+    </div>
+  </div>
+
+  <div class="card bg-secondary border-0 p-4">
+    <h5 class="text-white fw-medium mb-3">User Statistics</h5>
+    <div class="row g-3">
+      <div class="col-6">
+        <div class="text-muted">Total Users: <span class="text-white fw-bold">12,457</span></div>
+      </div>
+      <div class="col-6">
+        <div class="text-muted">Active Today: <span class="text-white fw-bold">3,241</span></div>
+      </div>
+      <div class="col-6">
+        <div class="text-muted">Premium Users: <span class="text-white fw-bold">8,901</span></div>
+      </div>
+      <div class="col-6">
+        <div class="text-muted">Banned Users: <span class="text-white fw-bold">23</span></div>
+      </div>
+    </div>
+  </div>
+</div>

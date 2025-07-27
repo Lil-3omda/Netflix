@@ -579,6 +579,7 @@ export class AdminChatComponent implements OnInit {
   replyMessage = '';
   isLoading = false;
 
+
   constructor(
     private communicationService: CommunicationService,
     private authService: AuthService
@@ -686,7 +687,6 @@ assignToMe() {
     }
   });
 }
-
 
   updateStatus(event: any) {
     if (!this.selectedConversation) return;

@@ -1,0 +1,29 @@
+<div class="mb-4">
+  <label class="form-label text-white fw-medium">{{ label }}</label>
+  <select
+    *ngIf="options; else inputTemplate"
+    class="form-select bg-secondary text-white border-dark custom-select"
+    [value]="value"
+    (change)="onValueChange($event)">
+    <option *ngFor="let option of options" [value]="option.value">
+      {{ option.label }}
+    </option>
+  </select>
+
+  <ng-template #inputTemplate>
+    <input
+      *ngIf="type !== 'textarea'; else textareaTemplate"
+      [type]="type"
+      class="form-control bg-secondary text-white border-dark custom-input"
+      [value]="value"
+      (input)="onValueChange($event)">
+
+    <ng-template #textareaTemplate>
+      <textarea
+        class="form-control bg-secondary text-white border-dark custom-input"
+        rows="3"
+        [value]="value"
+        (input)="onValueChange($event)"></textarea>
+    </ng-template>
+  </ng-template>
+</div>

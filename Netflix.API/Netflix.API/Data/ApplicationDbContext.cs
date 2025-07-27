@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.Models;
+using System.Reflection.Emit;
 
 namespace Netflix.API.Data
 {
@@ -10,7 +11,6 @@ namespace Netflix.API.Data
             : base(options) { }
 
         // DbSets
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Video> Videos { get; set; }
@@ -21,6 +21,7 @@ namespace Netflix.API.Data
         public DbSet<WatchHistory> WatchHistories { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
+
         public DbSet<ChatConversation> ChatConversations { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
 

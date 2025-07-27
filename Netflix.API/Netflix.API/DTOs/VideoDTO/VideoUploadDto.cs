@@ -13,5 +13,7 @@ namespace Netflix.API.DTOs.VideoDTO
 
         public int CategoryId { get; set; }
         public VideoType Type { get; set; }
+        public string Duration { get; set; }
+        public string Status { get; set; }
     }
 }

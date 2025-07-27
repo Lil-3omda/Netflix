@@ -1,4 +1,5 @@
-﻿namespace Netflix.API.Models
+using System.ComponentModel.DataAnnotations.Schema;
+namespace Netflix.API.Models
 {
     public class UserSubscription
     {
@@ -13,5 +14,8 @@
 
         public ApplicationUser User { get; set; }
         public SubscriptionPlan Plan { get; set; }
+
+        //[NotMapped]
+        //public ICollection<UserSubscription> UserSubscriptions { get; set; }
     }
 }

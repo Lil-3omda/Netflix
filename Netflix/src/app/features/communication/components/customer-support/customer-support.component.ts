@@ -29,7 +29,11 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
           <!-- Support Options -->
           <section class="support-options" *ngIf="!showConversations && !showNewTicket">
             <h2>How can we help you?</h2>
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> newadminpages
             <div class="options-grid">
               <div class="option-card" (click)="showNewTicket = true">
                 <div class="option-icon">
@@ -565,7 +569,6 @@ export class CustomerSupportComponent implements OnInit {
         this.showNewTicket = false;
         this.showConversations = true;
         this.loadCustomerConversations();
-
         // Reset form
         this.newTicket = {
           subject: '',
@@ -581,7 +584,10 @@ export class CustomerSupportComponent implements OnInit {
   }
 
   selectConversation(conversation: Conversation) {
+    // Navigate to conversation detail or open in modal
     console.log('Selected conversation:', conversation);
+    // You can implement a detailed conversation view here
+
   }
 
   formatDate(dateString: string): string {

@@ -12,6 +12,22 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             _context = context;
         }
+        // overRide to endpoint Getall from GenericRepository
+        public override async Task<IEnumerable<Video>> GetAllAsync()
+        {
+            return await _context.Videos
+                .Include(v => v.Category)
+                .Where(v => !v.IsDeleted)
+                .ToListAsync();
+        }// overRide to endpoint Getid from GenericRepository
+        public override async Task<Video?> GetByIdAsync(int id)
+        {
+            return await _context.Videos
+                .Include(v => v.Category)
+                .FirstOrDefaultAsync(v => v.Id == id );
+        }
+
+
         //  GetPagedVideosAsync
         public async Task<List<Video>> GetPagedVideosAsync(int pageNumber, int pageSize)
         {

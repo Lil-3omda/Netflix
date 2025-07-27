@@ -11,7 +11,10 @@ namespace Netflix.API.Mappings
             CreateMap<Category, CategoryDto>()
                 .ForMember(dest => dest.Videos, opt => opt.MapFrom(src => src.Videos));
 
-            CreateMap<Video, VideoInCategoryDto>();
+            CreateMap<Video, VideoInCategoryDto>()
+                .ForMember(dest => dest.VideoUrl, opt => opt.MapFrom(src => src.VideoUrl))
+                .ForMember(dest => dest.TrailerUrl, opt => opt.MapFrom(src => src.TrailerUrl))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl));
 
             CreateMap<CreateCategoryDto, Category>();
             CreateMap<UpdateCategoryDto, Category>();

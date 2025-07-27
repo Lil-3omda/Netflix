@@ -1,23 +1,101 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule,CommonModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrls: ['./navbar.css']
 })
-export class Navbar {
-categories: string[] = [];
+export class Navbar implements OnInit {
+  categories: string[] = [];
+  loading: boolean = true;
+  errorMessage: string | null = null;
+  isAuthenticated: boolean = false;
+  currentUser: any = null;
 
-constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient, 
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-ngOnInit(): void {
-  this.http.get<string[]>('https://localhost:7140/api/Category/names')
-    .subscribe(data => {
-      this.categories = data;
+  ngOnInit(): void {
+    this.fetchCategories();
+    this.checkAuthStatus();
+    
+    // Subscribe to auth status changes
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
     });
-}
+
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  private checkAuthStatus(): void {
+    this.isAuthenticated = this.authService.isAuthenticated();
+    this.currentUser = this.authService.getCurrentUser();
+  }
+
+  fetchCategories(): void {
+    const apiUrl = 'https://localhost:7140/api/Category/names';
+
+    this.http.get<string[]>(apiUrl).subscribe({
+      next: (data: string[]) => {
+        this.categories = data;
+        this.loading = false;
+        this.errorMessage = null;
+        console.log('Categories fetched successfully:', this.categories);
+
+        if (this.categories.length === 0) {
+          console.warn('The categories array is empty. No categories to display.');
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Failed to load categories:', err);
+        this.loading = false;
+        this.errorMessage = `Failed to load categories. Please try again later. Error: ${err.message || 'Unknown error'}`;
+      }
+    });
+  }
+
+  logout(): void {
+    // Clear all localStorage items related to authentication
+    localStorage.removeItem('netflix_token');
+    localStorage.removeItem('netflix_user');
+    localStorage.removeItem('userId');
+    
+    // Clear any other Netflix-related localStorage items
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('netflix_') || key.includes('user') || key.includes('auth')) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Use AuthService logout method
+    this.authService.logout();
+    
+    // Navigate to home page
+    this.router.navigate(['/']);
+  }
+
+  navigateToProfile(): void {
+    if (this.isAuthenticated) {
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  navigateToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  navigateToSignup(): void {
+    this.router.navigate(['/signup']);
+  }
 }
