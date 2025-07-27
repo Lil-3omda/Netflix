@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -1328,6 +1330,8 @@ export class SignupComponent implements OnInit {
   showPassword: boolean = false;
   isLoading: boolean = false;
 
+  private userId: string | null = null;
+
   // Error messages
   fullNameError: string = '';
   emailError: string = '';
@@ -1348,54 +1352,28 @@ export class SignupComponent implements OnInit {
   resendCooldown: number = 0;
   private resendTimer?: any;
 
+  planToIdMap: { [key: string]: number } = {
+    basic: 3,
+    standard: 4,
+    premium: 5
+  };
+
   plans = [
-    {
-      id: 'basic',
-      name: 'Basic',
-      quality: 'Good',
-      price: '100',
-      resolution: '720p (HD)',
-      devices: 'TV, computer, mobile phone, tablet',
-      simultaneousStreams: '1',
-      downloads: '1'
-    },
-    {
-      id: 'standard',
-      name: 'Standard',
-      quality: 'Great',
-      price: '170',
-      resolution: '1080p (Full HD)',
-      devices: 'TV, computer, mobile phone, tablet',
-      simultaneousStreams: '2',
-      downloads: '2'
-    },
-    {
-      id: 'premium',
-      name: 'Premium',
-      quality: 'Best',
-      price: '240',
-      resolution: '4K (Ultra HD) + HDR',
-      devices: 'TV, computer, mobile phone, tablet',
-      simultaneousStreams: '4',
-      downloads: '6'
-    }
+    { id: 'basic', name: 'Basic', quality: 'Good', price: '100', resolution: '720p (HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '1', downloads: '1' },
+    { id: 'standard', name: 'Standard', quality: 'Great', price: '170', resolution: '1080p (Full HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '2', downloads: '2' },
+    { id: 'premium', name: 'Premium', quality: 'Best', price: '240', resolution: '4K (Ultra HD) + HDR', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '4', downloads: '6' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService, private http: HttpClient) {}
 
   ngOnInit() {
-    // Get email from query params if coming from landing page
     this.route.queryParams.subscribe(params => {
-      if (params['email']) {
-        this.email = params['email'];
-      }
+      if (params['email']) this.email = params['email'];
     });
   }
 
   ngOnDestroy() {
-    if (this.resendTimer) {
-      clearInterval(this.resendTimer);
-    }
+    if (this.resendTimer) clearInterval(this.resendTimer);
   }
 
   nextStep() {
@@ -1413,9 +1391,7 @@ export class SignupComponent implements OnInit {
   onRegisterSubmit() {
     this.clearErrors();
 
-    if (!this.validateForm()) {
-      return;
-    }
+    if (!this.validateForm()) return;
 
     this.isLoading = true;
 
@@ -1423,18 +1399,14 @@ export class SignupComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.requiresVerification) {
-          this.nextStep(); // Go to OTP verification step
+          this.nextStep(); // Move to OTP verification
         } else {
           this.emailError = 'Registration failed. Please try again.';
         }
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.error?.message) {
-          this.emailError = error.error.message;
-        } else {
-          this.emailError = 'Registration failed. Please try again.';
-        }
+        this.emailError = error.error?.message || 'Registration failed. Please try again.';
       }
     });
   }
@@ -1453,32 +1425,66 @@ export class SignupComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.token) {
-          this.nextStep(); // Go to plan selection
+          this.userId = response.user.id;
+          localStorage.setItem('userId', this.userId!);
+          this.goToPlanSelection();
         } else {
           this.otpError = 'Verification failed. Please try again.';
         }
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.error?.message) {
-          this.otpError = error.error.message;
-        } else {
-          this.otpError = 'Verification failed. Please try again.';
-        }
+        this.otpError = error.error?.message ?? 'Verification failed. Please try again.';
       }
     });
+  }
+
+  goToPlanSelection() {
+    this.currentStep = 3;
+  }
+
+ confirmPlan() {
+  if (!this.userId) {
+    console.error('User ID not found.');
+    return;
+  }
+
+  const planId = this.planToIdMap[this.selectedPlan];
+  console.log(`📡 Submitting subscription for userId=${this.userId}, planId=${planId}`);
+
+  this.isLoading = true;
+
+  this.http.post(`${environment.apiUrl}/Subscription/subscribe-and-bootstrap`, {
+    userId: this.userId,
+    planId: planId
+  }).subscribe({
+    next: () => {
+      console.log('✅ Backend responded');
+      this.isLoading = false;
+      this.completeSignup();
+    },
+    error: (err) => {
+      console.error('❌ Failed to subscribe & create profile', err);
+      this.isLoading = false;
+    }
+  });
+}
+
+
+
+  completeSignup() {
+    this.router.navigate(['/Home']);
   }
 
   resendOtp() {
     if (this.resendCooldown > 0) return;
 
     this.authService.resendOtp(this.email).subscribe({
-      next: (response) => {
+      next: () => {
         this.startResendCooldown();
-        // Clear any existing OTP error
         this.otpError = '';
       },
-      error: (error) => {
+      error: () => {
         this.otpError = 'Failed to resend code. Please try again.';
       }
     });
@@ -1528,12 +1534,14 @@ export class SignupComponent implements OnInit {
 
   selectPaymentMethod(method: string) {
     this.selectedPaymentMethod = method;
+
     if (method === 'card') {
       this.nextStep();
+      this.confirmPlan();
+
     } else {
-      // Handle cash payment method
-      this.completeSignup();
-    }
+      this.nextStep();
+      this.confirmPlan();     }
   }
 
   getSelectedPlanPrice(): string {
@@ -1546,14 +1554,6 @@ export class SignupComponent implements OnInit {
     return plan ? plan.name : 'Premium';
   }
 
-  goToPlanSelection() {
-    this.currentStep = 3;
-  }
-
-  completeSignup() {
-    this.router.navigate(['/Home']);
-  }
-
   goToLogin() {
     this.router.navigate(['/login']);
   }
@@ -1562,5 +1562,3 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
-
-// bootstrapApplication(SignupComponent);

@@ -36,15 +36,15 @@ import { StatCardData } from '../../models/admin.interfaces';
 
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div 
+        <div
           *ngFor="let stat of stats; trackBy: trackByFn"
           class="group relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-netflix-red transition-all duration-500 hover:scale-105 cursor-pointer">
-          
+
           <!-- Background Pattern -->
           <div class="absolute inset-0 opacity-5">
             <div class="absolute inset-0 bg-gradient-to-br from-netflix-red to-transparent"></div>
           </div>
-          
+
           <!-- Content -->
           <div class="relative z-10">
             <div class="flex items-center justify-between mb-4">
@@ -54,7 +54,7 @@ import { StatCardData } from '../../models/admin.interfaces';
                 </svg>
               </div>
               <div class="text-right">
-                <div 
+                <div
                   class="text-sm font-medium flex items-center"
                   [ngClass]="{
                     'text-green-400': stat.trend === 'up',
@@ -62,32 +62,32 @@ import { StatCardData } from '../../models/admin.interfaces';
                     'text-gray-400': stat.trend === 'neutral'
                   }">
                   {{ stat.change }}
-                  <svg 
+                  <svg
                     *ngIf="stat.trend === 'up'"
-                    class="w-4 h-4 ml-1" 
-                    fill="none" 
-                    stroke="currentColor" 
+                    class="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l10-10M17 7v10M17 7H7"></path>
                   </svg>
-                  <svg 
+                  <svg
                     *ngIf="stat.trend === 'down'"
-                    class="w-4 h-4 ml-1" 
-                    fill="none" 
-                    stroke="currentColor" 
+                    class="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17l-10-10M7 7v10M7 7h10"></path>
                   </svg>
                 </div>
               </div>
             </div>
-            
+
             <h3 class="text-gray-400 text-sm font-medium mb-2">{{ stat.title }}</h3>
             <p class="text-3xl font-bold text-white group-hover:text-netflix-red transition-colors duration-300">
               {{ stat.value }}
             </p>
           </div>
-          
+
           <!-- Hover Effect -->
           <div class="absolute inset-0 bg-gradient-to-r from-netflix-red to-red-700 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
         </div>
@@ -106,7 +106,7 @@ import { StatCardData } from '../../models/admin.interfaces';
             Quick Actions
           </h3>
           <div class="space-y-3">
-            <button 
+            <button
               *ngFor="let action of quickActions"
               class="w-full flex items-center p-4 bg-gray-800 bg-opacity-50 rounded-xl hover:bg-opacity-80 transition-all duration-300 text-left group">
               <div class="w-10 h-10 bg-gradient-to-br from-netflix-red to-red-700 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
@@ -135,22 +135,22 @@ import { StatCardData } from '../../models/admin.interfaces';
             Top Performing Content
           </h3>
           <div class="space-y-4">
-            <div 
+            <div
               *ngFor="let content of topContent; trackBy: trackByContentFn"
               class="flex items-center p-4 bg-gray-800 bg-opacity-30 rounded-xl hover:bg-opacity-60 transition-all duration-300 group">
-              
+
               <!-- Rank -->
               <div class="w-12 h-12 bg-gradient-to-br from-netflix-red to-red-700 rounded-xl flex items-center justify-center mr-4 font-bold text-white shadow-lg">
                 {{ content.rank }}
               </div>
-              
+
               <!-- Thumbnail -->
               <div class="w-16 h-12 bg-gradient-to-br from-gray-700 to-gray-600 rounded-lg mr-4 flex items-center justify-center">
                 <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011 1v18a1 1 0 01-1 1H8a1 1 0 01-1-1V4m8 0H8m0 0v16h8V4M8 8h8m-8 4h8"></path>
                 </svg>
               </div>
-              
+
               <!-- Content Info -->
               <div class="flex-1">
                 <h4 class="font-semibold text-white group-hover:text-netflix-red transition-colors duration-300">
@@ -158,7 +158,7 @@ import { StatCardData } from '../../models/admin.interfaces';
                 </h4>
                 <p class="text-sm text-gray-400">{{ content.type }} • {{ content.genre }}</p>
               </div>
-              
+
               <!-- Stats -->
               <div class="text-right">
                 <p class="font-bold text-white">{{ content.views }}</p>
@@ -241,10 +241,10 @@ import { StatCardData } from '../../models/admin.interfaces';
           Recent Activity
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div 
+          <div
             *ngFor="let activity of recentActivities; trackBy: trackByActivityFn"
             class="flex items-start p-4 bg-gray-800 bg-opacity-30 rounded-xl hover:bg-opacity-60 transition-all duration-300">
-            <div 
+            <div
               class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mr-3"
               [ngClass]="{
                 'bg-green-500': activity.type === 'upload',
@@ -269,23 +269,23 @@ import { StatCardData } from '../../models/admin.interfaces';
     .bg-netflix-black {
       background-color: #000000;
     }
-    
+
     .bg-netflix-red {
       background-color: #e50914;
     }
-    
+
     .bg-netflix-red-dark {
       background-color: #b81d24;
     }
-    
+
     .text-netflix-red {
       color: #e50914;
     }
-    
+
     .border-netflix-red {
       border-color: #e50914;
     }
-    
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -296,25 +296,25 @@ import { StatCardData } from '../../models/admin.interfaces';
         transform: translateY(0);
       }
     }
-    
+
     .netflix-dashboard {
       animation: fadeInUp 0.8s ease-out;
     }
-    
+
     /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
-    
+
     ::-webkit-scrollbar-track {
       background: #1a1a1a;
     }
-    
+
     ::-webkit-scrollbar-thumb {
       background: #e50914;
       border-radius: 4px;
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
       background: #b81d24;
     }
@@ -338,23 +338,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ];
 
   quickActions = [
-    { 
-      title: 'Add New Content', 
+    {
+      title: 'Add New Content',
       description: 'Upload movies and series',
       icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6'
     },
-    { 
-      title: 'Manage Users', 
+    {
+      title: 'Manage Users',
       description: 'View and edit user accounts',
       icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z'
     },
-    { 
-      title: 'View Analytics', 
+    {
+      title: 'View Analytics',
       description: 'Check performance metrics',
       icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
     },
-    { 
-      title: 'System Settings', 
+    {
+      title: 'System Settings',
       description: 'Configure platform settings',
       icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'
     }
@@ -365,7 +365,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
-    this.stats = this.adminService.getStats();
+    this.loadDashboardData();
   }
 
   ngOnDestroy(): void {
@@ -373,6 +373,64 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  private loadDashboardData(): void {
+    // Load analytics overview
+    this.adminService.getAnalyticsOverview()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.stats = [
+            {
+              title: 'Total Users',
+              value: data.totalUsers.toLocaleString(),
+              change: '+2.3%',
+              icon: 'users',
+              color: 'text-blue-400',
+              trend: 'up'
+            },
+            {
+              title: 'Active Users',
+              value: data.activeUsers.toLocaleString(),
+              change: '+15.2%',
+              icon: 'dollar-sign',
+              color: 'text-green-400',
+              trend: 'up'
+            },
+            {
+              title: 'Total Content',
+              value: data.totalContent.toLocaleString(),
+              change: '+156',
+              icon: 'play',
+              color: 'text-purple-400',
+              trend: 'up'
+            },
+            {
+              title: 'Total Views',
+              value: data.totalViews.toLocaleString(),
+              change: '+8.7%',
+              icon: 'clock',
+              color: 'text-yellow-400',
+              trend: 'up'
+            }
+          ];
+
+          // Update top content with real data
+          this.topContent = data.topContent.map((content: any, index: number) => ({
+            rank: index + 1,
+            title: content.title,
+            type: content.type === 1 ? 'Movie' : 'Series',
+            genre: content.categoryName,
+            views: content.totalView.toLocaleString(),
+            change: '+' + Math.floor(Math.random() * 20) + '%' // You can calculate real change
+          }));
+        },
+        error: (error) => {
+          console.error('Error loading dashboard data:', error);
+          // Fallback to mock data
+          this.stats = this.adminService.getStats();
+        }
+      });
+  }
   trackByFn(index: number, item: StatCardData): string {
     return item.title;
   }
