@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import{HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -276,6 +279,7 @@ import { AuthService } from '../../../core/services/auth.service';
                     <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/visa.png" alt="Visa" class="payment-icon">
                     <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/mastercard.png" alt="Mastercard" class="payment-icon">
                   </div>
+
                 </div>
                 <div class="encrypted-badge">
                   <span>End-to-end encrypted</span>
@@ -288,7 +292,7 @@ import { AuthService } from '../../../core/services/auth.service';
                 </svg>
               </div>
 
-              <div class="payment-method" (click)="selectPaymentMethod('cash')">
+              <!-- <div class="payment-method" (click)="selectPaymentMethod('cash')">
                 <div class="payment-method-content">
                   <span class="payment-text">Pay Cash</span>
                   <div class="payment-icons">
@@ -298,7 +302,7 @@ import { AuthService } from '../../../core/services/auth.service';
                 <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M9 18L15 12L9 6" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -946,6 +950,7 @@ import { AuthService } from '../../../core/services/auth.service';
       font-size: 18px;
       color: #333;
       margin-bottom: 20px;
+
     }
 
     .security-text {
@@ -1176,6 +1181,7 @@ import { AuthService } from '../../../core/services/auth.service';
       font-size: 16px;
       color: #333;
       line-height: 1.4;
+
     }
 
     .start-membership-button {
@@ -1255,6 +1261,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
     .footer-link:hover {
       text-decoration: underline;
+
     }
 
     .language-selector {
@@ -1328,6 +1335,8 @@ export class SignupComponent implements OnInit {
   showPassword: boolean = false;
   isLoading: boolean = false;
 
+  private userId: string | null = null;
+
   // Error messages
   fullNameError: string = '';
   emailError: string = '';
@@ -1348,54 +1357,29 @@ export class SignupComponent implements OnInit {
   resendCooldown: number = 0;
   private resendTimer?: any;
 
+  planToIdMap: { [key: string]: number } = {
+    basic: 1,
+    standard: 2,
+    premium: 3
+  };
+
   plans = [
-    {
-      id: 'basic',
-      name: 'Basic',
-      quality: 'Good',
-      price: '100',
-      resolution: '720p (HD)',
-      devices: 'TV, computer, mobile phone, tablet',
-      simultaneousStreams: '1',
-      downloads: '1'
-    },
-    {
-      id: 'standard',
-      name: 'Standard',
-      quality: 'Great',
-      price: '170',
-      resolution: '1080p (Full HD)',
-      devices: 'TV, computer, mobile phone, tablet',
-      simultaneousStreams: '2',
-      downloads: '2'
-    },
-    {
-      id: 'premium',
-      name: 'Premium',
-      quality: 'Best',
-      price: '240',
-      resolution: '4K (Ultra HD) + HDR',
-      devices: 'TV, computer, mobile phone, tablet',
-      simultaneousStreams: '4',
-      downloads: '6'
-    }
+
+    { id: 'basic', name: 'Basic', quality: 'Good', price: '100', resolution: '720p (HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '1', downloads: '1' },
+    { id: 'standard', name: 'Standard', quality: 'Great', price: '170', resolution: '1080p (Full HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '2', downloads: '2' },
+    { id: 'premium', name: 'Premium', quality: 'Best', price: '240', resolution: '4K (Ultra HD) + HDR', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '4', downloads: '6' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService, private http: HttpClient) {}
 
   ngOnInit() {
-    // Get email from query params if coming from landing page
     this.route.queryParams.subscribe(params => {
-      if (params['email']) {
-        this.email = params['email'];
-      }
+      if (params['email']) this.email = params['email'];
     });
   }
 
   ngOnDestroy() {
-    if (this.resendTimer) {
-      clearInterval(this.resendTimer);
-    }
+    if (this.resendTimer) clearInterval(this.resendTimer);
   }
 
   nextStep() {
@@ -1413,9 +1397,7 @@ export class SignupComponent implements OnInit {
   onRegisterSubmit() {
     this.clearErrors();
 
-    if (!this.validateForm()) {
-      return;
-    }
+    if (!this.validateForm()) return;
 
     this.isLoading = true;
 
@@ -1423,18 +1405,14 @@ export class SignupComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.requiresVerification) {
-          this.nextStep(); // Go to OTP verification step
+          this.nextStep(); // Move to OTP verification
         } else {
           this.emailError = 'Registration failed. Please try again.';
         }
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.error?.message) {
-          this.emailError = error.error.message;
-        } else {
-          this.emailError = 'Registration failed. Please try again.';
-        }
+        this.emailError = error.error?.message || 'Registration failed. Please try again.';
       }
     });
   }
@@ -1453,32 +1431,194 @@ export class SignupComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.token) {
-          this.nextStep(); // Go to plan selection
+          this.userId = response.user.id;
+          localStorage.setItem('userId', this.userId!);
+          this.goToPlanSelection();
         } else {
           this.otpError = 'Verification failed. Please try again.';
         }
       },
       error: (error) => {
         this.isLoading = false;
-        if (error.error?.message) {
-          this.otpError = error.error.message;
-        } else {
-          this.otpError = 'Verification failed. Please try again.';
-        }
+        this.otpError = error.error?.message ?? 'Verification failed. Please try again.';
       }
     });
   }
+
+  goToPlanSelection() {
+    this.currentStep = 3;
+  }
+
+  selectPlan(planId: string) {
+    this.selectedPlan = planId;
+  }
+
+  selectPaymentMethod(method: string) {
+    this.selectedPaymentMethod = method;
+
+    if (method === 'card') {
+      this.nextStep(); // Go to card details
+    } else if (method === 'cash') {
+      // For cash payment, simulate developer mode
+      this.processDeveloperPayment();
+    }
+  }
+
+  private processDeveloperPayment(): void {
+  console.log('Processing developer mode payment...');
+  this.isLoading = true;
+
+  // Simulate payment processing delay
+  setTimeout(() => {
+    console.log('Developer payment completed successfully');
+    this.confirmPlan();
+  }, 2000);
+}
+
+
+ private async processPaymobPayment(): Promise<void> {
+  if (!this.userId) {
+    console.error('User ID not found.');
+    return;
+  }
+
+  const planPrice = this.getSelectedPlanPrice();
+  const amountCents = parseInt(planPrice) * 100; // Convert to cents
+
+  try {
+    this.isLoading = true;
+
+    // Prepare flat payload as expected by backend
+    const paymentPayload = {
+      amountCents: amountCents,
+      name: this.fullName,
+      email: this.email,
+      phone: '+201000000000' // You can later bind this to actual user input
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Call the backend
+    const paymentResponse = await this.http
+      .post<any>(`${environment.apiUrl}/Paymob/initiate`, paymentPayload, { headers })
+      .toPromise();
+
+    if (paymentResponse.success && paymentResponse.redirectUrl) {
+      // In developer mode, simulate successful payment
+      if (!environment.production) {
+        console.log('Developer mode: Simulating successful payment');
+        setTimeout(() => {
+          this.confirmPlan();
+        }, 1000);
+      } else {
+        // In production, redirect to Paymob
+        window.location.href = paymentResponse.redirectUrl;
+      }
+    } else {
+      throw new Error('Payment initialization failed');
+    }
+  } catch (error) {
+    console.error('Payment processing failed:', error);
+    this.isLoading = false;
+    alert('Payment processing failed. Please try again.');
+  }
+}
+
+  completeSignup() {
+    if (!this.selectedPaymentMethod) {
+      alert('Please select a payment method');
+      return;
+    }
+
+    if (this.selectedPaymentMethod === 'card') {
+      // Validate card details
+      if (!this.validateCardDetails()) {
+        return;
+      }
+      this.processPaymobPayment();
+    } else {
+      // Cash payment already processed in developer mode
+      this.router.navigate(['/Home']);
+    }
+  }
+
+  private validateCardDetails(): boolean {
+    if (!this.cardNumber || this.cardNumber.length < 16) {
+      alert('Please enter a valid card number');
+      return false;
+    }
+    if (!this.expiryDate || this.expiryDate.length < 5) {
+      alert('Please enter a valid expiry date');
+      return false;
+    }
+    if (!this.cvv || this.cvv.length < 3) {
+      alert('Please enter a valid CVV');
+      return false;
+    }
+    if (!this.nameOnCard || this.nameOnCard.trim().length < 2) {
+      alert('Please enter the name on card');
+      return false;
+    }
+    if (!this.agreementChecked) {
+      alert('Please agree to the terms and conditions');
+      return false;
+    }
+    return true;
+  }
+
+  confirmPlan() {
+  if (!this.userId) {
+    console.error('User ID not found.');
+    return;
+  }
+
+  const planId = this.planToIdMap[this.selectedPlan];
+  console.log(`📡 Submitting subscription for userId=${this.userId}, planId=${planId}`);
+
+  this.isLoading = true;
+
+  this.http.post(`${environment.apiUrl}/Subscription/subscribe-and-bootstrap`, {
+    userId: this.userId,
+    planId: planId
+  }).subscribe({
+    next: () => {
+      console.log('✅ Backend responded - subscription created');
+      this.isLoading = false;
+
+      // Store user authentication
+      const userData = {
+        id: this.userId,
+        email: this.email,
+        fullName: this.fullName,
+        plan: this.selectedPlan,
+        isEmailVerified: true
+      };
+
+      localStorage.setItem('netflix_user', JSON.stringify(userData));
+      localStorage.setItem('netflix_token', 'temp_token_' + this.userId);
+
+      // Navigate to home
+      this.router.navigate(['/home']);
+    },
+    error: (err) => {
+      console.error('❌ Failed to subscribe & create profile', err);
+      this.isLoading = false;
+      alert('Subscription failed. Please try again.');
+    }
+  });
+}
 
   resendOtp() {
     if (this.resendCooldown > 0) return;
 
     this.authService.resendOtp(this.email).subscribe({
-      next: (response) => {
+      next: () => {
         this.startResendCooldown();
-        // Clear any existing OTP error
         this.otpError = '';
       },
-      error: (error) => {
+      error: () => {
         this.otpError = 'Failed to resend code. Please try again.';
       }
     });
@@ -1522,36 +1662,40 @@ export class SignupComponent implements OnInit {
     this.otpError = '';
   }
 
-  selectPlan(planId: string) {
-    this.selectedPlan = planId;
-  }
-
-  selectPaymentMethod(method: string) {
-    this.selectedPaymentMethod = method;
-    if (method === 'card') {
-      this.nextStep();
-    } else {
-      // Handle cash payment method
-      this.completeSignup();
-    }
-  }
-
   getSelectedPlanPrice(): string {
     const plan = this.plans.find(p => p.id === this.selectedPlan);
     return plan ? plan.price : '240';
   }
 
+//   selectPaymentMethod(method: string) {
+//     this.selectedPaymentMethod = method;
+//     if (method === 'card') {
+//       this.nextStep();
+//     } else {
+//       // Handle cash payment method
+//       this.completeSignup();
+//     }
+//   }
+
+//   getSelectedPlanPrice(): string {
+//     const plan = this.plans.find(p => p.id === this.selectedPlan);
+//     return plan ? plan.price : '240';
+//   }
+
+//   getSelectedPlanName(): string {
+//     const plan = this.plans.find(p => p.id === this.selectedPlan);
+//     return plan ? plan.name : 'Premium';
+//   }
+
+//   goToPlanSelection() {
+//     this.currentStep = 3;
+//   }
+
+//   completeSignup() {
+//     this.router.navigate(['/Home']);
   getSelectedPlanName(): string {
     const plan = this.plans.find(p => p.id === this.selectedPlan);
     return plan ? plan.name : 'Premium';
-  }
-
-  goToPlanSelection() {
-    this.currentStep = 3;
-  }
-
-  completeSignup() {
-    this.router.navigate(['/Home']);
   }
 
   goToLogin() {

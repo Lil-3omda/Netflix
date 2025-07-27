@@ -12,7 +12,7 @@ export interface User {
   plan?: string;
   isEmailVerified?: boolean;
   // Add role if you want to support Role-Based UI logic
-  role?: string;
+  isAdmin?: boolean;
 }
 
 @Injectable({
@@ -87,12 +87,29 @@ export class AuthService {
   }
 
   logout(): void {
+    // Clear all Netflix-related localStorage items
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
+    localStorage.removeItem('userId');
+    
+    // Clear any other authentication-related items
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('netflix_') || 
+          key.includes('user') || 
+          key.includes('auth') || 
+          key.includes('token') ||
+          key.includes('profile')) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Clear session storage as well
+    sessionStorage.clear();
 
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
 
+    // Navigate to home page
     this.router.navigate(['/']);
   }
 

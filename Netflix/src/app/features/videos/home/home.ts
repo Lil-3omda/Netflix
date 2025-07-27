@@ -24,16 +24,18 @@ top10Movies: any[] = [];
 
 constructor(private movieService: MovieCategory) {}
 
-  // ngOnInit(): void {
-  //   this.movieService.getTop10().subscribe({
-  //     next: (data:any) => {
-  //       this.top10Movies = data;
-  //     },
-  //     error: (err:any) => {
-  //       console.error('Error fetching top 10:', err);
-  //     }
-  //   });
-  // }
+
+
+  ngOnInit(): void {
+    this.movieService.getTop10().subscribe({
+      next: (data:any) => {
+        this.top10Movies = data;
+      },
+      error: (err:any) => {
+        console.error('Error fetching top 10:', err);
+      }
+    });
+  }
 
 
 
@@ -52,11 +54,11 @@ scrollRight() {
     video.play();
   }
 
+
 resetVideo(video: HTMLVideoElement) {
   video.pause();
   video.currentTime = 0;
 
-  // Hack لإجبار المتصفح يعيد عرض البوستر
   const src = video.src;
   video.src = '';
   video.load(); // clear

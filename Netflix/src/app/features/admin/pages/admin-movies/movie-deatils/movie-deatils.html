@@ -1,0 +1,55 @@
+<div *ngIf="movieDetails" class="movie-detail-page text-light">
+
+  <!-- 🎬 Movie Info Card -->
+  <div class="container mt-5">
+    <div class="row g-4 glass-card p-4 rounded-4 shadow-lg align-items-center">
+
+      <!-- Poster -->
+      <div class="col-md-4">
+        <img
+          [src]="'https://localhost:7140/' + movieDetails.imageUrl"
+          alt="Movie Poster"
+          class="img-fluid rounded-4 shadow object-fit-cover w-100"
+          style="max-height: 480px;" />
+      </div>
+
+      <!-- Info -->
+      <div class="col-md-8">
+        <h1 class="fw-bold text-warning display-5">{{ movieDetails.title }}</h1>
+        <hr class="border-light opacity-25" />
+
+        <div class="fs-5">
+          <p><strong>📂 Category:</strong> {{ movieDetails.categoryName }}</p>
+          <p><strong>📝 Description:</strong> {{ movieDetails.description }}</p>
+          <p><strong>⏱️ Duration:</strong> {{ movieDetails.duration }}</p>
+          <p><strong>📌 Status:</strong> {{ movieDetails.status }}</p>
+          <p><strong>🎭 Type:</strong> {{ movieDetails.type }}</p>
+          <p><strong>👁️ Views:</strong> {{ movieDetails.viewCount }}</p>
+        </div>
+
+        <!-- 🎦 Full Movie Video -->
+        <div class="mt-4">
+          <h5 class="mb-2">📺 Watch Full Movie</h5>
+          <video controls class="w-100 rounded-4 shadow" style="max-height: 400px;">
+            <source [src]="'https://localhost:7140/' + movieDetails.videoUrl" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎞️ Trailer Section at Bottom -->
+  <div class="container my-5">
+    <div class="glass-card p-4 rounded-4 shadow-lg">
+      <h3 class="mb-3 text-info fw-semibold">🎞️ Trailer</h3>
+      <div class="ratio ratio-16x9 rounded overflow-hidden">
+        <iframe
+          [src]="safeTrailerUrl"
+          frameborder="0"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>

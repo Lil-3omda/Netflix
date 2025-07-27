@@ -423,13 +423,37 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.filteredUsers = [...this.users];
-    this.calculateStats();
+    this.loadUsers();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private loadUsers(): void {
+    this.adminService.getUsers(1, 50, this.searchTerm)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.users = response.users.map((user: any) => ({
+            id: user.id,
+            name: user.fullName,
+            email: user.email,
+            status: user.isEmailVerified ? 'Active' : 'Inactive',
+            subscription: user.subscriptionStatus === 'Active' ? 'Premium' : 'Basic',
+            region: 'Unknown', // You can add region to your user model
+            joinDate: new Date().toISOString(), // You can add proper join date
+            lastActive: new Date().toISOString()
+          }));
+          this.filteredUsers = [...this.users];
+          this.calculateStats();
+        },
+        error: (error) => {
+          console.error('Error loading users:', error);
+          // Keep existing mock data as fallback
+        }
+      });
   }
 
   private calculateStats(): void {
@@ -446,6 +470,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   filterUsers(): void {
+    this.loadUsers(); // Reload with search term
     this.filteredUsers = this.users.filter(user => {
       const matchesSearch = !this.searchTerm ||
         user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||

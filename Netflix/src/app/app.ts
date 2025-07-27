@@ -14,7 +14,7 @@ import { NetflixUser } from './admin/pages/netflix-user/netflix-user';
   standalone: true,
 
   imports: [
-    RouterOutlet,Navbar,RouterModule,CommonModule,AiChatbotComponent,NetflixUser
+    RouterOutlet,Navbar,RouterModule,CommonModule,AiChatbotComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']

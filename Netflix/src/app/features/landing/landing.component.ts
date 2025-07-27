@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-landing',
@@ -814,7 +815,7 @@ export class LandingComponent {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   goToLogin() {
     this.router.navigate(['/login']);
@@ -822,7 +823,23 @@ export class LandingComponent {
 
   startSignup() {
     if (this.email) {
-      this.router.navigate(['/signup'], { queryParams: { email: this.email } });
+      // Check if email exists
+      this.authService.checkEmailExists(this.email).subscribe({
+        next: (response) => {
+          if (response.exists) {
+            // Email exists, redirect to login
+            this.router.navigate(['/login'], { queryParams: { email: this.email } });
+          } else {
+            // Email doesn't exist, redirect to signup
+            this.router.navigate(['/signup'], { queryParams: { email: this.email } });
+          }
+        },
+        error: (error) => {
+          console.error('Error checking email:', error);
+          // Default to signup on error
+          this.router.navigate(['/signup'], { queryParams: { email: this.email } });
+        }
+      });
     } else {
       this.router.navigate(['/signup']);
     }
