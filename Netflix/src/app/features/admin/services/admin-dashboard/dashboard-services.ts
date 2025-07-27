@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DashboardServices {
-  
+
   constructor(private http: HttpClient) {}
   getDashboardData() {
     return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/statistics`);
@@ -37,7 +37,7 @@ export class DashboardServices {
   }
 
   getDeletedMovies() {
-   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/deleted-videos`); 
+   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/deleted-videos`);
   }
 
   uploadMovie(data: any): Observable<HttpEvent<any>> {
@@ -48,4 +48,11 @@ export class DashboardServices {
     return this.http.get<any>(`https://localhost:7140/api/videos/${id}`);
   }
 
+  updateVideo(id: number, dto: any): Observable<any> {
+    return this.http.put<any>(`https://localhost:7140/api/videos/${id}`, dto);
+  }
+
+  softDeleteVideo(id: number): Observable<any> {
+    return this.http.delete<any>(`https://localhost:7140/api/videos/${id}`);
+  }
 }

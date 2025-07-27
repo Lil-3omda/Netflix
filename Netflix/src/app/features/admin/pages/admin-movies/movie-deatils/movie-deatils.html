@@ -18,6 +18,11 @@
         <h1 class="fw-bold text-warning display-5">{{ movieDetails.title }}</h1>
         <hr class="border-light opacity-25" />
 
+        <button
+          class="btn btn-outline-info mb-3"
+          (click)="oneditMovie()">
+          <i class="bi bi-pencil-square"></i> Edit Movie </button>
+
         <div class="fs-5">
           <p><strong>📂 Category:</strong> {{ movieDetails.categoryName }}</p>
           <p><strong>📝 Description:</strong> {{ movieDetails.description }}</p>
@@ -52,4 +57,34 @@
       </div>
     </div>
   </div>
+</div>
+
+
+
+<div *ngIf="editing" class="uploading-overlay">
+
+<form #movieForm="ngForm" (ngSubmit)="saveChanges()">
+ <div class="mb-3">
+<label class="form-label">category</label>
+  <select class="form-select bg-black text-light" [(ngModel)]="editMovie.categoryId" name="categoryId" required>
+  <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+</select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Description</label>
+    <textarea class="form-control" [(ngModel)]="editMovie.description" name="description" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Trailer URL</label>
+    <input type="text" class="form-control" [(ngModel)]="editMovie.trailerUrl" name="trailerUrl" required />
+  </div>
+
+
+
+  <div class="d-flex gap-2 mt-4">
+    <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+    <button type="submit" class="btn btn-success">Save Changes</button>
+  </div>
+</form>
+
 </div>
