@@ -128,11 +128,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo:'home',
+        redirectTo:'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'home',
+        path: 'dashboard',
         component: HomePage,
       },
       {
