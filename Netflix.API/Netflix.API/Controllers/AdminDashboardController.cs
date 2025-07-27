@@ -41,6 +41,18 @@ namespace Netflix.API.Controllers
             return Ok(videos);
         }
 
+        //get deleted videos
+        [HttpGet("deleted-videos")]
+        public IActionResult GetDeletedVideos()
+        {
+            var deletedVideos = _context.Videos.Where(v => v.IsDeleted == true).ToList();
+            if (deletedVideos.Count == 0)
+            {
+                return NotFound(new { message = "No deleted videos found." });
+            }
+            return Ok(deletedVideos);
+        }
+
         //Get: api/totalViews
         [HttpGet("movies/statistics")]
         public IActionResult GetTotalViews()
