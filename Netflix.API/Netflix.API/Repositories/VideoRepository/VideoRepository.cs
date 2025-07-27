@@ -24,7 +24,7 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             return await _context.Videos
                 .Include(v => v.Category)
-                .FirstOrDefaultAsync(v => v.Id == id && !v.IsDeleted);
+                .FirstOrDefaultAsync(v => v.Id == id );
         }
 
 

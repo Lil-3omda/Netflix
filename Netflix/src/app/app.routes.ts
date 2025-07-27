@@ -4,8 +4,12 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
 import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
 import { HomePage } from './features/admin/pages/home-page/home-page';
-import { AdminMovies } from './features/admin/pages/admin-movies/admin-movies';
+import { AdminMovies } from './features/admin/pages/admin-movies/all-movie/admin-movies';
+import { PublishedMovies  } from './features/admin/pages/admin-movies/published-movies/PublishedMovies';
+import { DeletedMovies  } from './features/admin/pages/admin-movies/Archived-movies/DeletedMovies';
 import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movie';
+import { MoviesStatistics } from './features/admin/pages/admin-movies/movies-statistics/movies-statistics';
+import { MovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/movie-deatils';
 
 export const routes: Routes = [
   {
@@ -127,16 +131,39 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo:'home',
+        redirectTo:'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'home',
+        path: 'dashboard',
         component: HomePage,
       },
       {
-        path: 'Movies',
-        component:AdminMovies
+        path: 'movies',
+        component:MoviesStatistics,
+        children:[
+          {
+            path: '',
+            redirectTo: 'all',
+            pathMatch: 'full'
+          },
+          {
+            path:'all',
+            component: AdminMovies
+          },
+          {
+            path: 'published',
+            component: PublishedMovies,
+          },
+          {
+            path: 'archived',
+            component: DeletedMovies,
+          }
+        ]
+      },
+      {
+        path:'movie/:id',
+        component: MovieDeatils
       },
       {
         path: 'movies/add',
@@ -147,7 +174,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/movies',
-    loadComponent: () => import('./features/admin/pages/admin-movies/admin-movies').then(m => m.AdminMovies)
+    loadComponent: () => import('./features/admin/pages/admin-movies/all-movie/admin-movies').then(m => m.AdminMovies)
   },
   {
     path: 'admin/Home-page',

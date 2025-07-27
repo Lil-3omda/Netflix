@@ -1,6 +1,6 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import { AdminService } from '../../../../admin/services/admin.service';
-import { DashboardServices } from '../../services/admin-dashboard/dashboard-services';
+import { AdminService } from '../../../../../admin/services/admin.service';
+import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -84,11 +84,14 @@ export class AdminMovies implements OnInit {
     // Filter movies based on search term
   }
 
-applyFilters() {
+  applyFilters() {
   this.filteredMovies = this.movies.filter(movie =>
     (this.selectedCategory === '' || movie.categoryName === this.selectedCategory) &&
     movie.title.toLowerCase().includes(this.searchTerm.toLowerCase())
   );
+  console.log('Filtered movies:', this.filteredMovies);
+  console.log('movies:', this.movies);
+ 
 }
 
 
