@@ -14,7 +14,8 @@ import { MovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
+    redirectTo: 'Home',
+    pathMatch: 'full'
   },
   {
     path: 'login',
@@ -29,6 +30,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/videos/home/home').then(m => m.Home)
   },
   {
+
   path: 'category/:name',
   loadComponent: () =>
     import('./shared/category/category').then(m => m.Category)
@@ -37,8 +39,10 @@ export const routes: Routes = [
   path: 'moviedetails/:id',
   loadComponent: () =>
     import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis)
-},
-{
+
+},{
+
+
     path: 'Profile',
     loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
   },
@@ -74,7 +78,6 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [AuthGuard],
     children: [
       {
         path: '',
