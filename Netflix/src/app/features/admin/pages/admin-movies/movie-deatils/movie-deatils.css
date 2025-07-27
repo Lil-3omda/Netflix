@@ -35,7 +35,6 @@ h1, h3 {
 }
 
 
-
 .uploading-overlay {
   position: fixed;
   inset: 0;
@@ -47,14 +46,15 @@ h1, h3 {
 }
 
 .uploading-overlay form {
-  background-color: #000; /* أسود خالص */
+  background-color: #000; /* أسود */
   border: 1px solid #ff0000; /* إطار أحمر */
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
   max-width: 500px;
   width: 100%;
   color: #fff;
   font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
 .uploading-overlay .form-label {
@@ -62,31 +62,34 @@ h1, h3 {
   font-size: 14px;
   margin-bottom: 4px;
   display: block;
+  font-weight: 600;
 }
 
-.uploading-overlay .form-control {
+.uploading-overlay .form-control,
+.uploading-overlay .form-select {
   background-color: #111;
   color: #fff;
   border: 1px solid #333;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 8px 10px;
   margin-bottom: 16px;
   width: 100%;
 }
 
-.uploading-overlay .form-control:focus {
+.uploading-overlay .form-control:focus,
+.uploading-overlay .form-select:focus {
   border-color: #ff0000;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3);
 }
 
 .uploading-overlay .btn {
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 8px 20px;
   font-weight: 500;
   border: none;
   cursor: pointer;
-  margin-right: 10px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .uploading-overlay .btn-secondary {

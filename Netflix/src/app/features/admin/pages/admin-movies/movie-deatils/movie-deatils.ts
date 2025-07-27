@@ -18,7 +18,7 @@ export class MovieDeatils implements OnInit {
   movieDetails: any;
   id!:number;
 editMovie: any = {};
-
+categories: any[] = [];
 
  constructor(private route: ActivatedRoute, private dashboardService: DashboardServices,private sanitizer: DomSanitizer) {}
 
@@ -26,10 +26,18 @@ editMovie: any = {};
   this.id = Number(this.route.snapshot.paramMap.get('id'));
   console.log('Movie ID:', this.id);
   this.loadMovieDetails(this.id);
-
+  this.loadCategories();
 
  }
 
+loadCategories(): void {
+  this.dashboardService.getCategories().subscribe({
+    next: (data) => {
+      this.categories = data;
+    },
+    error: (err) => console.error(err)
+  });
+}
 
  loadMovieDetails(id:number): void {
   this.dashboardService.getMovieById(id).subscribe({
@@ -50,7 +58,7 @@ oneditMovie(): void {
   if (this.editing) {
 
     this.editMovie = {
-      categoryName: this.movieDetails.categoryName,
+     categoryId: this.movieDetails.categoryId,
       description: this.movieDetails.description,
       trailerUrl: this.movieDetails.trailerUrl,
     };
@@ -59,11 +67,12 @@ oneditMovie(): void {
 
 saveChanges(): void {
   this.editing = false;
-  const updatedMovie = {
-    description: this.editMovie.description,
-    categoryName: this.editMovie.categoryName,
-    trailerUrl: this.editMovie.trailerUrl,
-  };
+const updatedMovie = {
+  description: this.editMovie.description,
+  categoryId: this.editMovie.categoryId,
+  trailerUrl: this.editMovie.trailerUrl,
+};
+
 
   this.dashboardService.updateVideo(this.id, updatedMovie).subscribe({
     next: () => {
