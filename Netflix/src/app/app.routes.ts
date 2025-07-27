@@ -4,7 +4,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
 import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
 import { HomePage } from './features/admin/pages/home-page/home-page';
-import { AdminMovies } from './features/admin/pages/admin-movies/admin-movies';
+// import { AdminMovies } from './features/admin/pages/admin-movies/admin-movies';
 import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movie';
 
 export const routes: Routes = [
@@ -34,7 +34,7 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis)
 },
-
+{
     path: 'Profile',
     loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
   },
@@ -133,10 +133,10 @@ export const routes: Routes = [
         path: 'home',
         component: HomePage,
       },
-      {
-        path: 'Movies',
-        component:AdminMovies
-      },
+      // {
+      //   path: 'Movies',
+      //   component:AdminMovies
+      // },
       {
         path: 'movies/add',
         component:AddMovie
@@ -144,10 +144,10 @@ export const routes: Routes = [
 
     ]
   },
-  {
-    path: 'admin/movies',
-    loadComponent: () => import('./features/admin/pages/admin-movies/admin-movies').then(m => m.AdminMovies)
-  },
+  // {
+  //   path: 'admin/movies',
+  //   loadComponent: () => import('./features/admin/pages/admin-movies/admin-movies').then(m => m.AdminMovies)
+  // },
   {
     path: 'admin/Home-page',
     loadComponent: () => import('./features/admin/pages/home-page/home-page').then(m => m.HomePage)

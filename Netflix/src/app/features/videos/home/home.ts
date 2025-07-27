@@ -24,16 +24,16 @@ top10Movies: any[] = [];
 
 constructor(private movieService: MovieCategory) {}
 
-  ngOnInit(): void {
-    this.movieService.getTop10().subscribe({
-      next: (data:any) => {
-        this.top10Movies = data;
-      },
-      error: (err:any) => {
-        console.error('Error fetching top 10:', err);
-      }
-    });
-  }
+  // ngOnInit(): void {
+  //   this.movieService.getTop10().subscribe({
+  //     next: (data:any) => {
+  //       this.top10Movies = data;
+  //     },
+  //     error: (err:any) => {
+  //       console.error('Error fetching top 10:', err);
+  //     }
+  //   });
+  // }
 
 
 

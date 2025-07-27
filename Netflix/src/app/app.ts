@@ -7,13 +7,14 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
 import { AiChatbotComponent } from './features/communication/components/ai-chatbot/ai-chatbot.component';
+import { NetflixUser } from './admin/pages/netflix-user/netflix-user';
 
 @Component({
   selector: 'app-root',
   standalone: true,
 
   imports: [
-    RouterOutlet,Navbar,RouterModule,CommonModule,AiChatbotComponent
+    RouterOutlet,Navbar,RouterModule,CommonModule,AiChatbotComponent,NetflixUser
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
