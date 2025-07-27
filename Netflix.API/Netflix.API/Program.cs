@@ -20,6 +20,7 @@ using Netflix.API.Repositories.ConversationRepository;
 using Netflix.API.Repositories.MessageRepository;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Netflix.API
 {
@@ -61,8 +62,24 @@ namespace Netflix.API
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+
+
+
             var jwtSettings = builder.Configuration.GetSection("JWT");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
+
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 3L * 1024 * 1024 * 1024; // 3 GB
+            });
+
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.Limits.MaxRequestBodySize = 3L * 1024 * 1024 * 1024; // 3 GB
+            });
+
+
 
             builder.Services.AddAuthentication(options =>
             {

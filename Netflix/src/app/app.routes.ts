@@ -116,15 +116,15 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo:'home',
+        redirectTo:'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'home',
+        path: 'dashboard',
         component: HomePage,
       },
       {
-        path: 'Movies',
+        path: 'movies',
         component:AdminMovies
       },
       {
