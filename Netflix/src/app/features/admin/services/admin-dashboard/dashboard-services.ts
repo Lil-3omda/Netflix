@@ -1,12 +1,12 @@
-import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardServices {
-  
+
   constructor(private http: HttpClient) {}
   getDashboardData() {
     return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/statistics`);
@@ -24,6 +24,9 @@ export class DashboardServices {
     return this.http.get<any>(`https://localhost:7140/api/Category/names`);
   }
 
+  getAllMovies() {
+    return this.http.get<any>(`https://localhost:7140/api/Videos`);
+  }
   getCategories() {
     return this.http.get<any>(`https://localhost:7140/api/Category`);
   }

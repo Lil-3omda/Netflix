@@ -5,6 +5,21 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
+<!--   <div class="collapse navbar-collapse gap-3" id="navbarNav">
+    <ul class="navbar-nav">
+      <li *ngFor="let cat of categories" class="nav-item">
+        <a [routerLink]="['/category', cat]" class="nav-link text-white">
+          {{ cat }}
+        </a>
+      </li>
+    </ul>
+
+    <div class="d-flex align-items-center gap-3 ms-auto">
+      <a href=""><i class="bi bi-search fs-5 text-white cursor-pointer"></i></a>
+      <span class="text-white">Kids</span>
+      <i class="bi bi-bell fs-5 text-white cursor-pointer"></i>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" width="32" height="32" class="rounded" alt="avatar" />
+ -->
   <div class="collapse navbar-collapse gap-3" id="navbarNav">
     <!-- Categories - Only show when authenticated -->
     <ul class="navbar-nav" *ngIf="isAuthenticated">

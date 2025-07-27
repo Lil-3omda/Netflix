@@ -279,6 +279,7 @@ import{HttpHeaders} from '@angular/common/http';
                     <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/visa.png" alt="Visa" class="payment-icon">
                     <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/mastercard.png" alt="Mastercard" class="payment-icon">
                   </div>
+
                 </div>
                 <div class="encrypted-badge">
                   <span>End-to-end encrypted</span>
@@ -949,6 +950,7 @@ import{HttpHeaders} from '@angular/common/http';
       font-size: 18px;
       color: #333;
       margin-bottom: 20px;
+
     }
 
     .security-text {
@@ -1179,6 +1181,7 @@ import{HttpHeaders} from '@angular/common/http';
       font-size: 16px;
       color: #333;
       line-height: 1.4;
+
     }
 
     .start-membership-button {
@@ -1258,6 +1261,7 @@ import{HttpHeaders} from '@angular/common/http';
 
     .footer-link:hover {
       text-decoration: underline;
+
     }
 
     .language-selector {
@@ -1360,6 +1364,7 @@ export class SignupComponent implements OnInit {
   };
 
   plans = [
+
     { id: 'basic', name: 'Basic', quality: 'Good', price: '100', resolution: '720p (HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '1', downloads: '1' },
     { id: 'standard', name: 'Standard', quality: 'Great', price: '170', resolution: '1080p (Full HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '2', downloads: '2' },
     { id: 'premium', name: 'Premium', quality: 'Best', price: '240', resolution: '4K (Ultra HD) + HDR', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '4', downloads: '6' }
@@ -1662,6 +1667,32 @@ export class SignupComponent implements OnInit {
     return plan ? plan.price : '240';
   }
 
+//   selectPaymentMethod(method: string) {
+//     this.selectedPaymentMethod = method;
+//     if (method === 'card') {
+//       this.nextStep();
+//     } else {
+//       // Handle cash payment method
+//       this.completeSignup();
+//     }
+//   }
+
+//   getSelectedPlanPrice(): string {
+//     const plan = this.plans.find(p => p.id === this.selectedPlan);
+//     return plan ? plan.price : '240';
+//   }
+
+//   getSelectedPlanName(): string {
+//     const plan = this.plans.find(p => p.id === this.selectedPlan);
+//     return plan ? plan.name : 'Premium';
+//   }
+
+//   goToPlanSelection() {
+//     this.currentStep = 3;
+//   }
+
+//   completeSignup() {
+//     this.router.navigate(['/Home']);
   getSelectedPlanName(): string {
     const plan = this.plans.find(p => p.id === this.selectedPlan);
     return plan ? plan.name : 'Premium';
@@ -1675,3 +1706,5 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
+
+// bootstrapApplication(SignupComponent);

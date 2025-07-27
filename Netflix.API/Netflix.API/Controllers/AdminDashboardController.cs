@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.AspNetCore.WebUtilities;
 using Netflix.API.Data;
 using Netflix.API.DTOs.VideoDTO;
@@ -74,6 +75,7 @@ namespace Netflix.API.Controllers
             }
             return Ok(user);
         }
+
 
 
         // upload video and image and save it in wwwroot 

@@ -1,17 +1,27 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
-import { HttpEventType } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { FormGroup, FormBuilder, ReactiveFormsModule,  } from '@angular/forms';
 
 @Component({
   selector: 'app-add-movie',
+  imports: [ ReactiveFormsModule],
   templateUrl: './add-movie.html',
-  imports: [CommonModule, ReactiveFormsModule],
-  styleUrls: ['./add-movie.css']
+  styleUrl: './add-movie.css'
 })
 export class AddMovie {
+
+// import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+// import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
+// import { HttpEventType } from '@angular/common/http';
+// import { CommonModule } from '@angular/common';
+// import { Router, RouterLink } from '@angular/router';
+
+// @Component({
+//   selector: 'app-add-movie',
+//   templateUrl: './add-movie.html',
+//   imports: [CommonModule, ReactiveFormsModule],
+//   styleUrls: ['./add-movie.css']
+// })
+// export class AddMovie {
 
   movieForm: FormGroup;
   categories: any[] = [];
