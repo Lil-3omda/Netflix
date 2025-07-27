@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Netflix.API.Data;
 using Netflix.API.DTOs.VideoDTO;
 using Netflix.API.Models;
@@ -36,8 +37,30 @@ namespace Netflix.API.Controllers
         [HttpGet("videos")]
         public IActionResult GetVideos()
         {
-            var videos = _context.Videos;
-            
+            var videos = _context.Videos
+            .Include(v => v.Category)
+            .Select(v => new
+            {
+                v.Id,
+                v.Title,
+                v.Description,
+                v.VideoUrl,
+                v.TrailerUrl,
+                v.ImageUrl,
+                CategoryName = v.Category.Name,
+                v.Type,
+                v.Duration,
+                v.Status,
+                v.ViewCount,
+                v.TotalView,
+                v.IsDeleted,
+                RatingsCount = v.Ratings.Count(),
+                ReviewsCount = _context.Reviews.Count(r => r.VideoId == v.Id),
+               
+            })
+            .ToList();
+
+
             return Ok(videos);
         }
 
@@ -45,7 +68,26 @@ namespace Netflix.API.Controllers
         [HttpGet("deleted-videos")]
         public IActionResult GetDeletedVideos()
         {
-            var deletedVideos = _context.Videos.Where(v => v.IsDeleted == true).ToList();
+            var deletedVideos = _context.Videos.Include(v => v.Category)
+            .Select(v => new
+            {
+                v.Id,
+                v.Title,
+                v.Description,
+                v.VideoUrl,
+                v.TrailerUrl,
+                v.ImageUrl,
+                CategoryName = v.Category.Name,
+                v.Type,
+                v.Duration,
+                v.Status,
+                v.ViewCount,
+                v.TotalView,
+                v.IsDeleted,
+                RatingsCount = v.Ratings.Count(),
+                ReviewsCount = _context.Reviews.Count(r => r.VideoId == v.Id),
+
+            }).Where(v => v.IsDeleted == true).ToList();
             if (deletedVideos.Count == 0)
             {
                 return NotFound(new { message = "No deleted videos found." });
