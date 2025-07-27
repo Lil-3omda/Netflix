@@ -38,7 +38,7 @@ h1, h3 {
 .uploading-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.9); /* خلفية سوداء شفافة */
+  background-color: rgba(0, 0, 0, 0.9); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,8 +46,8 @@ h1, h3 {
 }
 
 .uploading-overlay form {
-  background-color: #000; /* أسود */
-  border: 1px solid #ff0000; /* إطار أحمر */
+  background-color: #000;
+  border: 1px solid #ff0000;
   border-radius: 12px;
   padding: 24px;
   max-width: 500px;
