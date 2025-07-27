@@ -34,7 +34,7 @@ export const routes: Routes = [
   path: 'moviedetails/:id',
   loadComponent: () =>
     import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis)
-},
+},{
 
     path: 'Profile',
     loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
@@ -135,7 +135,7 @@ export const routes: Routes = [
         component: HomePage,
       },
       {
-        path: 'Movies',
+        path: 'movies',
         component:AdminMovies
       },
       {

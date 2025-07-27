@@ -25,7 +25,7 @@ top10Movies: any[] = [];
 constructor(private movieService: MovieCategory) {}
 
   ngOnInit(): void {
-    this.movieService.getTop10().subscribe({
+    this.movieService.getTopViewed(10).subscribe({
       next: (data:any) => {
         this.top10Movies = data;
       },
