@@ -18,3 +18,91 @@
 h1, h3 {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
+
+
+.uploading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Dark transparent background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+
+
+.uploading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.9); /* خلفية سوداء شفافة */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.uploading-overlay form {
+  background-color: #000; /* أسود خالص */
+  border: 1px solid #ff0000; /* إطار أحمر */
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.uploading-overlay .form-label {
+  color: #ff0000;
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.uploading-overlay .form-control {
+  background-color: #111;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.uploading-overlay .form-control:focus {
+  border-color: #ff0000;
+  outline: none;
+}
+
+.uploading-overlay .btn {
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s;
+}
+
+.uploading-overlay .btn-secondary {
+  background-color: #222;
+  color: #fff;
+}
+
+.uploading-overlay .btn-secondary:hover {
+  background-color: #444;
+}
+
+.uploading-overlay .btn-success {
+  background-color: #ff0000;
+  color: #fff;
+}
+
+.uploading-overlay .btn-success:hover {
+  background-color: #cc0000;
+}
