@@ -29,9 +29,16 @@ export class DashboardServices {
   }
 
   getAllMovies() {
+    return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
+  }
+
+  getPublishedMovies() {
     return this.http.get<any>(`https://localhost:7140/api/Videos`);
   }
 
+  getDeletedMovies() {
+   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/deleted-videos`); 
+  }
 
   uploadMovie(data: any): Observable<HttpEvent<any>> {
     return this.http.post<any>('https://localhost:7140/api/AdminDashboard/upload',data)

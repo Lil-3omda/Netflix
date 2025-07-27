@@ -75,7 +75,7 @@ onSubmit(): void {
           this.uploadProgress = 0;
           this.uploading = false;
 
-          this.router.navigate(['/AdminTest/movies'])
+          this.router.navigate(['/AdminTest/movies/all'])
         }
       },
       error: err => {

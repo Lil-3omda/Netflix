@@ -1,6 +1,6 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import { AdminService } from '../../../../admin/services/admin.service';
-import { DashboardServices } from '../../services/admin-dashboard/dashboard-services';
+import { AdminService } from '../../../../../admin/services/admin.service';
+import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
