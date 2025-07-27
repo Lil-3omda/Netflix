@@ -41,7 +41,8 @@ namespace Netflix.API.Controllers
             .Include(v => v.Category)
             .Select(v => new
             {
-               v.Title,
+                v.Id,
+                v.Title,
                 v.Description,
                 v.VideoUrl,
                 v.TrailerUrl,
@@ -70,6 +71,7 @@ namespace Netflix.API.Controllers
             var deletedVideos = _context.Videos.Include(v => v.Category)
             .Select(v => new
             {
+                v.Id,
                 v.Title,
                 v.Description,
                 v.VideoUrl,
