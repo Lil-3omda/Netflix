@@ -31,16 +31,16 @@ export class DashboardServices {
     return this.http.get<any>(`https://localhost:7140/api/Category`);
   }
 
-  getAllMovies() {
-    return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
-  }
+  // getAllMovies() {
+  //   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
+  // }
 
   getPublishedMovies() {
     return this.http.get<any>(`https://localhost:7140/api/Videos`);
   }
 
   getDeletedMovies() {
-   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/deleted-videos`); 
+   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/deleted-videos`);
   }
 
   uploadMovie(data: any): Observable<HttpEvent<any>> {

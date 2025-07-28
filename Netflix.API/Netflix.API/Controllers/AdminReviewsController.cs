@@ -108,19 +108,11 @@ namespace Netflix.API.Controllers
 
                 var averageRating = allReviews.Any() ? allReviews.Average(r => r.Rating) : 0;
 
-                var recentReviews = allReviews
-                    .OrderByDescending(r => r.CreatedAt)
-                    .Take(10)
-                    .ToList();
-
-                var recentReviewDtos = _mapper.Map<IEnumerable<ReviewDTO>>(recentReviews);
-
                 return Ok(new
                 {
                     totalReviews,
                     averageRating = Math.Round(averageRating, 2),
-                    ratingDistribution,
-                    recentReviews = recentReviewDtos
+                    ratingDistribution
                 });
             }
             catch (Exception ex)
@@ -149,8 +141,8 @@ namespace Netflix.API.Controllers
 
                 return Ok(new
                 {
-                    flaggedReviews = flaggedReviewDtos,
-                    totalFlagged = flaggedReviews.Count
+                    reviews = flaggedReviewDtos,
+                    totalCount = flaggedReviews.Count
                 });
             }
             catch (Exception ex)

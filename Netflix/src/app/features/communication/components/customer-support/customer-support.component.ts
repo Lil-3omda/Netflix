@@ -29,11 +29,6 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
           <!-- Support Options -->
           <section class="support-options" *ngIf="!showConversations && !showNewTicket">
             <h2>How can we help you?</h2>
-<<<<<<< HEAD
-
-=======
-
->>>>>>> newadminpages
             <div class="options-grid">
               <div class="option-card" (click)="showNewTicket = true">
                 <div class="option-icon">

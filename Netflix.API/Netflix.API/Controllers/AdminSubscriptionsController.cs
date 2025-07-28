@@ -149,7 +149,6 @@ namespace Netflix.API.Controllers
 
 
         [HttpGet("users")]
-       //[HttpGet("userplans")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserSubscriptions()
         {
@@ -159,6 +158,7 @@ namespace Netflix.API.Controllers
                 .Select(us => new UserSubscriptionRow
                 {
                     Id = us.Id,
+                    UserId = us.UserId, // ✅ ADD THIS LINE
                     UserName = us.User.UserName,
                     UserEmail = us.User.Email,
                     PlanName = us.Plan.Name,
@@ -300,27 +300,47 @@ namespace Netflix.API.Controllers
             }
         }
 
-        [HttpPost("users/{userId}/cancel")]
-        public async Task<IActionResult> CancelSubscription(string userId)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUserSubscription(int id, [FromBody] UpdateUserSubscriptionDTO dto)
         {
             try
             {
-                var subscription = await _context.UserSubscriptions
-                    .FirstOrDefaultAsync(s => s.UserId == userId && s.IsActive);
-
+                var subscription = await _context.UserSubscriptions.FindAsync(id);
                 if (subscription == null)
-                    return NotFound(new { message = "Active subscription not found" });
+                    return NotFound(new { message = "Subscription not found" });
 
-                subscription.EndDate = DateTime.UtcNow;
+                // Update plan
+                var plan = await _context.SubscriptionPlans.FindAsync(dto.PlanId);
+                if (plan == null)
+                    return BadRequest(new { message = "Invalid plan ID" });
+
+                subscription.PlanId = dto.PlanId;
+
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Subscription cancelled successfully" });
+                return Ok(new { message = "Subscription updated successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error cancelling subscription for user {UserId}", userId);
-                return StatusCode(500, new { message = "Failed to cancel subscription" });
+                _logger.LogError(ex, "Error updating subscription {SubscriptionId}", id);
+                return StatusCode(500, new { message = "Failed to update subscription" });
             }
+        }
+
+
+        [HttpPost("subscriptions/{subscriptionId}/cancel")]
+        public async Task<IActionResult> CancelSubscriptionById(int subscriptionId)
+        {
+            var subscription = await _context.UserSubscriptions
+                .FirstOrDefaultAsync(s => s.Id == subscriptionId && s.IsActive);
+
+            if (subscription == null)
+                return NotFound(new { message = "Active subscription not found" });
+
+            subscription.EndDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Subscription cancelled successfully" });
         }
     }
 

@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-movive-detalis',
-  imports: [Navbar , JsonPipe , CommonModule],
+  imports: [Navbar , CommonModule],
   templateUrl: './movive-detalis.html',
   styleUrl: './movive-detalis.css'
 })

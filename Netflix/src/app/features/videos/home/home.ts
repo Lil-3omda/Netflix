@@ -11,7 +11,7 @@ import { Category } from "../../../shared/category/category";
   selector: 'app-home',
   standalone: true,
 
-  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar, NetflixModel, Category],
+  imports: [CommonModule, FormsModule, MovieSliderSectionComponent, Navbar, NetflixModel],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -27,14 +27,14 @@ constructor(private movieService: MovieCategory) {}
 
 
   ngOnInit(): void {
-    this.movieService.getTop10().subscribe({
-      next: (data:any) => {
-        this.top10Movies = data;
-      },
-      error: (err:any) => {
-        console.error('Error fetching top 10:', err);
-      }
-    });
+    // this.movieService.getTop10().subscribe({
+    //   next: (data:any) => {
+    //     this.top10Movies = data;
+    //   },
+    //   error: (err:any) => {
+    //     console.error('Error fetching top 10:', err);
+    //   }
+    // });
   }
 
 

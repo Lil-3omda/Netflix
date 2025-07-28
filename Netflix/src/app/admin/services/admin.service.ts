@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AdminPageType, User, Content, StatCardData, AnalyticsData, ChatMessage, Conversation } from '../models/admin.interfaces';
 import { environment } from '../../../environments/environment';
 
@@ -105,8 +106,20 @@ export class AdminService {
     return this.http.get<any[]>(`${this.apiUrl}/admin/Subscriptions/plans`);
   }
 
-  getUserSubscriptions(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/users`);
+  getUserSubscriptions(): Observable<any[]> {
+    return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/users`)
+      .pipe(
+        map((response: any) => {
+          // Handle both direct array response and wrapped response
+          if (response.subscriptions) {
+            return response.subscriptions;
+          } else if (Array.isArray(response)) {
+            return response;
+          } else {
+            return [];
+          }
+        })
+      );
   }
 
   getSubscriptionStatistics(): Observable<any> {
@@ -292,6 +305,10 @@ export class AdminService {
       }
     ];
   }
+  updateUserSubscription(id: number, dto: { planId: number }) {
+    return this.http.put(`/api/admin/Subscriptions/plans/${id}`, dto);
+  }
+
 
   getConversations(): Conversation[] {
     return [

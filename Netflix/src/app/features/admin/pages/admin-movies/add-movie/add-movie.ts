@@ -1,34 +1,25 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, ReactiveFormsModule,  } from '@angular/forms';
+import { HttpEventType } from '@angular/common/http';
+import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-add-movie',
-  imports: [ ReactiveFormsModule],
+  imports: [ ReactiveFormsModule,CommonModule],
   templateUrl: './add-movie.html',
   styleUrl: './add-movie.css'
 })
 export class AddMovie {
-
-// import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-// import { DashboardServices } from '../../../services/admin-dashboard/dashboard-services';
-// import { HttpEventType } from '@angular/common/http';
-// import { CommonModule } from '@angular/common';
-// import { Router, RouterLink } from '@angular/router';
-
-// @Component({
-//   selector: 'app-add-movie',
-//   templateUrl: './add-movie.html',
-//   imports: [CommonModule, ReactiveFormsModule],
-//   styleUrls: ['./add-movie.css']
-// })
-// export class AddMovie {
 
   movieForm: FormGroup;
   categories: any[] = [];
 
   uploadProgress: number = 0;
   uploading: boolean = false;
-  
+
 
   constructor(private fb: FormBuilder, private dashboardServices: DashboardServices, private router:Router) {
     this.movieForm = this.fb.group({
@@ -92,7 +83,7 @@ onSubmit(): void {
         console.error('Error uploading movie:', err);
       }
     });
-    
+
   }
 }
 

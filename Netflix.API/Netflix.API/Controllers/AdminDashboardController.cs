@@ -120,7 +120,7 @@ namespace Netflix.API.Controllers
                 ImageUrl = Path.Combine("images", imageFileName).Replace("\\", "/"),
                 CategoryId = model.CategoryId,
                 Type = VideoType.Movie,
-                Duration ="",
+                Duration = "",
                 Status = "Published",
                 ViewCount = 0,
                 TotalView = 0,
@@ -151,60 +151,60 @@ namespace Netflix.API.Controllers
         //    [FromQuery] string status,
         //    [FromHeader(Name = "X-Video-File-Name")] string videoFileNameHeader,
         //    [FromHeader(Name = "X-Image-File-Name")] string imageFileNameHeader)
-        //        {
-        //            var form = await Request.ReadFormAsync();
+        //{
+        //    var form = await Request.ReadFormAsync();
 
-        //            var video = form.Files["video"];
-        //            var image = form.Files["image"];
+        //    var video = form.Files["video"];
+        //    var image = form.Files["image"];
 
-        //            if (video == null || image == null)
-        //                return BadRequest("Missing video or image file.");
+        //    if (video == null || image == null)
+        //        return BadRequest("Missing video or image file.");
 
-        //            var videoPath = Path.Combine(_webHostEnvironment.WebRootPath, "videos");
-        //            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+        //    var videoPath = Path.Combine(_webHostEnvironment.WebRootPath, "videos");
+        //    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
 
-        //            Directory.CreateDirectory(videoPath);
-        //            Directory.CreateDirectory(imagePath);
+        //    Directory.CreateDirectory(videoPath);
+        //    Directory.CreateDirectory(imagePath);
 
-        //            var videoFileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
-        //            var imageFileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+        //    var videoFileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
+        //    var imageFileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
 
-        //            using (var stream = new FileStream(Path.Combine(videoPath, videoFileName), FileMode.Create))
-        //            {
-        //                await video.CopyToAsync(stream);
-        //            }
+        //    using (var stream = new FileStream(Path.Combine(videoPath, videoFileName), FileMode.Create))
+        //    {
+        //        await video.CopyToAsync(stream);
+        //    }
 
-        //            using (var stream = new FileStream(Path.Combine(imagePath, imageFileName), FileMode.Create))
-        //            {
-        //                await image.CopyToAsync(stream);
-        //            }
+        //    using (var stream = new FileStream(Path.Combine(imagePath, imageFileName), FileMode.Create))
+        //    {
+        //        await image.CopyToAsync(stream);
+        //    }
 
-        //            var newVideo = new Video
-        //            {
-        //                Title = title,
-        //                Description = description,
-        //                TrailerUrl = trailerUrl,
-        //                VideoUrl = Path.Combine("videos", videoFileName).Replace("\\", "/"),
-        //                ImageUrl = Path.Combine("images", imageFileName).Replace("\\", "/"),
-        //                CategoryId = categoryId,
-        //                Type = VideoType.Movie,
-        //                Duration = duration,
-        //                Status = status,
-        //                ViewCount = 0,
-        //                TotalView = 0,
-        //                IsDeleted = false
-        //            };
+        //    var newVideo = new Video
+        //    {
+        //        Title = title,
+        //        Description = description,
+        //        TrailerUrl = trailerUrl,
+        //        VideoUrl = Path.Combine("videos", videoFileName).Replace("\\", "/"),
+        //        ImageUrl = Path.Combine("images", imageFileName).Replace("\\", "/"),
+        //        CategoryId = categoryId,
+        //        Type = VideoType.Movie,
+        //        Duration = duration,
+        //        Status = status,
+        //        ViewCount = 0,
+        //        TotalView = 0,
+        //        IsDeleted = false
+        //    };
 
-        //            _context.Videos.Add(newVideo);
-        //            await _context.SaveChangesAsync();
+        //    _context.Videos.Add(newVideo);
+        //    await _context.SaveChangesAsync();
 
-        //            return Ok(new
-        //            {
-        //                message = "Uploaded successfully",
-        //                videoUrl = $"{Request.Scheme}://{Request.Host}/videos/{videoFileName}",
-        //                imageUrl = $"{Request.Scheme}://{Request.Host}/images/{imageFileName}"
-        //            });
-        //        }
+        //    return Ok(new
+        //    {
+        //        message = "Uploaded successfully",
+        //        videoUrl = $"{Request.Scheme}://{Request.Host}/videos/{videoFileName}",
+        //        imageUrl = $"{Request.Scheme}://{Request.Host}/images/{imageFileName}"
+        //    });
+        //}
 
 
 

@@ -11,6 +11,7 @@ export interface User {
   fullName?: string;
   plan?: string;
   isEmailVerified?: boolean;
+
   // Add role if you want to support Role-Based UI logic
   isAdmin?: boolean;
 }
@@ -91,12 +92,12 @@ export class AuthService {
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
     localStorage.removeItem('userId');
-    
+
     // Clear any other authentication-related items
     Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('netflix_') || 
-          key.includes('user') || 
-          key.includes('auth') || 
+      if (key.startsWith('netflix_') ||
+          key.includes('user') ||
+          key.includes('auth') ||
           key.includes('token') ||
           key.includes('profile')) {
         localStorage.removeItem(key);
