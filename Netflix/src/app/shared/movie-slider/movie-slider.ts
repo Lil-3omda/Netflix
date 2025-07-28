@@ -13,24 +13,24 @@ import { RouterLink } from '@angular/router';
 })
 export class MovieSliderSectionComponent implements OnInit {
   @ViewChild('slider', { static: false }) slider!: ElementRef;
-
-  @Input() title: string = '';
+ @Input() showRank: boolean = false;
+ @Input() title: string = '';
   @Input() categoryName: string = '';
-  @Input() isTop10: boolean = false; // ✅ جديدة
+  @Input() isTop10: boolean = false; 
 
   movies: any[] = [];
 
   constructor(private movieService: MovieCategory, private http: HttpClient) {}
 
   ngOnInit(): void {
-    if (this.isTop10) {
-      // ✅ جلب التوب 10
+     if (this.categoryName === 'Top 10') {
+      
       this.http.get<any[]>('https://localhost:7140/api/Videos/TopViews?count=10')
         .subscribe(data => {
           this.movies = data;
         });
     } else if (this.categoryName) {
-      // ✅ جلب حسب الكاتيجوري
+      
       this.movieService.getMoviesByCategory(this.categoryName)
         .subscribe(data => {
           this.movies = data.videos;
@@ -38,11 +38,23 @@ export class MovieSliderSectionComponent implements OnInit {
     }
   }
 
+
   scrollLeft() {
     this.slider.nativeElement.scrollBy({ left: -300, behavior: 'smooth' });
   }
 
   scrollRight() {
-    this.slider.nativeElement.scrollBy({ left: 300, behavior: 'smooth' });
+    const slider = this.slider.nativeElement;
+    const scrollAmount = 300;
+    const currentScroll = slider.scrollLeft;
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+    if (currentScroll + 5 >= maxScroll) {
+      
+      slider.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
   }
+
 }
