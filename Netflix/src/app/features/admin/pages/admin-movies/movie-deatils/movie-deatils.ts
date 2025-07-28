@@ -14,12 +14,12 @@ import { FormsModule } from '@angular/forms';
 export class MovieDeatils implements OnInit {
   safeTrailerUrl!: SafeResourceUrl;
   videoUrl!: string;
- editing = false;
+  editing = false;
   movieDetails: any;
   id!:number;
-editMovie: any = {};
-categories: any[] = [];
-
+  editMovie: any = {};
+  categories: any[] = [];
+  
  constructor(private route: ActivatedRoute, private dashboardService: DashboardServices,private sanitizer: DomSanitizer) {}
 
  ngOnInit(): void {
@@ -88,5 +88,18 @@ const updatedMovie = {
   cancelEdit(): void {
     this.editing = false;
     this.loadMovieDetails(this.id);
+  }
+  onDeleteMovie(): void {
+    if (confirm('Are you sure you want to delete this movie?')) {
+      this.dashboardService.softDeleteVideo(this.id).subscribe({
+        next: () => {
+          console.log('Movie deleted successfully');
+          // Optionally, navigate back to the movies list or show a success message
+        },
+        error: err => {
+          console.error('Error deleting movie:', err);
+        }
+      });
+    }
   }
 }
