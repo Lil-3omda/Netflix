@@ -1,24 +1,28 @@
-
-
-
 <div class="movie-slider-section py-5" style="background-color: #1a1a1a; position: relative;">
   <div class="container">
     <h2 class="text-white mb-4">{{ title }}</h2>
 
-   
     <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
     <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
 
-   
     <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
       <div
-        class="slide-item d-flex flex-column align-items-center me-4 flex-shrink-0"
-        *ngFor="let movie of movies"
+        class="slide-item d-flex flex-row align-items-center me-4 flex-shrink-0"
+        *ngFor="let movie of movies; let i = index"
+        style="min-width: 250px;"
       >
-        <div class="movie-card" [routerLink]="['/moviedetails', movie.id]">
-          <img [src]="'https://localhost:7140/'+movie.imageUrl" class="img-fluid" alt="{{ movie.title }}" />
+
+        
+        <div *ngIf="showRank" class="rank-number ">
+          {{ i + 1 }}
+        </div>
+
+      
+        <div class="movie-card " [routerLink]="['/moviedetails', movie.id]">
+          <img [src]="'/assets/images/' + movie.imageUrl" class="img-fluid rounded" alt="{{ movie.title }}" />
           <p class="text-white mt-2 text-center">{{ movie.title }}</p>
         </div>
+
       </div>
     </div>
   </div>

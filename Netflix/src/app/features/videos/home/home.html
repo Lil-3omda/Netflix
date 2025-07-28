@@ -49,17 +49,20 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
 
 
-<!-- <app-movie-category categoryName="top10"></app-movie-category>
-<app-movie-category categoryName="action"></app-movie-category>
-<app-movie-category categoryName="drama"></app-movie-category>
-<app-movie-category categoryName="comedy"></app-movie-category> -->
 
 
 
 
 
 
-<app-movie-slider [title]="'Top 10 in Egypt Today'" [isTop10]="true"></app-movie-slider>
+
+<app-movie-slider
+  [title]="'Top 10'"
+  [categoryName]="'Top 10'"
+  [showRank]="true">
+</app-movie-slider>
+
+
 
 
 <div *ngFor="let category of data">

@@ -1,69 +1,62 @@
-<app-navbar></app-navbar>
+<div class="w-100 my-4 px-3 px-md-5">
+  <div class="movie-card bg-dark text-white rounded-4 shadow-lg p-4 row g-4 align-items-start w-100 min-vh-60">
 
-<div class="movie-details-container" *ngIf="movie; else loading">
+    <!-- Image -->
+    <div class="col-md-4">
+      <img
+        [src]="'/assets/images/' + movie.imageUrl"
+        class="img-fluid rounded-3 w-100 shadow movie-img"
+        alt="{{ movie.title }}"
+        style="object-fit: cover; height: 100%; max-height: 500px;"
+      />
+    </div>
 
-  <!-- Poster -->
-  <div class="poster-wrapper">
-    <img [src]="'/assets/images/' + movie.imageUrl" alt="{{ movie.title }}" />
+    <!-- Info -->
+    <div class="col-md-8 d-flex flex-column justify-content-between">
+
+      <!-- Title & Description -->
+      <div>
+        <h1 class="display-4 fw-bold mb-3">{{ movie.title }}</h1>
+        <div class="text-muted mb-2">
+          <span>{{ movie.categoryName }}</span> |
+          <span>{{ movie.duration }} mins</span>
+        </div>
+        <p class="lead text-light mb-4">{{ movie.description }}</p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex flex-wrap gap-3 mb-4">
+        <button class="btn btn-outline-light px-4 py-2" (click)="switchTab('details')">📄 Details</button>
+        <button class="btn btn-outline-light px-4 py-2" (click)="switchTab('trailer')">🎬 Trailer</button>
+        <button class="btn btn-outline-light px-4 py-2" (click)="switchTab('movie')">▶️ Watch</button>
+      </div>
+
+      <!-- Rating -->
+      <div>
+        <span class="fs-3 text-warning">⭐️⭐️⭐️⭐️⭐️</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Info -->
-  <div class="info-wrapper">
-    <h1 class="movie-title">{{ movie.title }}</h1>
-    <p class="category">{{ movie.categoryName }} | {{ movie.duration }} mins</p>
-    <p class="description">{{ movie.description }}</p>
-    <p class="views">👁️ {{ movie.totalView || 0 }} views</p>
-
-    <!-- Rating -->
-    <div class="rating">
-      <span *ngFor="let star of [1,2,3,4,5]">⭐</span>
-    </div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <button [class.active]="activeTab === 'details'" (click)="switchTab('details')">📄 Details</button>
-      <button [class.active]="activeTab === 'trailer'" (click)="switchTab('trailer')">🎬 Trailer</button>
-      <button [class.active]="activeTab === 'movie'" (click)="switchTab('movie')">▶️ Watch Movie</button>
-    </div>
-
-    <!-- Tab Content -->
-
-    <!-- 1. Details -->
-    <div *ngIf="activeTab === 'details'">
-      <p><strong>Status:</strong> {{ movie.status }}</p>
-      <p><strong>Type:</strong> {{ movie.type === '0' ? 'Movie' : 'Series' }}</p>
-      <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
-    </div>
-
-    <!-- 2. Trailer -->
+  <!-- Trailer or Movie Section -->
+  <div class="mt-4 px-md-5">
+    <!-- Trailer -->
     <div *ngIf="activeTab === 'trailer' && showTrailer">
       <iframe
-        class="trailer-frame"
+        class="w-100 rounded-4 shadow"
+        style="height: 450px;"
         [src]="safeTrailerUrl"
         frameborder="0"
         allowfullscreen>
       </iframe>
     </div>
 
-    <!-- 3. Movie -->
+    <!-- Movie Video -->
     <div *ngIf="activeTab === 'movie' && !showTrailer">
-      <video
-        class="video-player"
-        src="https://vgfdprgqzkwvoxsnfdlr.supabase.co/storage/v1/object/public/pickup/instructor/42/video/.mp4/311792bc-49d0-48d1-a2bc-23cf3b3b3127.mp4"
-        controls
-        
-        ></video>
+      <video class="w-100 rounded-4 shadow" style="height: 450px;" controls>
+        <source [src]="'/assets/videos/' + movie.videoUrl" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </div>
-
-
   </div>
 </div>
-
-<!-- Loading -->
-<ng-template #loading>
-  <div class="text-center py-5 loading-spinner">
-    <div class="spinner-border text-danger" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-</ng-template>
