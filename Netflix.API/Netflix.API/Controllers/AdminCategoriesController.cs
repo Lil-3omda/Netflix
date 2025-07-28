@@ -8,7 +8,7 @@ namespace Netflix.API.Controllers
 {
     [Route("api/admin/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -21,11 +21,11 @@ namespace Netflix.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories([FromQuery] PaginationParams paginationParams)
+        public async Task<IActionResult> GetAllCategorieswithDeleted()
         {
             try
             {
-                var result = await _categoryService.GetAllPaginatedAsync(paginationParams);
+                var result = await _categoryService.GetAllCatedoriesAsync();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -34,6 +34,21 @@ namespace Netflix.API.Controllers
                 return StatusCode(500, new { message = "Failed to retrieve categories" });
             }
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllCategories()
+        //{
+        //    try
+        //    {
+        //        var result = await _categoryService.GetAllAsync();
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error getting categories");
+        //        return StatusCode(500, new { message = "Failed to retrieve categories" });
+        //    }
+        //}
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
@@ -97,7 +112,7 @@ namespace Netflix.API.Controllers
         {
             try
             {
-                var deleted = await _categoryService.DeleteAsync(id);
+                var deleted = await _categoryService.SoftDeleteCategoryAsync(id);
                 if (!deleted)
                     return BadRequest(new { message = "Cannot delete category that contains videos or category not found" });
 
@@ -133,6 +148,23 @@ namespace Netflix.API.Controllers
             {
                 _logger.LogError(ex, "Error getting category statistics");
                 return StatusCode(500, new { message = "Failed to retrieve statistics" });
+            }
+        }
+
+        [HttpPut("restore/{id}")]
+        public async Task<IActionResult> RestoreCategory(int id)
+        {
+            try
+            {
+                var restored = await _categoryService.RestoreCategoryAsync(id);
+                if (!restored)
+                    return NotFound(new { message = "Category not found or already active" });
+                return Ok(new { message = "Category restored successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error restoring category {CategoryId}", id);
+                return StatusCode(500, new { message = "Failed to restore category" });
             }
         }
     }

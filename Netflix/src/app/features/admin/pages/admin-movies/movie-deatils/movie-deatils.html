@@ -31,8 +31,6 @@
         </div>
         <hr class="border-light opacity-25" />
 
-
-
         <div class="fs-5">
           <p><strong>📂 Category:</strong> {{ movieDetails.categoryName }}</p>
           <p><strong>📝 Description:</strong> {{ movieDetails.description }}</p>
@@ -43,31 +41,37 @@
           <p><strong>👁️ Views:</strong> {{ movieDetails.totalView }}</p>
         </div>
 
-        <!-- 🎦 Full Movie Video -->
-        <div class="mt-4">
+        <!-- 🎞️ Trailer Section at Bottom -->
+              <div class="mt-4">
+            <h3 class="mb-3 text-info fw-semibold">🎞️ Trailer</h3>
+            <div class="ratio ratio-16x9 rounded overflow-hidden">
+              <iframe
+                [src]="safeTrailerUrl"
+                frameborder="0"
+                allowfullscreen>
+              </iframe>
+            </div>
+          
+          </div>
+
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎦 Full Movie Video -->
+        <div class="container my-5">
+          <div class="glass-card p-4 rounded-4 shadow-lg">
           <h5 class="mb-2">📺 Watch Full Movie</h5>
           <video controls class="w-100 rounded-4 shadow" style="max-height: 400px;">
             <source [src]="'https://localhost:7140/' + movieDetails.videoUrl" type="video/mp4">
             Your browser does not support the video tag.
           </video>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 🎞️ Trailer Section at Bottom -->
-  <div class="container my-5">
-    <div class="glass-card p-4 rounded-4 shadow-lg">
-      <h3 class="mb-3 text-info fw-semibold">🎞️ Trailer</h3>
-      <div class="ratio ratio-16x9 rounded overflow-hidden">
-        <iframe
-          [src]="safeTrailerUrl"
-          frameborder="0"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
+  
+ 
 </div>
 
 

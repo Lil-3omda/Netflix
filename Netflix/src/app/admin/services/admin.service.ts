@@ -80,6 +80,10 @@ export class AdminService {
     return this.http.delete<any>(`${this.apiUrl}/admin/Categories/${id}`);
   }
 
+  restoreCategory(id: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/Categories/restore/${id}`,id);
+  }
+
   // Review management methods - Fixed to match API
   getReviews(page: number = 1, pageSize: number = 200): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/Reviews?page=${page}&pageSize=${pageSize}`);
