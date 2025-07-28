@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -25,15 +25,14 @@ export class DashboardServices {
   }
 
   getAllMovies() {
-    return this.http.get<any>(`https://localhost:7140/api/Videos`);
+    return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
   }
+
+
   getCategories() {
     return this.http.get<any>(`https://localhost:7140/api/Category`);
   }
 
-  // getAllMovies() {
-  //   return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
-  // }
 
   getPublishedMovies() {
     return this.http.get<any>(`https://localhost:7140/api/Videos`);
@@ -51,4 +50,12 @@ export class DashboardServices {
     return this.http.get<any>(`https://localhost:7140/api/videos/${id}`);
   }
 
+
+  updateVideo(id: number, dto: any): Observable<any> {
+    return this.http.put<any>(`https://localhost:7140/api/videos/${id}`, dto);
+  }
+
+  softDeleteVideo(id: number): Observable<any> {
+    return this.http.delete<any>(`https://localhost:7140/api/videos/${id}`);
+  }
 }

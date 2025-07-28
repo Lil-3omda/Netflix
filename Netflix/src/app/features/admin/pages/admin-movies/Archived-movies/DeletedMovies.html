@@ -5,7 +5,7 @@
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
 
     <!-- Add Movie Button -->
-   <button class="btn btn-success" routerLink="/AdminTest/movies/add">
+   <button class="btn btn-success" routerLink="/admin/movies/add">
   <i class="fas fa-plus me-1"></i> Add Movie
 </button>
 
@@ -34,7 +34,7 @@
   <!-- Result (Optional List Placeholder) -->
   <div *ngIf="filteredMovies.length > 0" class="row g-3 mt-3">
     <div class="col-md-3" *ngFor="let item of filteredMovies | paginate: { itemsPerPage: 12, currentPage: page }"
-    [routerLink]="'/AdminTest/movie/'+ item.id">
+    [routerLink]="'/admin/movie/'+ item.id">
       <div class="bg-dark rounded shadow-sm small-media-card text-center p-2">
         <img [src]="'https://localhost:7140/'+item.imageUrl" alt="Poster" class="img-fluid rounded mb-1"
         style="width: 100%; height: auto; max-height: 200px; object-fit: contain; background-color: #000;" />

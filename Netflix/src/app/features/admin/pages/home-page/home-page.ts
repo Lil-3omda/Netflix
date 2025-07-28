@@ -6,7 +6,7 @@ import { NavBar } from "../../shared/nav-bar/nav-bar";
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, NavBar],
+  imports: [CommonModule],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })

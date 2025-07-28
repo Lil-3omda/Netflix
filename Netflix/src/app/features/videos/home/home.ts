@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { MovieCategory } from '../../../core/services/movie-category';
 import { Navbar } from "../../../layout/navbar/navbar";
 import { Category } from "../../../shared/category/category";
+import { HomePageServices } from '../../../core/services/home-page-services';
 
 @Component({
   selector: 'app-home',
@@ -20,21 +21,23 @@ export class Home  {
 
 
 top10Movies: any[] = [];
+data: any[] = [];
 
-
-constructor(private movieService: MovieCategory) {}
+constructor(private movieService: MovieCategory, private homeservices:HomePageServices) {}
 
 
 
   ngOnInit(): void {
-    // this.movieService.getTop10().subscribe({
-    //   next: (data:any) => {
-    //     this.top10Movies = data;
-    //   },
-    //   error: (err:any) => {
-    //     console.error('Error fetching top 10:', err);
-    //   }
-    // });
+
+    this.movieService.getTopViewed(10).subscribe({
+      next: (data:any) => {
+        this.top10Movies = data;
+      },
+      error: (err:any) => {
+        console.error('Error fetching top 10:', err);
+      }
+    });
+    this.loadCategories();
   }
 
 
@@ -46,6 +49,21 @@ scrollLeft() {
 scrollRight() {
   this.slider.nativeElement.scrollBy({ left: 300, behavior: 'smooth' });
 }
+
+
+
+  loadCategories() {
+    this.homeservices.getCategories().subscribe({
+      next:data=>{
+        this.data = data;
+        console.log('Categories loaded:', this.data);
+      },
+      error: err => {
+        console.error('Error loading categories:', err);
+      }
+    })
+
+  }
 
   videoUrl: string = 'https://vgfdprgqzkwvoxsnfdlr.supabase.co/storage/v1/object/public/pickup/instructor/42/video/.mp4/311792bc-49d0-48d1-a2bc-23cf3b3b3127.mp4';
   posterUrl: string = 'https://strandreleasing.com/wp-content/uploads/bfi_thumb/FrontCover_StrandBanner-nrye8w3wpafkaixcp4gn06xmf7k4q0h3ka6wis2ydk.jpg';

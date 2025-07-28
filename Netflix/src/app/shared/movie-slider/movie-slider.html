@@ -16,7 +16,7 @@
         *ngFor="let movie of movies"
       >
         <div class="movie-card" [routerLink]="['/moviedetails', movie.id]">
-          <img [src]="'/assets/images/' + movie.imageUrl" class="img-fluid" alt="{{ movie.title }}" />
+          <img [src]="'https://localhost:7140/'+movie.imageUrl" class="img-fluid" alt="{{ movie.title }}" />
           <p class="text-white mt-2 text-center">{{ movie.title }}</p>
         </div>
       </div>

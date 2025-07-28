@@ -81,7 +81,7 @@ export class AdminService {
   }
 
   // Review management methods - Fixed to match API
-  getReviews(page: number = 1, pageSize: number = 20): Observable<any> {
+  getReviews(page: number = 1, pageSize: number = 200): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/Reviews?page=${page}&pageSize=${pageSize}`);
   }
 
