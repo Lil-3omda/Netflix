@@ -15,13 +15,23 @@
 
       <!-- Info -->
       <div class="col-md-8">
-        <h1 class="fw-bold text-warning display-5">{{ movieDetails.title }}</h1>
-        <hr class="border-light opacity-25" />
-
+        <div class="d-flex justify-content-between align-center mb-3">
+          <h1 class="fw-bold text-warning display-5">{{ movieDetails.title }}</h1>
         <button
           class="btn btn-outline-info mb-3"
           (click)="oneditMovie()">
-          <i class="bi bi-pencil-square"></i> Edit Movie </button>
+          <i class="bi bi-pencil-square"></i> Edit Movie
+         </button>
+
+          <button
+            class="btn btn-outline-danger mb-3"
+            (click)="onDeleteMovie()">
+            <i class="bi bi-trash"></i> Delete Movie
+          </button>
+        </div>
+        <hr class="border-light opacity-25" />
+
+        
 
         <div class="fs-5">
           <p><strong>📂 Category:</strong> {{ movieDetails.categoryName }}</p>
@@ -62,29 +72,34 @@
 
 
 <div *ngIf="editing" class="uploading-overlay">
+  <form #movieForm="ngForm" name="movieForm" (ngSubmit)="saveChanges()" class="bg-dark p-4 rounded text-light w-50">
+    <h3 class="mb-4">Edit Movie</h3>
 
-<form #movieForm="ngForm" (ngSubmit)="saveChanges()">
- <div class="mb-3">
-<label class="form-label">category</label>
-  <select class="form-select bg-black text-light" [(ngModel)]="editMovie.categoryId" name="categoryId" required>
-  <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-</select>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Description</label>
-    <textarea class="form-control" [(ngModel)]="editMovie.description" name="description" required></textarea>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Trailer URL</label>
-    <input type="text" class="form-control" [(ngModel)]="editMovie.trailerUrl" name="trailerUrl" required />
-  </div>
+    <div class="mb-3">
+      <label class="form-label">Category</label>
+      <select class="form-select bg-black text-light" [(ngModel)]="editMovie.categoryId" name="categoryId" required #cat="ngModel">
+        <option value="">Select Category</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+      </select>
+      <div *ngIf="cat.invalid && cat.touched" class="text-danger">Category is required.</div>
+    </div>
 
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" [(ngModel)]="editMovie.description" name="description" required #desc="ngModel"></textarea>
+      <div *ngIf="desc.invalid && desc.touched" class="text-danger">Description is required.</div>
+    </div>
 
+    <div class="mb-3">
+      <label class="form-label">Trailer URL</label>
+      <input type="text" class="form-control" [(ngModel)]="editMovie.trailerUrl" name="trailerUrl" required #trailer="ngModel" />
+      <div *ngIf="trailer.invalid && trailer.touched" class="text-danger">Trailer URL is required.</div>
+    </div>
 
-  <div class="d-flex gap-2 mt-4">
-    <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
-    <button type="submit" class="btn btn-success">Save Changes</button>
-  </div>
-</form>
-
+    <div class="d-flex gap-2 mt-4">
+      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+      <button type="submit" class="btn btn-success" [disabled]="movieForm.invalid">Save Changes</button>
+    </div>
+  </form>
 </div>
+
