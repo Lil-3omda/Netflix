@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './movie-deatils.html',
   styleUrl: './movie-deatils.css'
 })
-export class MovieDeatils implements OnInit {
+export class AdminMovieDeatils implements OnInit {
   safeTrailerUrl!: SafeResourceUrl;
   videoUrl!: string;
   editing = false;
