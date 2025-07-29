@@ -2,28 +2,24 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
-  border: none;
-  font-size: 2rem;
-  width: 50px;
-  height: 50px;
-  z-index: 10;
-  cursor: pointer;
   border-radius: 50%;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  width: fit-content;
+  height: fit-content;
+  background:none;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 100px;
+  opacity: 1;
+
 }
 
-.slider-arrow:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-50%) scale(1.1);
+.slide-item{
+  margin-left:95px;
 }
-
-
 
 .left-arrow {
   left: 20px;
@@ -46,11 +42,9 @@
 .movie-card {
   width: 200px;
   margin: 10px;
- height: 400px;
+  height: 300px;
   border-radius: 8px;
-  overflow: hidden;
   transition: transform 0.5s ease;
- 
   text-align: center;
 }
 
@@ -60,17 +54,18 @@
 }
 
 .movie-image {
-  overflow: hidden;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 
 .movie-image img {
+  position: relative;
+  z-index: 55244;
   width: 100%;
   height: 300px;   
   object-fit: cover;
   border-bottom: 1px solid #333;
-}
 
+}
 
 .movie-title,
 .extra-info {
@@ -80,15 +75,12 @@
   transition: all 0.4s ease;
 }
 
-
 .movie-card:hover .movie-title,
 .movie-card:hover .extra-info {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
-  
+  transform: translateY(0);  
 }
-
 
 .movie-title {
   color: white;
@@ -96,7 +88,6 @@
   font-weight: bold;
   margin-top: 8px;
 }
-
 
 .extra-info {
   margin-top: 8px;
@@ -119,28 +110,45 @@
   color: #aaa;
 }
 
-
-
-
-
-
 .rank-number {
-  font-size: 250px;
+  position: absolute;
+  color:black;
+  font-size: 260px;
   font-weight: 900;
-  color: #0e0d0d;
-  margin-right: -10px;
-  margin-bottom: 120px;
-  line-height: 1;
-  text-shadow:
-    2px 2px 6px rgba(255, 255, 255, 0.575),
-    -2px -2px 6px rgba(255, 255, 255, 0.1);
-  min-width: 100px;
-  text-align: center;
- 
+  -webkit-text-stroke: 5px #555; 
+  z-index: 0;
+  top: -20px;
+  right: 180px;
+  line-height: 1.25;
+  pointer-events: none;
+  user-select: none;
 }
 
-with-rank {
-  margin-right: 3.5rem; 
+.ten-number{
+  position: absolute;
+  color:black;
+  font-size: 200px;
+  font-weight: 900;
+  -webkit-text-stroke: 5px #555; 
+  z-index: 0;
+  top: -20px;
+  right: 180px;
+  line-height: 1.7;
+  pointer-events: none;
+  user-select: none;
+
+}
+
+.slide-item {
+  position: relative;
+}
+
+.slide-item:hover .rank-number {
+  transform: scale(1.05);
+}
+
+.with-rank {
+  margin-right: 3.5rem;
 }
 
 .no-rank {
