@@ -1,40 +1,75 @@
 .movie-card {
-  background-color: #141414;
+  width: 200px;
+  margin: 10px;
+ height: 400px;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
+  transition: transform 0.5s ease;
+ 
+  text-align: center;
 }
 
 .movie-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+  transform: scale(1.08);
   z-index: 2;
 }
 
-.movie-card img {
+.movie-image {
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.movie-image img {
   width: 100%;
-  height: 240px; 
+  height: 300px;   
   object-fit: cover;
   border-bottom: 1px solid #333;
 }
 
-.movie-info {
-  padding: 12px;
-  color: #fff;
+
+.movie-title,
+.extra-info {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
 }
 
-.movie-info h5 {
-  font-size: 16px;
-  margin-bottom: 6px;
-  font-weight: 600;
+
+.movie-card:hover .movie-title,
+.movie-card:hover .extra-info {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  
 }
 
-.movie-info p {
-  font-size: 13px;
-  color: #bbb;
-  line-height: 1.4;
+
+.movie-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+
+.extra-info {
+  margin-top: 8px;
+  color: white;
+}
+
+.extra-info .icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 5px;
+  font-size: 1.2rem;
+}
+.extra-info a:hover{
+  color: red;
+} 
+
+.extra-info .meta {
+  font-size: 0.85rem;
+  color: #aaa;
 }

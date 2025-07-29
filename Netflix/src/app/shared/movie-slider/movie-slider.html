@@ -2,28 +2,41 @@
   <div class="container">
     <h2 class="text-white mb-4">{{ title }}</h2>
 
+    
     <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
     <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
 
+    
     <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
       <div
-        class="slide-item d-flex flex-row align-items-center me-4 flex-shrink-0"
+        class="slide-item d-flex align-items-center flex-shrink-0"
+        [ngClass]="showRank ? 'with-rank me-4' : 'no-rank me-2'"
         *ngFor="let movie of movies; let i = index"
-        style="min-width: 250px;"
+        [style.minWidth.px]="showRank ? 250 : 180"
       >
-
-        
-        <div *ngIf="showRank" class="rank-number ">
+       
+        <div *ngIf="showRank" class="rank-number">
           {{ i + 1 }}
         </div>
 
-      
-        <div class="movie-card " [routerLink]="['/moviedetails', movie.id]">
-          <img [src]="'/assets/images/' + movie.imageUrl" class="img-fluid rounded" alt="{{ movie.title }}" />
-          <p class="text-white mt-2 text-center">{{ movie.title }}</p>
+        
+        <div class="movie-card" >
+          <div class="movie-image">
+            <img [src]="'/assets/images/' + movie.imageUrl" class="img-fluid rounded" alt="{{ movie.title }}" />
+          </div>
+          <div class="movie-title">{{ movie.title }}</div>
+          <div class="extra-info text-center mt-2">
+            <div class="d-flex justify-content-center gap-3 mb-2">
+              <a [routerLink]="['/moviedetails', movie.id]">
+              <i class="fas fa-play-circle fs-3"></i>
+              </a>
+              <i class="fas fa-heart fs-3 d-none"></i>
+            </div>
+          </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
+
+

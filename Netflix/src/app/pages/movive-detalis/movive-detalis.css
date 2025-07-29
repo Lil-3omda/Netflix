@@ -1,0 +1,25 @@
+.lead{
+  opacity: 0.5;
+}
+
+.btn-play {
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 10%;
+    }
+
+    .btn-play:hover {
+      background-color: darkred;
+    }
+
+    .btn-trailer {
+      background-color: white;
+      color: black;
+      border: 1px solid black;
+    }
+
+    .btn-trailer:hover {
+      background-color: red;
+      color: rgb(248, 218, 218);
+    }
