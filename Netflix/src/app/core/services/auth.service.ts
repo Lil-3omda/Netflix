@@ -125,4 +125,27 @@ export class AuthService {
   checkEmailExists(email: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/auth/email-exists?email=${encodeURIComponent(email)}`);
   }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  verifyResetOtp(email: string, otpCode: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/verify-reset-otp`, { email, otpCode });
+  }
+
+  resetPassword(email: string, resetToken: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/reset-password`, { 
+      email, 
+      resetToken, 
+      newPassword 
+    });
+  }
+
+  changeUserRole(userId: string, newRole: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/change-role`, {
+      userId,
+      newRole
+    });
+  }
 }

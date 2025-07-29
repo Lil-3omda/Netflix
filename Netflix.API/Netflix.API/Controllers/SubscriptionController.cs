@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Netflix.API.Models;
 using Netflix.API.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Netflix.API.DTOs.SubscriptionDTOs;
 using Netflix.API.DTOs.ProfileDTOs;
+using Microsoft.EntityFrameworkCore;
+using Netflix.API.Data;
 
 namespace Netflix.API.Controllers
 {
@@ -13,16 +15,18 @@ namespace Netflix.API.Controllers
     public class SubscriptionController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly ApplicationDbContext context;
 
-        public SubscriptionController(IUnitOfWork unitOfWork)
+        public SubscriptionController(IUnitOfWork unitOfWork, ApplicationDbContext context)
         {
             this.unitOfWork = unitOfWork;
+            this.context = context;
         }
 
         [HttpGet("plans")]
         public async Task<ActionResult<IEnumerable<SubscriptionPlan>>> GetPlans()
         {
-            var plans = await unitOfWork.UserSubscriptions.GetAllAsync();
+            var plans = await context.SubscriptionPlans.ToListAsync();
             return Ok(plans);
         }
 
@@ -82,6 +86,81 @@ namespace Netflix.API.Controllers
                 return NotFound();
 
             return Ok(subscription);
+        }
+
+        [HttpGet("user-subscription/{userId}")]
+        public async Task<IActionResult> GetUserSubscriptionDetails(string userId)
+        {
+            var subscription = await context.UserSubscriptions
+                .Include(us => us.Plan)
+                .FirstOrDefaultAsync(us => us.UserId == userId);
+
+            if (subscription == null)
+                return NotFound(new { message = "No subscription found for user" });
+
+            var profileCount = await context.Profiles.CountAsync(p => p.UserId == userId);
+
+            return Ok(new
+            {
+                planName = subscription.Plan.Name,
+                price = subscription.Plan.Price,
+                maxProfiles = subscription.Plan.MaxProfiles,
+                currentProfiles = profileCount,
+                nextBillingDate = subscription.EndDate,
+                status = subscription.EndDate > DateTime.UtcNow ? "Active" : "Expired"
+            });
+        }
+
+        [HttpPost("change-plan")]
+        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanDTO dto)
+        {
+            var subscription = await context.UserSubscriptions
+                .FirstOrDefaultAsync(us => us.UserId == dto.UserId);
+
+            if (subscription == null)
+                return NotFound(new { message = "No subscription found for user" });
+
+            var newPlan = await context.SubscriptionPlans
+                .FirstOrDefaultAsync(p => p.Id == dto.NewPlanId);
+
+            if (newPlan == null)
+                return NotFound(new { message = "Plan not found" });
+
+            // Check if downgrading and user has too many profiles
+            var profileCount = await context.Profiles.CountAsync(p => p.UserId == dto.UserId);
+            if (profileCount > newPlan.MaxProfiles)
+            {
+                return BadRequest(new { 
+                    message = $"Cannot downgrade to {newPlan.Name} plan. You have {profileCount} profiles but this plan only allows {newPlan.MaxProfiles}. Please delete some profiles first." 
+                });
+            }
+
+            // Update subscription
+            subscription.PlanId = dto.NewPlanId;
+            // Extend subscription by one month from current end date or now, whichever is later
+            var baseDate = subscription.EndDate > DateTime.UtcNow ? subscription.EndDate : DateTime.UtcNow;
+            subscription.EndDate = baseDate.AddMonths(1);
+
+            await context.SaveChangesAsync();
+
+            return Ok(new { message = "Plan changed successfully" });
+        }
+
+        [HttpPost("cancel/{userId}")]
+        public async Task<IActionResult> CancelSubscription(string userId)
+        {
+            var subscription = await context.UserSubscriptions
+                .FirstOrDefaultAsync(us => us.UserId == userId);
+
+            if (subscription == null)
+                return NotFound(new { message = "No subscription found for user" });
+
+            // Don't delete subscription, just mark it as cancelled by not extending it
+            // The subscription will remain active until the end date
+            
+            return Ok(new { 
+                message = "Subscription cancelled successfully. Your access will remain active until " + subscription.EndDate.ToString("yyyy-MM-dd") 
+            });
         }
     }
 }

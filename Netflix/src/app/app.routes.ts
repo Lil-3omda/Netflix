@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
+import { GuestGuard } from './core/guards/guest.guard';
 import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
 import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
 import { HomePage } from './features/admin/pages/home-page/home-page';
@@ -12,11 +14,13 @@ import { MoviesStatistics } from './features/admin/pages/admin-movies/movies-sta
 import { MovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/movie-deatils';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
-  { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.Login) },
-  { path: 'signup', loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent) },
-  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home) },
+  {path: 'dashboard', loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent) },
+
+  { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.Login), canActivate: [GuestGuard] },
+  { path: 'signup', loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent), canActivate: [GuestGuard] },
+  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home), canActivate: [AuthGuard] },
 
   {
     path: 'category/:name',
@@ -28,7 +32,13 @@ export const routes: Routes = [
   },
   {
     path: 'Profile',
-    loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)
+    loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'account',
+    loadComponent: () => import('./features/account/account.component').then(m => m.AccountComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: 'only-on-netflix',
@@ -51,10 +61,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/Footer/speed-test.component').then(m => m.SpeedTestComponent)
   },
 
+
   // Admin Section
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [AdminGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadComponent: () => import('./features/admin/pages/home-page/home-page').then(m => m.HomePage) },
