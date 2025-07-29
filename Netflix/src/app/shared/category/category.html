@@ -5,13 +5,22 @@
 
   <div class="row">
     <div class="col-6 col-md-3 mb-4" *ngFor="let movie of movies">
-      <div class="movie-card" [routerLink]="['/moviedetails', movie.id]" class="text-decoration-none">
-        <img [src]="'/assets/images/' + movie.imageUrl" alt="{{ movie.title }}" />
-        <div class="movie-info">
-          <h5>{{ movie.title }}</h5>
-          <p>{{ movie.description }}</p>
+              <div class="movie-card" >
+          <div class="movie-image">
+            <img [src]="'/assets/images/' + movie.imageUrl" class="img-fluid rounded" alt="{{ movie.title }}" />
+          </div>
+          <div class="movie-title">{{ movie.title }}</div>
+          <div class="extra-info text-center mt-2">
+            <div class="d-flex justify-content-center gap-3 mb-2">
+              <a [routerLink]="['/moviedetails', movie.id]">
+              <i class="fas fa-play-circle fs-3"></i>
+              </a>
+              <i class="fas fa-heart fs-3 d-none"></i>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
+
+
