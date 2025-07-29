@@ -1,40 +1,112 @@
 .movie-card {
-  background-color: #141414;
-  border-radius: 8px;
+  width: 250px;
+  height: 350px;
+  border-radius: 12px;
   overflow: hidden;
+  background-color: #141414;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  position: relative;
   cursor: pointer;
 }
 
 .movie-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
-  z-index: 2;
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+  z-index: 3;
 }
 
-.movie-card img {
+.movie-image {
   width: 100%;
-  height: 240px; 
+  height: 100%;
+  position: relative;
+}
+
+.movie-image img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-bottom: 1px solid #333;
+  display: block;
+  transition: transform 0.4s ease;
 }
 
-.movie-info {
-  padding: 12px;
+.movie-card:hover .movie-image img {
+  transform: scale(1.05);
+}
+
+/* Overlay that slides up */
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+  text-align: center;
+}
+
+.movie-card:hover .movie-overlay {
+  transform: translateY(0%);
+}
+
+.movie-title {
   color: #fff;
-}
-
-.movie-info h5 {
-  font-size: 16px;
-  margin-bottom: 6px;
+  font-size: 1rem;
   font-weight: 600;
+  margin-bottom: 6px;
 }
 
-.movie-info p {
-  font-size: 13px;
-  color: #bbb;
-  line-height: 1.4;
+.extra-info {
+  color: #ccc;
 }
+
+.extra-info a i {
+  color: #bbb;
+  transition: color 0.3s ease;
+}
+
+.play-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.play-now-btn:hover {
+  color: #e50914;
+}
+
+.play-now-btn .play-text {
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.play-text {
+  opacity: 0;
+  display: none;
+  transform: translatey(-10px);
+  font-size: medium;
+  font-weight: 800;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  white-space: nowrap;
+}
+
+/* Reveal text when hovering over the movie card */
+.movie-card:hover .play-now-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+.play-now-btn:hover .play-text {
+  display: block;
+  opacity: 1;
+  transform: translatey(0);
+}
+
+

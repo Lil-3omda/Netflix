@@ -100,7 +100,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
         // update data vide by admin 
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateVideo(int id,[FromBody] VideoUploadDto dto)
         {
@@ -148,7 +148,7 @@ namespace Netflix.API.Controllers.VideoController
             return Ok(mapp);
         }
         //SoftDeleted
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDelete(int id)
         {
@@ -159,7 +159,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
         // Restore Video From Delete 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}/restore")]
         public async Task<IActionResult> RestoreVideo(int id)
         {

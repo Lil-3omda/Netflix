@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardServices } from '../../services/admin-dashboard/dashboard-services';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavBar } from "../../shared/nav-bar/nav-bar";
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css'
 })

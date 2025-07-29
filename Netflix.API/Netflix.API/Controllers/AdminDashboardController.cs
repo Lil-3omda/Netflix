@@ -64,6 +64,37 @@ namespace Netflix.API.Controllers
             return Ok(videos);
         }
 
+        //get by id 
+        [HttpGet("video/{id}")]
+        public IActionResult GetVideoById([FromRoute] int id)
+        {
+            var video = _context.Videos.Include(v => v.Category)
+            .Select(v => new
+            {
+                v.Id,
+                v.Title,
+                v.Description,
+                v.VideoUrl,
+                v.TrailerUrl,
+                v.ImageUrl,
+                CategoryName = v.Category.Name,
+                v.Type,
+                v.Duration,
+                v.Status,
+                v.ViewCount,
+                v.TotalView,
+                v.IsDeleted,
+                RatingsCount = v.Ratings.Count(),
+                ReviewsCount = _context.Reviews.Count(r => r.VideoId == v.Id),
+            })
+            .FirstOrDefault(v => v.Id == id);
+            if (video == null)
+            {
+                return NotFound(new { message = $"Video with ID: {id} not found." });
+            }
+            return Ok(video);
+        }
+
         //get deleted videos
         [HttpGet("deleted-videos")]
         public IActionResult GetDeletedVideos()
@@ -94,6 +125,55 @@ namespace Netflix.API.Controllers
                 return NotFound(new { message = "No deleted videos found." });
             }
             return Ok(deletedVideos);
+        }
+
+
+        //update video
+        [HttpPut("video/{id}")]
+        public IActionResult UpdateVideo([FromRoute] int id, [FromBody] AdminEditDTO model)
+        {
+            var video = _context.Videos.FirstOrDefault(v => v.Id == id);
+            if (video == null)
+            {
+                return NotFound(new { message = $"Video with ID: {id} not found." });
+            }
+           
+            video.Description = model.Description;
+            video.TrailerUrl = model.TrailerUrl;
+            video.CategoryId = model.CategoryId;
+            _context.Videos.Update(video);
+            _context.SaveChanges();
+            return Ok(new { message = "Video updated successfully." });
+        }
+
+        //Delete video
+        [HttpDelete("video/{id}")]
+        public IActionResult DeleteVideo([FromRoute] int id)
+        {
+            var video = _context.Videos.FirstOrDefault(v => v.Id == id);
+            if (video == null)
+            {
+                return NotFound(new { message = $"Video with ID: {id} not found." });
+            }
+            video.IsDeleted = true;
+            _context.Videos.Update(video);
+            _context.SaveChanges();
+            return Ok(new { message = "Video deleted successfully." });
+        }
+
+        // Restore video
+        [HttpPost("video/{id}/restore")]
+        public IActionResult RestoreVideo([FromRoute] int id)
+        {
+            var video = _context.Videos.FirstOrDefault(v => v.Id == id);
+            if (video == null)
+            {
+                return NotFound(new { message = $"Video with ID: {id} not found." });
+            }
+            video.IsDeleted = false;
+            _context.Videos.Update(video);
+            _context.SaveChanges();
+            return Ok(new { message = "Video restored successfully." });
         }
 
         //Get: api/totalViews

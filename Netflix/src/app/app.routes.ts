@@ -12,7 +12,8 @@ import { PublishedMovies } from './features/admin/pages/admin-movies/published-m
 import { DeletedMovies } from './features/admin/pages/admin-movies/Archived-movies/DeletedMovies';
 import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movie';
 import { MoviesStatistics } from './features/admin/pages/admin-movies/movies-statistics/movies-statistics';
-import { MovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/movie-deatils';
+import { AdminMovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/movie-deatils';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -119,9 +120,10 @@ export const routes: Routes = [
           { path: 'published', component: PublishedMovies },
           { path: 'archived', component: DeletedMovies },
           { path: 'add', component: AddMovie },
-          { path: 'moviedetails/:id',  loadComponent: () =>import('./features/admin/pages/admin-movies/movie-deatils/movie-deatils').then(m => m.MovieDeatils) }
+          
         ]
-      }
+      },
+      { path: 'moviedetails/:id',  component: AdminMovieDeatils },
     ]
   },
 

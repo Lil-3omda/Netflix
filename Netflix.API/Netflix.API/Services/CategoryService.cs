@@ -24,6 +24,15 @@ namespace Netflix.API.Services
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
+            var categories = await context.Categories.Where(c => !c.IsDeleted)
+                .Include(c => c.Videos)
+                .ToListAsync();
+
+            return mapper.Map<IEnumerable<CategoryDto>>(categories);
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetAllCatedoriesAsync()
+        {
             var categories = await context.Categories
                 .Include(c => c.Videos)
                 .ToListAsync();
@@ -98,21 +107,43 @@ namespace Netflix.API.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> SoftDeleteCategoryAsync(int categoryId)
         {
             var category = await context.Categories
                 .Include(c => c.Videos)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
 
             if (category == null)
                 return false;
 
-            if (category.Videos.Any())
-                return false;
+            
+            category.IsDeleted = true;
 
-            unitOfWork.context.Categories.Remove(category);
-            await unitOfWork.SaveAsync();
+           
+            foreach (var video in category.Videos)
+            {
+                video.IsDeleted = true;
+            }
+
+            await context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> RestoreCategoryAsync(int id)
+        {
+             var category = await context.Categories
+             .Include(c => c.Videos)
+            .FirstOrDefaultAsync(c => c.Id==id);
+               if (category == null)
+                    return false;
+              category.IsDeleted = false;
+              foreach (var video in category.Videos)
+              {
+                 video.IsDeleted = false;
+              }
+              await context.SaveChangesAsync();
+              return true;
+        }
+
     }
 }

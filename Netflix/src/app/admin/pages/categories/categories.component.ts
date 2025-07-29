@@ -7,6 +7,7 @@ import { AdminService } from '../../services/admin.service';
 interface Category {
   id: number;
   name: string;
+  isDeleted?: boolean;
   videos: any[];
 }
 
@@ -55,13 +56,9 @@ interface Category {
             <select class="form-select" [(ngModel)]="filterType" (change)="filterCategories()">
               <option value="">All Categories</option>
               <option value="with-content">With Content</option>
+              <option value="archived">Archived</option>
               <option value="empty">Empty</option>
             </select>
-          </div>
-          <div class="col-md-3">
-            <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2">
-              <i class="bi bi-filter"></i><span>Filter</span>
-            </button>
           </div>
         </div>
       </div>
@@ -92,14 +89,18 @@ interface Category {
                 </td>
                 <td><span class="badge bg-primary">{{ category.videos?.length || 0 }} videos</span></td>
                 <td>
-                  <span class="badge bg-success" *ngIf="category.videos?.length">Active</span>
-                  <span class="badge bg-warning" *ngIf="!category.videos?.length">Empty</span>
+                  <span class="badge bg-danger me-1" *ngIf="category.isDeleted">Archived</span>
+                  
+                    <span class="badge bg-success" *ngIf="category.videos?.length">Active</span>
+                    <span class="badge bg-warning" *ngIf="!category.videos?.length">Empty</span>
+                  
                 </td>
                 <td>
                   <div class="btn-group btn-group-sm">
                     <button (click)="editCategory(category)" class="btn btn-outline-light" title="Edit Category"><i class="bi bi-pencil"></i></button>
-                    <button (click)="viewCategoryVideos(category)" class="btn btn-outline-info" title="View Videos"><i class="bi bi-eye"></i></button>
-                    <button (click)="confirmDeleteCategory(category)" class="btn btn-outline-danger" title="Delete Category"><i class="bi bi-trash"></i></button>
+                    <button (click)="viewCategoryVideos(category)" class="btn btn-outline-info mx-2" title="View Videos"><i class="bi bi-eye"></i></button>
+                    <button *ngIf="!category.isDeleted" (click)="confirmDeleteCategory(category)" class="btn btn-outline-danger" title="Delete Category"><i class="bi bi-trash"></i></button>
+                    <button *ngIf="category.isDeleted" (click)="restoreCategory(category.id)" class="btn btn-outline-success" title="Restore Category"><i class="bi bi-arrow-counterclockwise"></i></button>
                   </div>
                 </td>
               </tr>
@@ -232,12 +233,13 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   private loadCategories(): void {
     this.adminService.getCategories()
-      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.categories = Array.isArray(response.items) ? response.items : [];
+          this.categories = response || [];
           this.filteredCategories = [...this.categories];
+          console.log('Loaded categories:', this.categories);
           this.loadStatistics();
+
         },
         error: (err) => console.error('Failed to load categories', err)
       });
@@ -267,6 +269,10 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   filterCategories(): void {
     this.filteredCategories = this.categories.filter(category => {
       const matchesSearch = !this.searchTerm || category.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const isArchived = category.isDeleted;
+      if (this.filterType === 'archived') {
+        return matchesSearch && isArchived;
+      }
       const matchesFilter = !this.filterType ||
         (this.filterType === 'with-content' && category.videos?.length) ||
         (this.filterType === 'empty' && !category.videos?.length);
@@ -335,6 +341,20 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     this.selectedCategory = null;
   }
 
+  restoreCategory(id:number): void {
+    this.adminService.restoreCategory(id).subscribe({
+      next: () => {
+        this.loadCategories();
+        this.showDeleteModal = false;
+        this.selectedCategory = null;
+      },
+      error: (err) => {
+        console.error('Restore failed:', err);
+        this.showDeleteModal = false;
+      }
+    })
+
+  }
   performDeleteCategory(): void {
     if (!this.selectedCategory) return;
     this.adminService.deleteCategory(this.selectedCategory.id)
