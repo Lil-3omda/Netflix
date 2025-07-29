@@ -1632,11 +1632,11 @@ private async processPaymobPayment(): Promise<void> {
         isEmailVerified: true
       };
 
-      localStorage.setItem('netflix_user', JSON.stringify(userData));
-      localStorage.setItem('netflix_token', 'temp_token_' + this.userId);
+      // localStorage.setItem('netflix_user', JSON.stringify(userData));
+      // localStorage.setItem('netflix_token', 'temp_token_' + this.userId);
 
       // Navigate to home
-      this.router.navigate(['/home']);
+      this.router.navigate(['/login']);
     },
     error: (err) => {
       console.error('❌ Failed to subscribe & create profile', err);
