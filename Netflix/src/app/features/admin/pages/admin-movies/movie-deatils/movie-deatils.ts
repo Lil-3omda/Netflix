@@ -96,10 +96,26 @@ const updatedMovie = {
       this.dashboardService.softDeleteVideo(this.id).subscribe({
         next: () => {
           console.log('Movie deleted successfully');
+          this.loadMovieDetails(this.id); // Reload movie details after deletion
           // Optionally, navigate back to the movies list or show a success message
         },
         error: err => {
           console.error('Error deleting movie:', err);
+        }
+      });
+    }
+  }
+
+  onRestoreMovie(): void {
+    if (confirm('Are you sure you want to Restore this movie?')) {
+      this.dashboardService.restoreVideo(this.id).subscribe({
+        next: () => {
+          this.loadMovieDetails(this.id); // Reload movie details after restoration
+          console.log('Movie restoed successfully');
+          // Optionally, navigate back to the movies list or show a success message
+        },
+        error: err => {
+          console.error('Error restore movie:', err);
         }
       });
     }
