@@ -1631,11 +1631,6 @@ private async processPaymobPayment(): Promise<void> {
         plan: this.selectedPlan,
         isEmailVerified: true
       };
-
-      // localStorage.setItem('netflix_user', JSON.stringify(userData));
-      // localStorage.setItem('netflix_token', 'temp_token_' + this.userId);
-
-      // Navigate to home
       this.router.navigate(['/login']);
     },
     error: (err) => {
