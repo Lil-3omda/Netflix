@@ -1,0 +1,116 @@
+<div class="favorites-container">
+  <!-- Title -->
+  <div *ngIf="showTitle" class="favorites-header">
+    <h2 class="favorites-title">My List</h2>
+    <button *ngIf="!isLoading" 
+            class="refresh-button" 
+            (click)="refresh()" 
+            title="Refresh favorites">
+      <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+    </div>
+    <p class="loading-text">Loading your favorites...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <p class="error-message">{{ error }}</p>
+    <button class="retry-button" (click)="refresh()">Try Again</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !error && favorites.length === 0" class="empty-container">
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+    <h3 class="empty-title">No favorites yet</h3>
+    <p class="empty-description">
+      Start building your list by adding movies and shows you love. Look for the heart icon next to titles.
+    </p>
+  </div>
+
+  <!-- Favorites Grid/Row -->
+  <div *ngIf="!isLoading && !error && favorites.length > 0" 
+       class="favorites-list"
+       [class.favorites-grid]="layout === 'grid'"
+       [class.favorites-row]="layout === 'row'">
+    
+    <div *ngFor="let favorite of favorites; trackBy: trackByVideoId" 
+         class="favorite-item"
+         (click)="onVideoClick(favorite.video!)">
+      
+      <!-- Video Thumbnail -->
+      <div class="video-thumbnail">
+        <img [src]="getVideoImageUrl(favorite.video!)" 
+             [alt]="favorite.video?.title"
+             class="thumbnail-image"
+             loading="lazy">
+        
+        <!-- Overlay with actions -->
+        <div class="thumbnail-overlay">
+          <!-- Play button -->
+          <button class="play-button" title="Play">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5,3 19,12 5,21"></polygon>
+            </svg>
+          </button>
+          
+          <!-- Remove favorite button -->
+          <button class="remove-favorite-button" 
+                  (click)="onRemoveFavorite(favorite.videoId); $event.stopPropagation()"
+                  title="Remove from favorites">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Video type badge -->
+        <div class="video-type-badge">
+          {{ getVideoTypeDisplay(favorite.video?.type || 0) }}
+        </div>
+      </div>
+      
+      <!-- Video Info -->
+      <div class="video-info">
+        <h3 class="video-title">{{ favorite.video?.title }}</h3>
+        <div class="video-meta">
+          <span *ngIf="favorite.video?.duration" class="video-duration">
+            {{ formatDuration(favorite.video.duration) }}
+          </span>
+          <span *ngIf="favorite.video?.averageRating" class="video-rating">
+            ⭐ {{ favorite.video.averageRating | number:'1.1-1' }}
+          </span>
+        </div>
+        <p *ngIf="favorite.video?.description && layout === 'row'" 
+           class="video-description">
+          {{ favorite.video.description }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- View All Link (for preview mode) -->
+  <div *ngIf="maxItems && favorites.length >= maxItems" class="view-all-container">
+    <a routerLink="/favorites" class="view-all-link">
+      View All Favorites ({{ favorites.length }}+)
+      <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9,18 15,12 9,6"></polyline>
+      </svg>
+    </a>
+  </div>
+</div>

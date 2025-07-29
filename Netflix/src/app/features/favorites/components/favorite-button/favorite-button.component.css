@@ -1,0 +1,220 @@
+/* Base favorite button styles */
+.favorite-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  position: relative;
+  z-index: 10;
+}
+
+.favorite-button:hover {
+  transform: scale(1.1);
+}
+
+.favorite-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Size variants */
+.favorite-button--small {
+  padding: 4px;
+  width: 32px;
+  height: 32px;
+}
+
+.favorite-button--small .heart-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.favorite-button--medium {
+  padding: 6px;
+  width: 40px;
+  height: 40px;
+}
+
+.favorite-button--medium .heart-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.favorite-button--large {
+  padding: 8px;
+  width: 48px;
+  height: 48px;
+}
+
+.favorite-button--large .heart-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Variant styles */
+.favorite-button--icon {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.favorite-button--icon:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.favorite-button--button {
+  background: rgba(229, 9, 20, 0.1);
+  border: 1px solid #e50914;
+  border-radius: 6px;
+  padding: 8px 16px;
+  width: auto;
+  height: auto;
+}
+
+.favorite-button--button:hover {
+  background: rgba(229, 9, 20, 0.2);
+  border-color: #e50914;
+}
+
+/* Status styles */
+.favorite-button--inactive .heart-empty {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.favorite-button--inactive:hover .heart-empty {
+  color: #e50914;
+}
+
+.favorite-button--active .heart-filled {
+  color: #e50914;
+  animation: heartPulse 0.3s ease-out;
+}
+
+.favorite-button--active:hover .heart-filled {
+  color: #ff0a1a;
+}
+
+/* Heart icon styles */
+.favorite-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-icon {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.heart-filled {
+  animation: heartBeat 0.6s ease-in-out;
+}
+
+/* Button text */
+.button-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #e50914;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .favorite-button--button .button-text {
+    font-size: 12px;
+  }
+  
+  .favorite-button--medium {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .favorite-button--large {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Accessibility */
+.favorite-button:focus {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+}
+
+.favorite-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .favorite-button--icon {
+    background: black;
+    border: 2px solid white;
+  }
+  
+  .heart-empty {
+    color: white !important;
+  }
+  
+  .heart-filled {
+    color: red !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .favorite-button,
+  .heart-icon {
+    transition: none;
+  }
+  
+  .favorite-button:hover {
+    transform: none;
+  }
+  
+  .heart-filled,
+  .heart-beat,
+  .heart-pulse {
+    animation: none;
+  }
+}
