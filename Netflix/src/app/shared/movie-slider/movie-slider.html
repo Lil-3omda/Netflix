@@ -15,7 +15,10 @@
         [style.minWidth.px]="showRank ? 250 : 180"
       >
        
-        <div *ngIf="showRank" class="rank-number">
+        <div *ngIf="showRank && i<9" class="rank-number">
+          {{ i + 1 }}
+        </div>
+        <div *ngIf="showRank && i==9" class="ten-number">
           {{ i + 1 }}
         </div>
 
