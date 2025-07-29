@@ -46,9 +46,9 @@ namespace Netflix.API.Data
             {
                 var plans = new List<SubscriptionPlan>
                 {
-                    new SubscriptionPlan { Name = "Basic", Price = 100, MaxProfiles = 1 },
-                    new SubscriptionPlan { Name = "Standard", Price = 170, MaxProfiles = 2 },
-                    new SubscriptionPlan { Name = "Premium", Price = 240, MaxProfiles = 4 }
+                    new SubscriptionPlan { Name = "Basic", Price = 100, MaxProfiles = 3 },
+                    new SubscriptionPlan { Name = "Standard", Price = 170, MaxProfiles = 5 },
+                    new SubscriptionPlan { Name = "Premium", Price = 240, MaxProfiles = 7 }
                 };
 
                 context.SubscriptionPlans.AddRange(plans);

@@ -275,14 +275,14 @@ import{HttpHeaders} from '@angular/common/http';
               <div class="payment-method" (click)="selectPaymentMethod('card')">
                 <div class="payment-method-content">
                   <span class="payment-text">Credit or Debit Card</span>
-                  <div class="payment-icons">
-                    <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/visa.png" alt="Visa" class="payment-icon">
-                    <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/mastercard.png" alt="Mastercard" class="payment-icon">
+                  <div class="payment-icons mx-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="payment-icon" height="30">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" class="payment-icon" height="30">
                   </div>
 
                 </div>
                 <div class="encrypted-badge">
-                  <span>End-to-end encrypted</span>
+                  <!-- <span>End-to-end encrypted</span> -->
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                     <path d="M18 8H20C21.1 8 22 8.9 22 10V20C22 21.1 21.1 22 20 22H4C2.9 22 2 21.1 2 20V10C2 8.9 2.9 8 4 8H6V6C6 3.8 7.8 2 10 2H14C16.2 2 18 3.8 18 6V8ZM16 8V6C16 4.9 15.1 4 14 4H10C8.9 4 8 4.9 8 6V8H16Z" fill="#999"/>
                   </svg>
@@ -320,8 +320,8 @@ import{HttpHeaders} from '@angular/common/http';
               </div>
               <h1 class="card-title">Set up your credit or debit card</h1>
               <div class="card-icons">
-                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/visa.png" alt="Visa" class="payment-icon">
-                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/mastercard.png" alt="Mastercard" class="payment-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="payment-icon" height="30">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" class="payment-icon" height="30">
               </div>
             </div>
 
@@ -1498,7 +1498,7 @@ export class SignupComponent implements OnInit {
 }
 
 
- private async processPaymobPayment(): Promise<void> {
+private async processPaymobPayment(): Promise<void> {
 
   if (!this.userId) {
     const storedId = localStorage.getItem('userId');
@@ -1570,7 +1570,7 @@ export class SignupComponent implements OnInit {
       this.processPaymobPayment();
     } else {
       // Cash payment already processed in developer mode
-      this.router.navigate(['/Home']);
+      this.router.navigate(['/Profile']);
     }
   }
 
@@ -1735,6 +1735,7 @@ export class SignupComponent implements OnInit {
   }
 
   goToLogin() {
+      localStorage.clear();
     this.router.navigate(['/login']);
   }
 
