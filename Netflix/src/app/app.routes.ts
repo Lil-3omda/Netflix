@@ -53,12 +53,36 @@ export const routes: Routes = [
     loadComponent: () => import('./features/Footer/ways-to-watch').then(m => m.WaysToWatchComponent)
   },
   {
+    path: 'faccount',
+    loadComponent: () => import('./features/Footer/account').then(m => m.AccountComponent)
+  },
+  {
     path: 'privacy',
     loadComponent: () => import('./features/Footer/privacy.component').then(m => m.PrivacyComponent)
   },
   {
     path: 'speed-test',
     loadComponent: () => import('./features/Footer/speed-test.component').then(m => m.SpeedTestComponent)
+  },
+  {
+    path: 'frequently-asked-questions',
+    loadComponent: () => import('./features/Footer/faq').then(m => m.FaqComponent)
+  },
+  {
+    path: 'investor-relations',
+    loadComponent: () => import('./features/Footer/investor-relations').then(m => m.InvestorRelationsComponent)
+  },
+  {
+    path: 'terms-of-use',
+    loadComponent: () => import('./pages/customer-service-center/netflix-terms/netflix-terms').then(m => m.NetflixTerms)
+  },
+  {
+    path: 'terms-of-use/netflix-terms',
+    loadComponent: () => import('./pages/customer-service-center/netflix-terms/netflix-terms').then(m => m.NetflixTerms)
+  },
+  {
+    path: 'contact-us',
+    loadComponent: () => import('./pages/netflix-contact/netflix-contact').then(m => m.NetflixContact)
   },
 
 
