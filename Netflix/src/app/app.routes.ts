@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { GuestGuard } from './core/guards/guest.guard';
+import { SubscriptionGuard } from './core/guards/subscription.guard';
 import { NavBar } from './features/admin/shared/nav-bar/nav-bar';
 import { AdminLayout } from './features/admin/components/admin-layout/admin-layout';
 import { HomePage } from './features/admin/pages/home-page/home-page';
@@ -20,7 +21,7 @@ export const routes: Routes = [
 
   { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.Login), canActivate: [GuestGuard] },
   { path: 'signup', loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent), canActivate: [GuestGuard] },
-  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home), canActivate: [AuthGuard] },
+  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home), canActivate: [AuthGuard, SubscriptionGuard] },
 
   {
     path: 'category/:name',
@@ -33,7 +34,7 @@ export const routes: Routes = [
   {
     path: 'Profile',
     loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, SubscriptionGuard]
   },
   {
     path: 'account',
@@ -83,6 +84,10 @@ export const routes: Routes = [
   {
     path: 'contact-us',
     loadComponent: () => import('./pages/netflix-contact/netflix-contact').then(m => m.NetflixContact)
+  },
+  { path: 'payment',
+    loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
+    canActivate: [AuthGuard]
   },
 
 

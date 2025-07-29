@@ -53,13 +53,13 @@ interface SubscriptionData {
 
         <!-- Tab Navigation -->
         <div class="tab-navigation">
-          <button 
+          <button
             class="tab-btn"
             [class.active]="activeTab === 'profile'"
             (click)="setActiveTab('profile')">
             Profile & Security
           </button>
-          <button 
+          <button
             class="tab-btn"
             [class.active]="activeTab === 'subscription'"
             (click)="setActiveTab('subscription')">
@@ -79,9 +79,9 @@ interface SubscriptionData {
                   <button class="edit-btn" (click)="startEditing('name')">Edit</button>
                 </div>
                 <div class="edit-form" *ngIf="editingName">
-                  <input 
-                    type="text" 
-                    [(ngModel)]="editFullName" 
+                  <input
+                    type="text"
+                    [(ngModel)]="editFullName"
                     class="edit-input">
                   <div class="edit-actions">
                     <button class="save-btn" (click)="saveFullName()" [disabled]="isLoading">Save</button>
@@ -111,19 +111,19 @@ interface SubscriptionData {
                   <button class="edit-btn" (click)="startEditing('password')">Change</button>
                 </div>
                 <div class="edit-form" *ngIf="editingPassword">
-                  <input 
-                    type="password" 
-                    [(ngModel)]="currentPassword" 
+                  <input
+                    type="password"
+                    [(ngModel)]="currentPassword"
                     placeholder="Current password"
                     class="edit-input">
-                  <input 
-                    type="password" 
-                    [(ngModel)]="newPassword" 
+                  <input
+                    type="password"
+                    [(ngModel)]="newPassword"
                     placeholder="New password"
                     class="edit-input">
-                  <input 
-                    type="password" 
-                    [(ngModel)]="confirmPassword" 
+                  <input
+                    type="password"
+                    [(ngModel)]="confirmPassword"
                     placeholder="Confirm new password"
                     class="edit-input">
                   <div class="edit-actions">
@@ -141,6 +141,11 @@ interface SubscriptionData {
         <div class="tab-content" *ngIf="activeTab === 'subscription'">
           <div class="section">
             <h2>Current Plan</h2>
+            <div class="section" *ngIf="!subscriptionData">
+              <h2>You don't have a subscription plan</h2>
+              <p>You need to select a plan to enjoy Netflix.</p>
+              <button class="btn btn-primary" (click)="goToSignupWithPlan('premium')">Choose a Plan</button>
+            </div>
             <div class="current-plan" *ngIf="subscriptionData">
               <div class="plan-header">
                 <h3>{{ subscriptionData.planName }}</h3>
@@ -162,7 +167,7 @@ interface SubscriptionData {
           <div class="section" *ngIf="showChangePlan">
             <h2>Choose a Plan</h2>
             <div class="plans-grid">
-              <div 
+              <div
                 class="plan-card"
                 *ngFor="let plan of availablePlans"
                 [class.current]="plan.name === subscriptionData?.planName"
@@ -175,7 +180,7 @@ interface SubscriptionData {
                   <div class="feature">{{ plan.quality }} quality</div>
                   <div class="feature">{{ plan.resolution }}</div>
                 </div>
-                <button 
+                <button
                   class="select-plan-btn"
                   *ngIf="plan.name !== subscriptionData?.planName"
                   [disabled]="isLoading"
@@ -725,7 +730,7 @@ export class AccountComponent implements OnInit {
   userData: UserData | null = null;
   subscriptionData: SubscriptionData | null = null;
   availablePlans: any[] = [];
-  
+
   // Editing states
   editingName: boolean = false;
   editingPassword: boolean = false;
@@ -733,13 +738,13 @@ export class AccountComponent implements OnInit {
   currentPassword: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
-  
+
   // UI states
   showChangePlan: boolean = false;
   showCancelPlan: boolean = false;
   selectedPlan: number | null = null;
   isLoading: boolean = false;
-  
+
   // Error messages
   nameError: string = '';
   passwordError: string = '';
@@ -778,20 +783,25 @@ export class AccountComponent implements OnInit {
 
     this.http.get<any>(`${environment.apiUrl}/Subscription/user-subscription/${userId}`).subscribe({
       next: (res) => {
-        this.subscriptionData = {
-          planName: res.planName,
-          price: res.price,
-          maxProfiles: res.maxProfiles,
-          currentProfiles: res.currentProfiles || 0,
-          nextBillingDate: res.nextBillingDate,
-          status: res.status || 'Active'
-        };
+        if (res && res.planName) {
+          this.subscriptionData = {
+            planName: res.planName,
+            price: res.price,
+            maxProfiles: res.maxProfiles,
+            currentProfiles: res.currentProfiles || 0,
+            nextBillingDate: res.nextBillingDate,
+            status: res.status || 'Active'
+          };
+        } else {
+          this.subscriptionData = null;
+        }
       },
-      error: (err) => {
-        console.error('Error loading subscription data:', err);
+      error: () => {
+        this.subscriptionData = null;
       }
     });
   }
+
 
   loadAvailablePlans(): void {
     this.http.get<any[]>(`${environment.apiUrl}/Subscription/plans`).subscribe({
@@ -852,7 +862,7 @@ export class AccountComponent implements OnInit {
 
     // API call to update name
     const updateData = { fullName: this.editFullName.trim() };
-    
+
     this.http.put(`${environment.apiUrl}/User/update-profile/${this.userData?.id}`, updateData).subscribe({
       next: (response) => {
         if (this.userData) {
@@ -915,7 +925,7 @@ export class AccountComponent implements OnInit {
 
   changePlan(planId: number): void {
     this.isLoading = true;
-    
+
     const changeData = {
       userId: this.userData?.id,
       newPlanId: planId
@@ -983,4 +993,14 @@ export class AccountComponent implements OnInit {
   goHome(): void {
     this.router.navigate(['/']);
   }
+
+  goToSignupWithPlan(planId: string) {
+    this.router.navigate(['/signup'], {
+      queryParams: {
+        step: 4,
+        selectedPlan: planId
+      }
+    });
+  }
+
 }

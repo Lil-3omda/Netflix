@@ -210,6 +210,11 @@ export class ChooseProfile implements OnInit {
   loadSubscriptionInfo(): void {
     this.http.get<any>(`${environment.apiUrl}/Subscription/user-subscription/${this.userId}`).subscribe({
       next: (res) => {
+        if (!res || !res.planName) {
+          this.router.navigate(['/signup'], { queryParams: { step: 4, message: 'Please choose a plan before creating profiles.' } });
+          return;
+        }
+
         this.subscriptionInfo = {
           planName: res.planName,
           maxProfiles: res.maxProfiles,
@@ -217,8 +222,16 @@ export class ChooseProfile implements OnInit {
         };
       },
       error: (err) => {
-        console.error('Error loading subscription info:', err);
+      console.error('Error loading subscription info:', err);
+      if (err.status === 404) {
+        this.router.navigate(['/account'], {
+          queryParams: {
+            tab: 'subscription',
+            message: 'Please subscribe before creating profiles.'
+          }
+        });
       }
+    }
     });
   }
 

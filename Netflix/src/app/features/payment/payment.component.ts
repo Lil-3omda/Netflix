@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PaymentService } from './payment.service';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-payment',
@@ -309,12 +311,16 @@ export class PaymentComponent implements OnInit {
 
   constructor(
     private paymentService: PaymentService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    // Get selected plan from route or service
-    // this.selectedPlan = this.getSelectedPlan();
+     this.route.queryParams.subscribe(params => {
+        const userId = params['userId'];
+        const planId = params['planId'];
+      // You can now call the backend to create a payment session, etc.
+    });
   }
 
   async initiatePayment() {
@@ -331,7 +337,7 @@ export class PaymentComponent implements OnInit {
       };
 
       const response = await this.paymentService.initiatePayment(paymentRequest).toPromise();
-      
+
       if (response.success) {
         this.isProcessing = true;
         // Redirect to Paymob payment page

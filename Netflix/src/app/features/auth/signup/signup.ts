@@ -1285,6 +1285,8 @@ import{HttpHeaders} from '@angular/common/http';
 
       .logo-svg, .logo-svg-red {
         width: 120px;
+        console.log('💰 Processing cash payment in developer mode...');
+
         height: 32px;
       }
 
@@ -1302,6 +1304,8 @@ import{HttpHeaders} from '@angular/common/http';
       }
 
       .detail-values {
+        console.log('💳 Processing card payment via Paymob...');
+
         grid-template-columns: 1fr;
       }
 
@@ -1309,16 +1313,22 @@ import{HttpHeaders} from '@angular/common/http';
         grid-template-columns: repeat(2, 1fr);
       }
 
+        console.log('📤 Sending payment request:', paymentRequest);
+
       .netflix-next-button,
       .start-membership-button {
+        console.log('📥 Payment response received:', response);
+
         width: 100%;
+          console.log('🔗 Redirecting to payment URL:', response.redirectUrl);
       }
 
       .card-row {
+          console.error('❌ Payment initiation failed - no redirect URL');
         flex-direction: column;
       }
 
-      .card-input-group.half {
+        console.error('💥 Payment processing failed:', error);
         width: 100%;
         margin-right: 0;
       }
@@ -1375,8 +1385,20 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['email']) this.email = params['email'];
+      if (params['step']) {
+        const step = parseInt(params['step'], 10);
+        if (!isNaN(step)) this.currentStep = step;
+      }
+      if (params['message']) alert(params['message']);
     });
+
+    const storedUserId = localStorage.getItem('netflix_user');
+    if (storedUserId) {
+      this.userId = storedUserId;
+    }
   }
+
+
 
   ngOnDestroy() {
     if (this.resendTimer) clearInterval(this.resendTimer);
@@ -1477,13 +1499,21 @@ export class SignupComponent implements OnInit {
 
 
  private async processPaymobPayment(): Promise<void> {
+
   if (!this.userId) {
-    console.error('User ID not found.');
-    return;
+    const storedId = localStorage.getItem('userId');
+    if (storedId) {
+      this.userId = storedId;
+    } else {
+      console.error('User ID not found in localStorage or component.');
+      alert('User ID is missing. Please complete OTP verification again.');
+      this.router.navigate(['/signup'], { queryParams: { message: 'Please verify again' } });
+      return;
+    }
   }
 
   const planPrice = this.getSelectedPlanPrice();
-  const amountCents = parseInt(planPrice) * 100; // Convert to cents
+  const amountCents = parseInt(planPrice) * 100;
 
   try {
     this.isLoading = true;
@@ -1569,10 +1599,16 @@ export class SignupComponent implements OnInit {
   }
 
   confirmPlan() {
-  if (!this.userId) {
-    console.error('User ID not found.');
-    return;
+    if (!this.userId) {
+    const storedId = localStorage.getItem('userId');
+    if (storedId) {
+      this.userId = storedId;
+    } else {
+      console.error('User ID not found.');
+      return;
+    }
   }
+
 
   const planId = this.planToIdMap[this.selectedPlan];
   console.log(`📡 Submitting subscription for userId=${this.userId}, planId=${planId}`);

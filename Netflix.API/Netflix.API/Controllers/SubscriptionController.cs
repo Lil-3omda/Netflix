@@ -137,9 +137,8 @@ namespace Netflix.API.Controllers
 
             // Update subscription
             subscription.PlanId = dto.NewPlanId;
-            // Extend subscription by one month from current end date or now, whichever is later
-            var baseDate = subscription.EndDate > DateTime.UtcNow ? subscription.EndDate : DateTime.UtcNow;
-            subscription.EndDate = baseDate.AddMonths(1);
+            // Set subscription to one month from now
+            subscription.EndDate = DateTime.UtcNow.AddMonths(1);
 
             await context.SaveChangesAsync();
 

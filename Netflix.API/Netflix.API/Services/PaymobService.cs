@@ -1,6 +1,7 @@
 using Netflix.API.DTOs;
 using Netflix.API.Services.Interfaces;
 using System.Text.Json;
+using System.Text;
 
 namespace Netflix.API.Services
 {
@@ -25,17 +26,33 @@ namespace Netflix.API.Services
                 var integrationId = _configuration["Paymob:IntegrationId"];
                 var iframeId = _configuration["Paymob:IframeId"];
 
+                _logger.LogInformation("🚀 Starting Paymob payment initiation for amount: {Amount}", request.AmountCents);
+
                 // Step 1: Get auth token
                 var authRequest = new { api_key = apiKey };
-                var authResponse = await _httpClient.PostAsJsonAsync("https://accept.paymob.com/api/auth/tokens", authRequest);
+                var authJson = JsonSerializer.Serialize(authRequest);
+                var authContent = new StringContent(authJson, Encoding.UTF8, "application/json");
+                
+                var authResponse = await _httpClient.PostAsync("https://accept.paymob.com/api/auth/tokens", authContent);
+                var authResponseContent = await authResponse.Content.ReadAsStringAsync();
+                
+                _logger.LogInformation("📝 Auth response status: {Status}, Content: {Content}", authResponse.StatusCode, authResponseContent);
                 
                 if (!authResponse.IsSuccessStatusCode)
                 {
-                    _logger.LogError("Failed to get auth token from Paymob");
+                    _logger.LogError("❌ Failed to get auth token from Paymob. Status: {Status}, Response: {Response}", 
+                        authResponse.StatusCode, authResponseContent);
                     throw new Exception("Payment service unavailable");
                 }
 
-                var authResult = await authResponse.Content.ReadFromJsonAsync<AuthResponse>();
+                var authResult = JsonSerializer.Deserialize<AuthResponse>(authResponseContent);
+                if (authResult == null || string.IsNullOrEmpty(authResult.token))
+                {
+                    _logger.LogError("❌ Auth response was null or missing token. Response: {Response}", authResponseContent);
+                    throw new Exception("Auth token missing from Paymob");
+                }
+
+                _logger.LogInformation("✅ Auth token received successfully");
 
                 // Step 2: Create order
                 var orderRequest = new
@@ -47,15 +64,29 @@ namespace Netflix.API.Services
                     items = new object[] { }
                 };
 
-                var orderResponse = await _httpClient.PostAsJsonAsync("https://accept.paymob.com/api/ecommerce/orders", orderRequest);
+                var orderJson = JsonSerializer.Serialize(orderRequest);
+                var orderContent = new StringContent(orderJson, Encoding.UTF8, "application/json");
+
+                var orderResponse = await _httpClient.PostAsync("https://accept.paymob.com/api/ecommerce/orders", orderContent);
+                var orderResponseContent = await orderResponse.Content.ReadAsStringAsync();
+                
+                _logger.LogInformation("📦 Order response status: {Status}, Content: {Content}", orderResponse.StatusCode, orderResponseContent);
                 
                 if (!orderResponse.IsSuccessStatusCode)
                 {
-                    _logger.LogError("Failed to create order in Paymob");
+                    _logger.LogError("❌ Failed to create order in Paymob. Status: {Status}, Response: {Response}", 
+                        orderResponse.StatusCode, orderResponseContent);
                     throw new Exception("Failed to create payment order");
                 }
 
-                var orderResult = await orderResponse.Content.ReadFromJsonAsync<OrderResponse>();
+                var orderResult = JsonSerializer.Deserialize<OrderResponse>(orderResponseContent);
+                if (orderResult == null)
+                {
+                    _logger.LogError("❌ Order response was null. Response: {Response}", orderResponseContent);
+                    throw new Exception("Invalid order response from Paymob");
+                }
+
+                _logger.LogInformation("✅ Order created successfully with ID: {OrderId}", orderResult.id);
 
                 // Step 3: Get payment token
                 var paymentKeyRequest = new
@@ -67,12 +98,12 @@ namespace Netflix.API.Services
                     billing_data = new
                     {
                         apartment = "NA",
-                        email = request.Email,
+                        email = request.Email ?? "test@example.com",
                         floor = "NA",
-                        first_name = request.Name,
+                        first_name = request.Name ?? "Netflix User",
                         street = "NA",
                         building = "NA",
-                        phone_number = request.Phone,
+                        phone_number = request.Phone ?? "+201000000000",
                         shipping_method = "NA",
                         postal_code = "NA",
                         city = "Cairo",
@@ -84,22 +115,41 @@ namespace Netflix.API.Services
                     integration_id = int.Parse(integrationId)
                 };
 
-                var keyResponse = await _httpClient.PostAsJsonAsync("https://accept.paymob.com/api/acceptance/payment_keys", paymentKeyRequest);
+                var paymentKeyJson = JsonSerializer.Serialize(paymentKeyRequest);
+                var paymentKeyContent = new StringContent(paymentKeyJson, Encoding.UTF8, "application/json");
+
+                _logger.LogInformation("🔑 Requesting payment key with integration ID: {IntegrationId}", integrationId);
+
+                var keyResponse = await _httpClient.PostAsync("https://accept.paymob.com/api/acceptance/payment_keys", paymentKeyContent);
+                var keyResponseContent = await keyResponse.Content.ReadAsStringAsync();
+                
+                _logger.LogInformation("🔑 Payment key response status: {Status}, Content: {Content}", keyResponse.StatusCode, keyResponseContent);
                 
                 if (!keyResponse.IsSuccessStatusCode)
                 {
-                    _logger.LogError("Failed to get payment key from Paymob");
+                    _logger.LogError("❌ Failed to get payment key from Paymob. Status: {Status}, Response: {Response}", 
+                        keyResponse.StatusCode, keyResponseContent);
                     throw new Exception("Failed to generate payment token");
                 }
 
-                var paymentKeyResult = await keyResponse.Content.ReadFromJsonAsync<PaymentKeyResponse>();
+                var paymentKeyResult = JsonSerializer.Deserialize<PaymentKeyResponse>(keyResponseContent);
+                if (paymentKeyResult == null || string.IsNullOrEmpty(paymentKeyResult.token))
+                {
+                    _logger.LogError("❌ Payment key response was null or missing token. Response: {Response}", keyResponseContent);
+                    throw new Exception("Payment token missing from Paymob");
+                }
+
+                _logger.LogInformation("✅ Payment key generated successfully");
 
                 // Return iframe URL
-                return $"https://accept.paymob.com/api/acceptance/iframes/{iframeId}?payment_token={paymentKeyResult.token}";
+                var iframeUrl = $"https://accept.paymob.com/api/acceptance/iframes/{iframeId}?payment_token={paymentKeyResult.token}";
+                _logger.LogInformation("🎯 Generated iframe URL: {Url}", iframeUrl);
+                
+                return iframeUrl;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error initiating Paymob payment");
+                _logger.LogError(ex, "💥 Error initiating Paymob payment");
                 throw;
             }
         }
@@ -112,25 +162,39 @@ namespace Netflix.API.Services
                 
                 // Get auth token
                 var authRequest = new { api_key = apiKey };
-                var authResponse = await _httpClient.PostAsJsonAsync("https://accept.paymob.com/api/auth/tokens", authRequest);
+                var authJson = JsonSerializer.Serialize(authRequest);
+                var authContent = new StringContent(authJson, Encoding.UTF8, "application/json");
+                
+                var authResponse = await _httpClient.PostAsync("https://accept.paymob.com/api/auth/tokens", authContent);
                 var authResult = await authResponse.Content.ReadFromJsonAsync<AuthResponse>();
+
+                if (authResult == null || string.IsNullOrEmpty(authResult.token))
+                {
+                    _logger.LogError("Failed to get auth token for verification");
+                    return false;
+                }
 
                 // Get transaction details
                 var transactionResponse = await _httpClient.GetAsync($"https://accept.paymob.com/api/acceptance/transactions/{transactionId}?token={authResult.token}");
                 
                 if (!transactionResponse.IsSuccessStatusCode)
                 {
+                    _logger.LogError("Failed to get transaction details for ID: {TransactionId}", transactionId);
                     return false;
                 }
 
-                var transaction = await transactionResponse.Content.ReadFromJsonAsync<JsonElement>();
+                var transactionContent = await transactionResponse.Content.ReadAsStringAsync();
+                var transaction = JsonSerializer.Deserialize<JsonElement>(transactionContent);
+                
                 var success = transaction.GetProperty("success").GetBoolean();
+                
+                _logger.LogInformation("Transaction {TransactionId} verification result: {Success}", transactionId, success);
                 
                 return success;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error verifying Paymob payment");
+                _logger.LogError(ex, "Error verifying Paymob payment for transaction: {TransactionId}", transactionId);
                 return false;
             }
         }
@@ -143,8 +207,16 @@ namespace Netflix.API.Services
                 
                 // Get auth token
                 var authRequest = new { api_key = apiKey };
-                var authResponse = await _httpClient.PostAsJsonAsync("https://accept.paymob.com/api/auth/tokens", authRequest);
+                var authJson = JsonSerializer.Serialize(authRequest);
+                var authContent = new StringContent(authJson, Encoding.UTF8, "application/json");
+                
+                var authResponse = await _httpClient.PostAsync("https://accept.paymob.com/api/auth/tokens", authContent);
                 var authResult = await authResponse.Content.ReadFromJsonAsync<AuthResponse>();
+
+                if (authResult == null || string.IsNullOrEmpty(authResult.token))
+                {
+                    throw new Exception("Failed to authenticate with Paymob");
+                }
 
                 // Get order details
                 var orderResponse = await _httpClient.GetAsync($"https://accept.paymob.com/api/ecommerce/orders/{orderId}?token={authResult.token}");
@@ -154,7 +226,8 @@ namespace Netflix.API.Services
                     throw new Exception("Order not found");
                 }
 
-                var order = await orderResponse.Content.ReadFromJsonAsync<JsonElement>();
+                var orderContent = await orderResponse.Content.ReadAsStringAsync();
+                var order = JsonSerializer.Deserialize<JsonElement>(orderContent);
                 
                 return new PaymentStatusDTO
                 {
@@ -167,7 +240,7 @@ namespace Netflix.API.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting payment status");
+                _logger.LogError(ex, "Error getting payment status for order: {OrderId}", orderId);
                 throw;
             }
         }
