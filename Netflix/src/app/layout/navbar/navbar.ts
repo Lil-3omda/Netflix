@@ -65,7 +65,7 @@ export class Navbar implements OnInit {
   currentUser: any = null;
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -73,7 +73,7 @@ export class Navbar implements OnInit {
   ngOnInit(): void {
     this.fetchCategories();
     this.checkAuthStatus();
-    
+
     // Subscribe to auth status changes
     this.authService.isAuthenticated$.subscribe(isAuth => {
       this.isAuthenticated = isAuth;
@@ -116,7 +116,7 @@ export class Navbar implements OnInit {
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
     localStorage.removeItem('userId');
-    
+
     // Clear any other Netflix-related localStorage items
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('netflix_') || key.includes('user') || key.includes('auth')) {
@@ -126,14 +126,14 @@ export class Navbar implements OnInit {
 
     // Use AuthService logout method
     this.authService.logout();
-    
+
     // Navigate to home page
     this.router.navigate(['/']);
   }
 
   navigateToProfile(): void {
     if (this.isAuthenticated) {
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/Profile']);
     }
   }
 

@@ -47,7 +47,7 @@ interface SubscriptionInfo {
       <!-- Main Content -->
       <div class="profile-content">
         <h1 class="profile-title">Who's watching?</h1>
-        
+
         <!-- Subscription Info -->
         <div class="subscription-info" *ngIf="subscriptionInfo">
           <p>{{ subscriptionInfo.planName }} Plan - {{ subscriptionInfo.currentProfiles }}/{{ subscriptionInfo.maxProfiles }} profiles used</p>
@@ -56,7 +56,7 @@ interface SubscriptionInfo {
         <!-- Profiles Grid -->
         <div class="profiles-grid">
           <!-- Existing Profiles -->
-          <div 
+          <div
             class="profile-item"
             *ngFor="let profile of profiles"
             (click)="selectProfile(profile.id)">
@@ -67,7 +67,7 @@ interface SubscriptionInfo {
           </div>
 
           <!-- Add Profile Button -->
-          <div 
+          <div
             class="profile-item add-profile"
             *ngIf="canAddProfile()"
             (click)="showAddProfileForm()">
@@ -168,7 +168,7 @@ export class ChooseProfile implements OnInit {
   subscriptionInfo: SubscriptionInfo | null = null;
 
   constructor(
-    private profilesService: ProfilesService, 
+    private profilesService: ProfilesService,
     private router: Router,
     private http: HttpClient
   ) {}
@@ -297,19 +297,19 @@ export class ChooseProfile implements OnInit {
 
   getProfileImage(name: string): string {
     const avatars = [
-      '/assets/profiles/avatar1.png',
-      '/assets/profiles/avatar2.png',
-      '/assets/profiles/avatar3.png',
-      '/assets/profiles/avatar4.png',
-      '/assets/profiles/avatar5.png'
+      '/assets/images/netflix2.jpg',
+      '/assets/images/netflix3.jpg',
+      '/assets/images/netflix4.jpg',
+      '/assets/images/Netflix-avatar.png',
+      '/assets/profiles/avatar2.png'
     ];
-    
+
     // Use name hash to consistently assign avatar
     const hash = name.split('').reduce((a, b) => {
       a = ((a << 5) - a) + b.charCodeAt(0);
       return a & a;
     }, 0);
-    
+
     return avatars[Math.abs(hash) % avatars.length];
   }
 
