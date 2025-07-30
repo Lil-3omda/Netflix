@@ -22,5 +22,10 @@ namespace Netflix.API.Repositories.WatchHistoryRepository
                                  .OrderByDescending(w => w.WatchedAt)
                                  .ToListAsync();
         }
+        public async Task<bool> IsWatchedAsync(int profileId, int videoId)
+        {
+            return await context.WatchHistories
+                                .AnyAsync(h => h.ProfileId == profileId && h.VideoId == videoId);
+        }
     }
 }

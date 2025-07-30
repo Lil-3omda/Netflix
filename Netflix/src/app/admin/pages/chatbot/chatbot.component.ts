@@ -9,246 +9,143 @@ import { ChatMessage, Conversation } from '../../models/admin.interfaces';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="netflix-page space-y-8">
-      <!-- Header Section -->
-      <div class="flex items-center justify-between">
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h1 class="text-4xl font-bold bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent netflix-title">
-            AI Chatbot Management
-          </h1>
-          <p class="text-gray-400 mt-2">Monitor and manage customer support conversations</p>
+          <h1 class="display-4 fw-bold text-danger">AI Chatbot Management</h1>
+          <p class="text-muted">Monitor and manage customer support conversations</p>
         </div>
-        <div class="flex space-x-3">
-          <button class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-xl text-white font-medium transition-all duration-300">
-            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+        <div>
+          <button class="btn btn-success me-2">
+            <i class="bi bi-check-circle me-1"></i>
             Bot Online
           </button>
-          <button class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-white font-medium transition-all duration-300 netflix-btn">
-            Settings
-          </button>
+          <button class="btn btn-danger">Settings</button>
         </div>
       </div>
 
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-6 border border-gray-700 netflix-card">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Active Conversations</p>
-              <p class="text-3xl font-bold text-white mt-2">{{ activeConversations }}</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-              </svg>
+      <div class="row g-3 mb-5">
+        <div class="col-md-3">
+          <div class="card text-bg-dark h-100">
+            <div class="card-body">
+              <p class="text-muted small">Active Conversations</p>
+              <h3>{{ activeConversations }}</h3>
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-6 border border-gray-700 netflix-card">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Resolved Today</p>
-              <p class="text-3xl font-bold text-white mt-2">{{ resolvedToday }}</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
+        <div class="col-md-3">
+          <div class="card text-bg-dark h-100">
+            <div class="card-body">
+              <p class="text-muted small">Resolved Today</p>
+              <h3>{{ resolvedToday }}</h3>
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-6 border border-gray-700 netflix-card">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Avg Response Time</p>
-              <p class="text-3xl font-bold text-white mt-2">{{ avgResponseTime }}</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
+        <div class="col-md-3">
+          <div class="card text-bg-dark h-100">
+            <div class="card-body">
+              <p class="text-muted small">Avg Response Time</p>
+              <h3>{{ avgResponseTime }}</h3>
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-6 border border-gray-700 netflix-card">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Satisfaction Rate</p>
-              <p class="text-3xl font-bold text-white mt-2">{{ satisfactionRate }}%</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-              </svg>
+        <div class="col-md-3">
+          <div class="card text-bg-dark h-100">
+            <div class="card-body">
+              <p class="text-muted small">Satisfaction Rate</p>
+              <h3>{{ satisfactionRate }}%</h3>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Main Content -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="row g-4">
         <!-- Conversations List -->
-        <div class="lg:col-span-1 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl border border-gray-700 overflow-hidden">
-          <div class="p-6 border-b border-gray-700">
-            <h3 class="text-xl font-semibold text-white mb-4">Recent Conversations</h3>
-            <div class="flex space-x-2">
-              <button
-                [class.bg-red-600]="selectedFilter === 'all'"
-                [class.bg-gray-700]="selectedFilter !== 'all'"
-                (click)="selectedFilter = 'all'"
-                class="px-3 py-1 text-white rounded-lg text-sm font-medium transition-all duration-300">
-                All
-              </button>
-              <button
-                [class.bg-red-600]="selectedFilter === 'pending'"
-                [class.bg-gray-700]="selectedFilter !== 'pending'"
-                (click)="selectedFilter = 'pending'"
-                class="px-3 py-1 text-white rounded-lg text-sm font-medium transition-all duration-300">
-                Pending
-              </button>
-              <button
-                [class.bg-red-600]="selectedFilter === 'high'"
-                [class.bg-gray-700]="selectedFilter !== 'high'"
-                (click)="selectedFilter = 'high'"
-                class="px-3 py-1 text-white rounded-lg text-sm font-medium transition-all duration-300">
-                High Priority
-              </button>
+        <div class="col-lg-4">
+          <div class="card text-bg-dark h-100">
+            <div class="card-header">
+              <h5>Recent Conversations</h5>
+              <div class="btn-group mt-2">
+                <button class="btn btn-sm" [ngClass]="{ 'btn-danger': selectedFilter === 'all', 'btn-secondary': selectedFilter !== 'all' }" (click)="selectedFilter = 'all'">All</button>
+                <button class="btn btn-sm" [ngClass]="{ 'btn-danger': selectedFilter === 'pending', 'btn-secondary': selectedFilter !== 'pending' }" (click)="selectedFilter = 'pending'">Pending</button>
+                <button class="btn btn-sm" [ngClass]="{ 'btn-danger': selectedFilter === 'high', 'btn-secondary': selectedFilter !== 'high' }" (click)="selectedFilter = 'high'">High Priority</button>
+              </div>
             </div>
-          </div>
-
-          <div class="max-h-96 overflow-y-auto">
-            <div
-              *ngFor="let conversation of filteredConversations; trackBy: trackByConversation"
-              class="p-4 border-b border-gray-700 hover:bg-gray-800 hover:bg-opacity-50 cursor-pointer transition-all duration-300"
-              [class.bg-gray-800]="selectedConversation?.id === conversation.id"
-              [class.bg-opacity-30]="selectedConversation?.id === conversation.id"
-              (click)="selectConversation(conversation)">
-              <div class="flex items-start justify-between">
-                <div class="flex-1">
-                  <div class="flex items-center space-x-2 mb-1">
-                    <h4 class="font-medium text-white text-sm">{{ conversation.user }}</h4>
-                    <span
-                      class="px-2 py-1 rounded-full text-xs font-medium"
-                      [ngClass]="{
-                        'bg-red-100 text-red-800': conversation.priority === 'high',
-                        'bg-yellow-100 text-yellow-800': conversation.priority === 'medium',
-                        'bg-green-100 text-green-800': conversation.priority === 'low'
-                      }">
-                      {{ conversation.priority }}
-                    </span>
+            <div class="card-body overflow-auto" style="max-height: 500px">
+              <div *ngFor="let conversation of filteredConversations; trackBy: trackByConversation" class="p-2 border-bottom" role="button" (click)="selectConversation(conversation)" [class.bg-secondary-subtle]="selectedConversation?.id === conversation.id">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <div class="fw-bold">{{ conversation.user }}</div>
+                    <div class="text-muted small">{{ conversation.platform }}</div>
+                    <div class="text-truncate small">{{ conversation.lastMessage }}</div>
                   </div>
-                  <p class="text-gray-400 text-xs mb-2">{{ conversation.platform }}</p>
-                  <p class="text-gray-300 text-sm line-clamp-2">{{ conversation.lastMessage }}</p>
-                </div>
-                <div class="text-right ml-2">
-                  <span
-                    class="px-2 py-1 rounded-full text-xs font-medium"
-                    [ngClass]="{
-                      'bg-blue-100 text-blue-800': conversation.status === 'unread',
-                      'bg-yellow-100 text-yellow-800': conversation.status === 'pending',
-                      'bg-orange-100 text-orange-800': conversation.status === 'in-progress',
-                      'bg-green-100 text-green-800': conversation.status === 'resolved'
-                    }">
-                    {{ conversation.status }}
-                  </span>
-                  <p class="text-xs text-gray-500 mt-1">{{ formatTime(conversation.timestamp) }}</p>
+                  <div class="text-end">
+                    <span class="badge bg-danger" *ngIf="conversation.priority === 'high'">High</span>
+                    <span class="badge bg-warning text-dark" *ngIf="conversation.priority === 'medium'">Medium</span>
+                    <span class="badge bg-success" *ngIf="conversation.priority === 'low'">Low</span>
+                    <div class="small text-muted">{{ formatTime(conversation.timestamp) }}</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Chat Interface -->
-        <div class="lg:col-span-2 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl border border-gray-700 flex flex-col">
-          <div *ngIf="selectedConversation" class="flex flex-col h-full">
-            <!-- Chat Header -->
-            <div class="p-6 border-b border-gray-700">
-              <div class="flex items-center justify-between">
+        <!-- Chat Window -->
+        <div class="col-lg-8">
+          <div class="card text-bg-dark h-100 d-flex flex-column">
+            <ng-container *ngIf="selectedConversation; else noConversation">
+              <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
-                  <h3 class="text-xl font-semibold text-white">{{ selectedConversation.user }}</h3>
-                  <p class="text-gray-400 text-sm">{{ selectedConversation.platform }} • {{ formatTime(selectedConversation.timestamp) }}</p>
+                  <h5 class="mb-0">{{ selectedConversation.user }}</h5>
+                  <small class="text-muted">{{ selectedConversation.platform }} • {{ formatTime(selectedConversation.timestamp) }}</small>
                 </div>
-                <div class="flex space-x-2">
-                  <button class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-lg text-white text-sm transition-all duration-300">
-                    Transfer
-                  </button>
-                  <button class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded-lg text-white text-sm transition-all duration-300">
-                    Resolve
-                  </button>
+                <div>
+                  <button class="btn btn-sm btn-primary me-2">Transfer</button>
+                  <button class="btn btn-sm btn-success">Resolve</button>
                 </div>
               </div>
-            </div>
 
-            <!-- Messages -->
-            <div class="flex-1 p-6 overflow-y-auto">
-              <div class="space-y-4">
-                <div
-                  *ngFor="let message of messages; trackBy: trackByMessage"
-                  class="flex"
-                  [class.justify-end]="message.type === 'user'"
-                  [class.justify-start]="message.type === 'bot'">
-                  <div
-                    class="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl"
-                    [ngClass]="{
-                      'bg-red-600 text-white': message.type === 'user',
-                      'bg-gray-700 text-gray-100': message.type === 'bot'
-                    }">
-                    <p class="text-sm">{{ message.content }}</p>
-                    <p class="text-xs mt-1 opacity-70">{{ formatTime(message.timestamp) }}</p>
+              <div class="card-body overflow-auto flex-grow-1" style="max-height: 400px">
+                <div *ngFor="let message of messages; trackBy: trackByMessage" class="mb-3">
+                  <div class="d-flex" [class.justify-content-end]="message.type === 'user'">
+                    <div [class.bg-danger]="message.type === 'user'" [class.bg-secondary]="message.type === 'bot'" class="rounded px-3 py-2 text-white">
+                      <div class="small">{{ message.content }}</div>
+                      <div class="small text-muted">{{ formatTime(message.timestamp) }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Message Input -->
-            <div class="p-6 border-t border-gray-700">
-              <div class="flex space-x-4">
-                <input
-                  type="text"
-                  [(ngModel)]="newMessage"
-                  (keyup.enter)="sendMessage()"
-                  placeholder="Type your response..."
-                  class="flex-1 px-4 py-3 bg-gray-900 bg-opacity-50 text-white rounded-xl border border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-500 focus:ring-opacity-20 transition-all duration-300">
-                <button
-                  (click)="sendMessage()"
-                  [disabled]="!newMessage.trim()"
-                  class="px-6 py-3 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-white font-medium transition-all duration-300">
-                  Send
-                </button>
+              <div class="card-footer">
+                <div class="d-flex mb-2">
+                  <input type="text" class="form-control me-2" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type your response...">
+                  <button class="btn btn-danger" [disabled]="!newMessage.trim()" (click)="sendMessage()">Send</button>
+                </div>
+                <div>
+                  <button *ngFor="let response of quickResponses" class="btn btn-outline-light btn-sm me-2 mb-2" (click)="sendQuickResponse(response)">{{ response }}</button>
+                </div>
               </div>
+            </ng-container>
 
-              <!-- Quick Responses -->
-              <div class="flex flex-wrap gap-2 mt-4">
-                <button
-                  *ngFor="let response of quickResponses"
-                  (click)="sendQuickResponse(response)"
-                  class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg text-sm transition-all duration-300">
-                  {{ response }}
-                </button>
+            <ng-template #noConversation>
+              <div class="card-body d-flex justify-content-center align-items-center">
+                <div class="text-center">
+                  <div class="display-6 text-muted mb-2">
+                    <i class="bi bi-chat-dots"></i>
+                  </div>
+                  <h5 class="text-light">Select a Conversation</h5>
+                  <p class="text-muted">Choose a conversation from the list to start managing</p>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <!-- No Conversation Selected -->
-          <div *ngIf="!selectedConversation" class="flex-1 flex items-center justify-center">
-            <div class="text-center">
-              <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                </svg>
-              </div>
-              <h3 class="text-xl font-semibold text-gray-400 mb-2">Select a Conversation</h3>
-              <p class="text-gray-500">Choose a conversation from the list to start managing</p>
-            </div>
+            </ng-template>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Make sure Bootstrap Icons are included if you use them -->
+
   `,
   styles: [`
     .netflix-page {
