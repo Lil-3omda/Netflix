@@ -32,7 +32,7 @@ export class ProfilesService {
   }
 
   createProfile(profile: { name: string; userId: string }): Observable<IProfile> {
-      return this.http.post<IProfile>(`${this.apiUrl}/profile`, profile);
+    return this.http.post<IProfile>(`${this.apiUrl}`, profile);
   }
 
   updateProfile(id: number, profile: { name: string; userId: number }): Observable<IProfile> {

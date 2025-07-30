@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +21,12 @@ using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Features;
 
+
 namespace Netflix.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -137,7 +137,15 @@ namespace Netflix.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+                await ApplicationDbContextSeed.SeedAsync(context, userManager, roleManager);
+            }
             app.UseHttpsRedirection();
             app.UseCors("AllowAngularApp");
             app.UseAuthentication();

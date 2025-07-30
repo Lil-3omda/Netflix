@@ -5,7 +5,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import{HttpHeaders} from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+
+interface UserSession {
+  id: string;
+  email: string;
+  fullName: string;
+  isEmailVerified: boolean;
+  currentStep?: number;
+  selectedPlan?: string;
+}
 
 @Component({
   selector: 'app-signup',
@@ -35,7 +44,7 @@ import{HttpHeaders} from '@angular/common/http';
           <div class="netflix-logo" (click)="goHome()">
             <svg viewBox="0 0 111 30" class="logo-svg-red" aria-hidden="true" role="img">
               <g>
-                <path d="M105.06233,14.2806261 L110.999156,30 C109.249227,29.7497422 107.500234,29.4366857 105.718437,29.1554972 L102.374168,20.4686475 L98.9371075,28.4375293 C97.2499766,28.1563408 95.5928391,28.061674 93.9057081,27.8432843 L99.9372012,14.0931671 L94.4680851,-5.68434189e-14 L99.5313525,-5.68434189e-14 L102.593495,7.87421502 L105.874965,-5.68434189e-14 L110.999156,-5.68434189e-14 L105.06233,14.2806261 Z M90.4686475,-5.68434189e-14 L85.8749649,-5.68434189e-14 L85.8749649,27.2499766 C87.3746368,27.3437061 88.9371075,27.4055675 90.4686475,27.5930265 L90.4686475,-5.68434189e-14 Z M81.9055207,26.93692 C77.7186241,26.6557316 73.5307901,26.4064111 69.250164,26.3117443 L69.250164,-5.68434189e-14 L73.9366389,-5.68434189e-14 L73.9366389,21.8745899 C76.6248008,21.9373887 79.3120255,22.1557784 81.9055207,22.2804387 L81.9055207,26.93692 Z M64.2496954,10.6561065 L64.2496954,15.3435186 L57.8442216,15.3435186 L57.8442216,25.9996251 L53.2186709,25.9996251 L53.2186709,-5.68434189e-14 L66.3436123,-5.68434189e-14 L66.3436123,4.68741213 L57.8442216,4.68741213 L57.8442216,10.6561065 L64.2496954,10.6561065 Z M45.3435186,4.68741213 L45.3435186,26.2498828 C43.7810479,26.2498828 42.1876465,26.2498828 40.6561065,26.3117443 L40.6561065,4.68741213 L35.8121661,4.68741213 L35.8121661,-5.68434189e-14 L50.2183897,-5.68434189e-14 L50.2183897,4.68741213 L45.3435186,4.68741213 Z M30.749836,15.5928391 C28.687787,15.5928391 26.2498828,15.5928391 24.4999531,15.6875059 L24.4999531,22.6562939 C27.2499766,22.4678976 30,22.2495079 32.7809542,22.1557784 L32.7809542,26.6557316 L19.812541,27.6876933 L19.812541,-5.68434189e-14 L32.7809542,-5.68434189e-14 L32.7809542,4.68741213 L24.4999531,4.68741213 L24.4999531,10.9991564 C26.3126816,10.9991564 29.0936358,10.9054269 30.749836,10.9054269 L30.749836,15.5928391 Z M4.78114163,12.9684132 L4.78114163,29.3429562 C3.09401069,29.5313525 1.59340144,29.7497422 0,30 L0,-5.68434189e-14 L4.4690224,-5.68434189e-14 L10.562377,17.0315868 L10.562377,-5.68434189e-14 L15.2497891,-5.68434189e-14 L15.2497891,28.061674 C13.5935889,28.3437998 11.906458,28.4375293 10.1246602,28.6868498 L4.78114163,12.9684132 Z"></path>
+                <path d="M105.06233,14.2806261 L110.999156,30 C109.249227,29.7497422 107.500234,29.4366857 105.718437,29.1554972 L102.374168,20.4686475 L98.9371075,28.4375293 C97.2499766,28.1563408 95.5928391,28.061674 93.9057081,27.8432843 L99.9372012,14.0931671 L94.4680851,-5.68434189e-14 L99.5313525,-5.68434189e-14 L102.593495,7.87421502 L105.874965,-5.68434189e-14 L110.999156,-5.68434189e-14 L105.06233,14.2806261 Z M90.4686475,-5.68434189e-14 L85.8749649,-5.68434189e-14 L85.8749649,27.2499766 C87.3746368,27.3437061 88.9371075,27.4055675 90.4686475,27.5930265 L90.4686475,-5.68434189e-14 Z M81.9055207,26.93692 C77.7186241,26.6557316 73.5307901,26.4064111 69.250164,26.3117443 L69.250164,-5.68434189e-14 L73.9366389,-5.68434189e-14 L73.9366389,21.8745899 C76.6248008,21.9373887 79.3120255,22.1557784 81.9055207,22.2804387 L81.9055207,26.93692 Z M64.2496954,10.6561065 L64.2496954,15.3435186 L57.8442216,15.3435186 L57.8442216,25.9996251 L53.2186709,25.9996251 L53.2186709,-5.68434189e-14 L66.3436123,-5.68434189e-14 L66.3436123,4.68741213 L57.8442216,4.68741213 L57.8442216,10.6561065 L64.2496954,10.6561065 Z M45.3435186,4.68741213 L45.3435186,26.2498828 C43.7810479,26.2498828 42.1876465,26.2498828 40.6561065,26.3117443 L40.6561065,4.68741213 L35.8121661,4.68741213 L35.8121661,-5.68434189e-14 L50.2183897,-5.68434189e-14 L50.2183897,4.68741213 L45.3435186,4.68741213 Z M30.749836,15.5928391 C28.687787,15.5928391 26.2498828,15.5928391 24.4999531,15.6875059 L24.4999531,22.6562939 C27.2499766,22.4678976 30,22.2495079 32.7809542,22.1557784 L32.7809542,26.6557316 L19.812541,27.6876933 L19.812541,-5.68434189e-14 L32.7809542,-5.68434189e-14 L32.7809542,4.68741213 L24.4999531,4.68741213 L24.4999531,10.9991564 C26.3126816,10.9991564 29.0936358,10.9054269 30.749836,10.9054269 L30.749836,15.5928391 Z M4.78114163,16.9684132 L4.78114163,29.3429562 C3.09401069,29.5313525 1.59340144,29.7497422 0,30 L0,-5.68434189e-14 L4.4690224,-5.68434189e-14 L10.562377,17.0315868 L10.562377,-5.68434189e-14 L15.2497891,-5.68434189e-14 L15.2497891,28.061674 C13.5935889,28.3437998 11.906458,28.4375293 10.1246602,28.6868498 L4.78114163,12.9684132 Z"></path>
               </g>
             </svg>
           </div>
@@ -250,7 +259,6 @@ import{HttpHeaders} from '@angular/common/http';
           </div>
         </div>
 
-
           <!-- Step 4: Payment Method Selection -->
           <div class="payment-step" *ngIf="currentStep === 4">
             <div class="payment-header">
@@ -275,14 +283,12 @@ import{HttpHeaders} from '@angular/common/http';
               <div class="payment-method" (click)="selectPaymentMethod('card')">
                 <div class="payment-method-content">
                   <span class="payment-text">Credit or Debit Card</span>
-                  <div class="payment-icons">
-                    <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/visa.png" alt="Visa" class="payment-icon">
-                    <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/mastercard.png" alt="Mastercard" class="payment-icon">
+                  <div class="payment-icons mx-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="payment-icon" height="30">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" class="payment-icon" height="30">
                   </div>
-
                 </div>
                 <div class="encrypted-badge">
-                  <span>End-to-end encrypted</span>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                     <path d="M18 8H20C21.1 8 22 8.9 22 10V20C22 21.1 21.1 22 20 22H4C2.9 22 2 21.1 2 20V10C2 8.9 2.9 8 4 8H6V6C6 3.8 7.8 2 10 2H14C16.2 2 18 3.8 18 6V8ZM16 8V6C16 4.9 15.1 4 14 4H10C8.9 4 8 4.9 8 6V8H16Z" fill="#999"/>
                   </svg>
@@ -291,18 +297,6 @@ import{HttpHeaders} from '@angular/common/http';
                   <path d="M9 18L15 12L9 6" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-
-              <!-- <div class="payment-method" (click)="selectPaymentMethod('cash')">
-                <div class="payment-method-content">
-                  <span class="payment-text">Pay Cash</span>
-                  <div class="payment-icons">
-                    <div class="cash-icon">💳</div>
-                  </div>
-                </div>
-                <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 18L15 12L9 6" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div> -->
             </div>
           </div>
 
@@ -320,8 +314,8 @@ import{HttpHeaders} from '@angular/common/http';
               </div>
               <h1 class="card-title">Set up your credit or debit card</h1>
               <div class="card-icons">
-                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/visa.png" alt="Visa" class="payment-icon">
-                <img src="https://assets.nflxext.com/ffe/siteui/acquisition/payment/ach/mastercard.png" alt="Mastercard" class="payment-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" class="payment-icon" height="30">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" class="payment-icon" height="30">
               </div>
             </div>
 
@@ -772,157 +766,157 @@ import{HttpHeaders} from '@angular/common/http';
 
     /* Netflix Plan Selection Styles (Step 3) */
     .plan-step {
-  max-width: 978px;
-  margin: 0 auto;
-  text-align: center;
-}
+      max-width: 978px;
+      margin: 0 auto;
+      text-align: center;
+    }
 
-.plan-step-header {
-  margin-bottom: 30px;
-}
+    .plan-step-header {
+      margin-bottom: 30px;
+    }
 
-.step-text-black {
-  font-size: 13px;
-  color: #737373;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+    .step-text-black {
+      font-size: 13px;
+      color: #737373;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-.plan-title {
-  font-size: 32px;
-  font-weight: 600;
-  color: #e50914;
-  margin-top: 10px;
-}
+    .plan-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: #e50914;
+      margin-top: 10px;
+    }
 
-.netflix-plans-container {
-  background: white;
-  padding: 0 16px;
-}
+    .netflix-plans-container {
+      background: white;
+      padding: 0 16px;
+    }
 
-.plans-grid {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 24px;
-  justify-content: space-between;
-}
+    .plans-grid {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      justify-content: space-between;
+    }
 
-.netflix-plan-card {
-  flex: 1;
-  border: 2px solid #e6e6e6;
-  border-radius: 4px;
-  padding: 24px;
-  text-align: center;
-  background-color: #fff;
-  transition: 0.3s ease;
-  position: relative;
-}
+    .netflix-plan-card {
+      flex: 1;
+      border: 2px solid #e6e6e6;
+      border-radius: 4px;
+      padding: 24px;
+      text-align: center;
+      background-color: #fff;
+      transition: 0.3s ease;
+      position: relative;
+    }
 
-.netflix-plan-card h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
-}
+    .netflix-plan-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
 
-.netflix-plan-card div {
-  font-size: 16px;
-  color: #737373;
-}
+    .netflix-plan-card div {
+      font-size: 16px;
+      color: #737373;
+    }
 
-.netflix-plan-card:hover {
-  border-color: #e50914;
-  box-shadow: 0 0 0 2px #e50914;
-  cursor: pointer;
-}
+    .netflix-plan-card:hover {
+      border-color: #e50914;
+      box-shadow: 0 0 0 2px #e50914;
+      cursor: pointer;
+    }
 
-.netflix-plan-card.selected {
-  border-color: #e50914;
-  box-shadow: 0 0 0 3px #e50914;
-}
+    .netflix-plan-card.selected {
+      border-color: #e50914;
+      box-shadow: 0 0 0 3px #e50914;
+    }
 
-.most-popular {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: #e50914;
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 2px;
-}
+    .most-popular {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #e50914;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
 
-.plan-comparison {
-  margin-top: 20px;
-  width: 100%;
-}
+    .plan-comparison {
+      margin-top: 20px;
+      width: 100%;
+    }
 
-.detail-row {
-  display: grid;
-  grid-template-columns: 1fr repeat(3, 1fr);
-  border-bottom: 1px solid #e6e6e6;
-  min-height: 56px;
-  align-items: center;
-}
+    .detail-row {
+      display: grid;
+      grid-template-columns: 1fr repeat(3, 1fr);
+      border-bottom: 1px solid #e6e6e6;
+      min-height: 56px;
+      align-items: center;
+    }
 
-.detail-label {
-  background: #f8f8f8;
-  padding: 12px;
-  font-weight: 500;
-  color: #333;
-  text-align: left;
-}
+    .detail-label {
+      background: #f8f8f8;
+      padding: 12px;
+      font-weight: 500;
+      color: #333;
+      text-align: left;
+    }
 
-.detail-value {
-  padding: 12px;
-  text-align: center;
-  color: #737373;
-  border-left: 1px solid #e6e6e6;
-}
+    .detail-value {
+      padding: 12px;
+      text-align: center;
+      color: #737373;
+      border-left: 1px solid #e6e6e6;
+    }
 
-.detail-value.highlighted {
-  color: #e50914;
-  font-weight: 600;
-  background-color: #fff4f4;
-}
+    .detail-value.highlighted {
+      color: #e50914;
+      font-weight: 600;
+      background-color: #fff4f4;
+    }
 
-.plan-footer-info {
-  text-align: left;
-  margin: 30px 0;
-}
+    .plan-footer-info {
+      text-align: left;
+      margin: 30px 0;
+    }
 
-.footer-text {
-  font-size: 13px;
-  color: #737373;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
+    .footer-text {
+      font-size: 13px;
+      color: #737373;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
 
-.netflix-next-button {
-  background-color: #e50914;
-  color: white;
-  font-size: 18px;
-  font-weight: 600;
-  padding: 16px 0;
-  border: none;
-  border-radius: 4px;
-  width: 100%;
-  max-width: 440px;
-  margin: 0 auto 40px auto;
-  display: block;
-  transition: background-color 0.2s;
-}
+    .netflix-next-button {
+      background-color: #e50914;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 16px 0;
+      border: none;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto 40px auto;
+      display: block;
+      transition: background-color 0.2s;
+    }
 
-.netflix-next-button:hover:not(:disabled) {
-  background-color: #f40612;
-}
+    .netflix-next-button:hover:not(:disabled) {
+      background-color: #f40612;
+    }
 
-.netflix-next-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+    .netflix-next-button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
 
     /* Payment Method Selection Styles (Step 4) */
     .payment-step {
@@ -950,7 +944,6 @@ import{HttpHeaders} from '@angular/common/http';
       font-size: 18px;
       color: #333;
       margin-bottom: 20px;
-
     }
 
     .security-text {
@@ -1181,7 +1174,6 @@ import{HttpHeaders} from '@angular/common/http';
       font-size: 16px;
       color: #333;
       line-height: 1.4;
-
     }
 
     .start-membership-button {
@@ -1261,7 +1253,6 @@ import{HttpHeaders} from '@angular/common/http';
 
     .footer-link:hover {
       text-decoration: underline;
-
     }
 
     .language-selector {
@@ -1301,10 +1292,6 @@ import{HttpHeaders} from '@angular/common/http';
         grid-template-columns: 1fr;
       }
 
-      .detail-values {
-        grid-template-columns: 1fr;
-      }
-
       .footer-links {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1326,27 +1313,24 @@ import{HttpHeaders} from '@angular/common/http';
   `]
 })
 export class SignupComponent implements OnInit {
+  // Session and user data
+  private userId: string | null = null;
+  private userSession: UserSession | null = null;
+
+  // Component state
   currentStep: number = 1;
+  isLoading: boolean = false;
+
+  // Form data
   fullName: string = '';
   email: string = '';
   password: string = '';
   otpCode: string = '';
   receiveOffers: boolean = false;
   showPassword: boolean = false;
-  isLoading: boolean = false;
 
-  private userId: string | null = null;
-
-  // Error messages
-  fullNameError: string = '';
-  emailError: string = '';
-  passwordError: string = '';
-  otpError: string = '';
-
-  // Plan selection
+  // Plan and payment
   selectedPlan: string = 'premium';
-
-  // Payment details
   selectedPaymentMethod: string = '';
   cardNumber: string = '';
   expiryDate: string = '';
@@ -1354,8 +1338,19 @@ export class SignupComponent implements OnInit {
   nameOnCard: string = '';
   agreementChecked: boolean = false;
 
+  // Error handling
+  fullNameError: string = '';
+  emailError: string = '';
+  passwordError: string = '';
+  otpError: string = '';
+
+  // OTP resend
   resendCooldown: number = 0;
   private resendTimer?: any;
+
+  // Constants - Updated to handle both keys
+  private readonly USER_SESSION_KEY = 'netflix_user_session';
+  private readonly LEGACY_USER_KEY = 'netflix_user';
 
   planToIdMap: { [key: string]: number } = {
     basic: 1,
@@ -1364,17 +1359,56 @@ export class SignupComponent implements OnInit {
   };
 
   plans = [
-
     { id: 'basic', name: 'Basic', quality: 'Good', price: '100', resolution: '720p (HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '1', downloads: '1' },
     { id: 'standard', name: 'Standard', quality: 'Great', price: '170', resolution: '1080p (Full HD)', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '2', downloads: '2' },
     { id: 'premium', name: 'Premium', quality: 'Best', price: '240', resolution: '4K (Ultra HD) + HDR', devices: 'TV, computer, mobile phone, tablet', simultaneousStreams: '4', downloads: '6' }
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
+    console.log('🚀 SignupComponent initialized');
+
+    // First restore session data, then handle query parameters
+    this.restoreUserSession();
+
+    // Handle query parameters but don't overwrite session data with empty values
     this.route.queryParams.subscribe(params => {
-      if (params['email']) this.email = params['email'];
+      console.log('📥 Query params received:', params);
+
+      // Only update email if it's provided and we don't already have one
+      if (params['email'] && params['email'].trim() !== '') {
+        this.email = params['email'];
+        console.log('📧 Email from query params:', this.email);
+      } else if (!this.email) {
+        console.log('⚠️ No email in query params and no email in session');
+      }
+
+      // Update step if provided
+      if (params['step']) {
+        const step = parseInt(params['step'], 10);
+        if (!isNaN(step)) {
+          this.currentStep = step;
+          console.log('📍 Step from query params:', this.currentStep);
+        }
+      }
+
+      // Show message if provided
+      if (params['message']) {
+        alert(params['message']);
+      }
+    });
+
+    console.log('✅ Final component state:', {
+      email: this.email,
+      currentStep: this.currentStep,
+      userId: this.userId,
+      fullName: this.fullName
     });
   }
 
@@ -1382,12 +1416,98 @@ export class SignupComponent implements OnInit {
     if (this.resendTimer) clearInterval(this.resendTimer);
   }
 
+  /**
+   * Restore user session from localStorage (checks both keys)
+   */
+  private restoreUserSession() {
+    try {
+      // First try the new session key
+      let sessionData = localStorage.getItem(this.USER_SESSION_KEY);
+      let sessionKey = this.USER_SESSION_KEY;
+
+      // If not found, try the legacy key
+      if (!sessionData) {
+        sessionData = localStorage.getItem(this.LEGACY_USER_KEY);
+        sessionKey = this.LEGACY_USER_KEY;
+        console.log('🔄 Trying legacy session key:', this.LEGACY_USER_KEY);
+      }
+
+      if (sessionData) {
+        this.userSession = JSON.parse(sessionData);
+        console.log('📚 Restored user session from', sessionKey, ':', this.userSession);
+
+        if (this.userSession) {
+          // Restore user data
+          this.userId = this.userSession.id;
+          this.email = this.userSession.email;
+          this.fullName = this.userSession.fullName;
+
+          // Restore progress
+          if (this.userSession.currentStep) {
+            this.currentStep = this.userSession.currentStep;
+          }
+
+          if (this.userSession.selectedPlan) {
+            this.selectedPlan = this.userSession.selectedPlan;
+          }
+
+          // If user is returning with verified email, skip to payment steps
+          if (this.userSession.isEmailVerified && this.currentStep < 3) {
+            console.log('✅ Email already verified, jumping to plan selection');
+            this.currentStep = 3;
+          }
+
+          console.log('📤 Session restored - email:', this.email, 'step:', this.currentStep);
+        }
+      } else {
+        console.log('ℹ️ No session found in localStorage');
+      }
+    } catch (error) {
+      console.error('❌ Failed to restore user session:', error);
+      this.clearUserSession();
+    }
+  }
+
+  /**
+   * Save current user session to localStorage
+   */
+  private saveUserSession() {
+    if (this.userId) {
+      const sessionData: UserSession = {
+        id: this.userId,
+        email: this.email,
+        fullName: this.fullName,
+        isEmailVerified: this.currentStep >= 3,
+        currentStep: this.currentStep,
+        selectedPlan: this.selectedPlan
+      };
+
+      // Save to both keys for compatibility
+      localStorage.setItem(this.USER_SESSION_KEY, JSON.stringify(sessionData));
+      localStorage.setItem(this.LEGACY_USER_KEY, JSON.stringify(sessionData));
+      console.log('💾 Saved user session:', sessionData);
+    }
+  }
+
+  /**
+   * Clear user session from localStorage
+   */
+  private clearUserSession() {
+    localStorage.removeItem(this.USER_SESSION_KEY);
+    localStorage.removeItem(this.LEGACY_USER_KEY);
+    localStorage.removeItem('userId'); // Legacy cleanup
+    this.userSession = null;
+    console.log('🗑️ Cleared user session');
+  }
+
   nextStep() {
     this.currentStep++;
+    this.saveUserSession();
   }
 
   previousStep() {
     this.currentStep--;
+    this.saveUserSession();
   }
 
   togglePassword() {
@@ -1403,14 +1523,18 @@ export class SignupComponent implements OnInit {
 
     this.authService.signup(this.fullName, this.email, this.password).subscribe({
       next: (response) => {
+        console.log('✅ Registration successful:', response);
         this.isLoading = false;
         if (response.requiresVerification) {
+          this.userId = response.user?.id || null;
+          this.saveUserSession();
           this.nextStep(); // Move to OTP verification
         } else {
           this.emailError = 'Registration failed. Please try again.';
         }
       },
       error: (error) => {
+        console.error('❌ Registration failed:', error);
         this.isLoading = false;
         this.emailError = error.error?.message || 'Registration failed. Please try again.';
       }
@@ -1425,20 +1549,27 @@ export class SignupComponent implements OnInit {
       return;
     }
 
+    if (!this.email) {
+      this.otpError = 'Email is required for verification.';
+      return;
+    }
+
     this.isLoading = true;
 
     this.authService.verifyOtp(this.email, this.otpCode).subscribe({
       next: (response) => {
+        console.log('✅ OTP verification successful:', response);
         this.isLoading = false;
         if (response.token) {
           this.userId = response.user.id;
-          localStorage.setItem('userId', this.userId!);
+          this.saveUserSession(); // Save session after successful verification
           this.goToPlanSelection();
         } else {
           this.otpError = 'Verification failed. Please try again.';
         }
       },
       error: (error) => {
+        console.error('❌ OTP verification failed:', error);
         this.isLoading = false;
         this.otpError = error.error?.message ?? 'Verification failed. Please try again.';
       }
@@ -1447,10 +1578,12 @@ export class SignupComponent implements OnInit {
 
   goToPlanSelection() {
     this.currentStep = 3;
+    this.saveUserSession();
   }
 
   selectPlan(planId: string) {
     this.selectedPlan = planId;
+    this.saveUserSession();
   }
 
   selectPaymentMethod(method: string) {
@@ -1465,66 +1598,95 @@ export class SignupComponent implements OnInit {
   }
 
   private processDeveloperPayment(): void {
-  console.log('Processing developer mode payment...');
-  this.isLoading = true;
-
-  // Simulate payment processing delay
-  setTimeout(() => {
-    console.log('Developer payment completed successfully');
-    this.confirmPlan();
-  }, 2000);
-}
-
-
- private async processPaymobPayment(): Promise<void> {
-  if (!this.userId) {
-    console.error('User ID not found.');
-    return;
-  }
-
-  const planPrice = this.getSelectedPlanPrice();
-  const amountCents = parseInt(planPrice) * 100; // Convert to cents
-
-  try {
+    console.log('💰 Processing developer mode payment...');
     this.isLoading = true;
 
-    // Prepare flat payload as expected by backend
-    const paymentPayload = {
-      amountCents: amountCents,
-      name: this.fullName,
-      email: this.email,
-      phone: '+201000000000' // You can later bind this to actual user input
-    };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    // Call the backend
-    const paymentResponse = await this.http
-      .post<any>(`${environment.apiUrl}/Paymob/initiate`, paymentPayload, { headers })
-      .toPromise();
-
-    if (paymentResponse.success && paymentResponse.redirectUrl) {
-      // In developer mode, simulate successful payment
-      if (!environment.production) {
-        console.log('Developer mode: Simulating successful payment');
-        setTimeout(() => {
-          this.confirmPlan();
-        }, 1000);
-      } else {
-        // In production, redirect to Paymob
-        window.location.href = paymentResponse.redirectUrl;
-      }
-    } else {
-      throw new Error('Payment initialization failed');
-    }
-  } catch (error) {
-    console.error('Payment processing failed:', error);
-    this.isLoading = false;
-    alert('Payment processing failed. Please try again.');
+    // Simulate payment processing delay
+    setTimeout(() => {
+      console.log('✅ Developer payment completed successfully');
+      this.confirmPlan();
+    }, 2000);
   }
-}
+
+  private async processPaymobPayment(): Promise<void> {
+    console.log('💳 Processing card payment via Paymob...');
+
+    // Ensure we have user ID
+    if (!this.userId) {
+      console.error('❌ User ID not found - cannot process payment');
+      alert('Session expired. Please verify your email again.');
+      this.router.navigate(['/signup'], { queryParams: { step: 2, email: this.email } });
+      return;
+    }
+
+    // Validate required user data
+    if (!this.fullName || !this.email) {
+      console.error('❌ Missing user data for payment:', { fullName: this.fullName, email: this.email });
+      alert('Missing user information. Please complete the signup process again.');
+      this.router.navigate(['/signup']);
+      return;
+    }
+
+    const planPrice = this.getSelectedPlanPrice();
+    const amountCents = parseInt(planPrice) * 100;
+
+    try {
+      this.isLoading = true;
+
+      // Prepare payment payload
+      const paymentPayload = {
+        amountCents: amountCents,
+        name: this.fullName,
+        email: this.email,
+        phone: '+201000000000' // You can later bind this to actual user input
+      };
+
+      console.log('📤 Sending payment request:', paymentPayload);
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+      });
+
+      // Call the backend
+      const paymentResponse = await this.http
+        .post<any>(`${environment.apiUrl}/Paymob/initiate`, paymentPayload, { headers })
+        .toPromise();
+
+      console.log('📥 Payment response received:', paymentResponse);
+
+      if (paymentResponse.success && paymentResponse.redirectUrl) {
+        // In developer mode, simulate successful payment
+        if (!environment.production) {
+          console.log('🔧 Developer mode: Simulating successful payment');
+          setTimeout(() => {
+            this.confirmPlan();
+          }, 1000);
+        } else {
+          // In production, redirect to Paymob
+          console.log('🔗 Redirecting to payment URL:', paymentResponse.redirectUrl);
+          window.location.href = paymentResponse.redirectUrl;
+        }
+      } else {
+        console.error('❌ Payment initiation failed - no redirect URL');
+        throw new Error('Payment initialization failed');
+      }
+    } catch (error) {
+      console.error('💥 Payment processing failed:', error);
+      this.isLoading = false;
+
+      // Provide more specific error messages
+      let errorMessage = 'Payment processing failed. Please try again.';
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to generate payment token')) {
+          errorMessage = 'Unable to connect to payment processor. Please check your connection and try again.';
+        } else if (error.message.includes('Invalid payment request')) {
+          errorMessage = 'Invalid payment information. Please check your details and try again.';
+        }
+      }
+
+      alert(errorMessage);
+    }
+  }
 
   completeSignup() {
     if (!this.selectedPaymentMethod) {
@@ -1540,7 +1702,7 @@ export class SignupComponent implements OnInit {
       this.processPaymobPayment();
     } else {
       // Cash payment already processed in developer mode
-      this.router.navigate(['/Home']);
+      this.router.navigate(['/Profile']);
     }
   }
 
@@ -1568,57 +1730,71 @@ export class SignupComponent implements OnInit {
     return true;
   }
 
-  confirmPlan() {
-  if (!this.userId) {
-    console.error('User ID not found.');
-    return;
-  }
+  private createDefaultProfile(userId: string) {
+  const defaultProfile = {
+    userId: userId,
+    name: 'My Profile',
+    isKid: false
+  };
 
-  const planId = this.planToIdMap[this.selectedPlan];
-  console.log(`📡 Submitting subscription for userId=${this.userId}, planId=${planId}`);
-
-  this.isLoading = true;
-
-  this.http.post(`${environment.apiUrl}/Subscription/subscribe-and-bootstrap`, {
-    userId: this.userId,
-    planId: planId
-  }).subscribe({
-    next: () => {
-      console.log('✅ Backend responded - subscription created');
-      this.isLoading = false;
-
-      // Store user authentication
-      const userData = {
-        id: this.userId,
-        email: this.email,
-        fullName: this.fullName,
-        plan: this.selectedPlan,
-        isEmailVerified: true
-      };
-
-      localStorage.setItem('netflix_user', JSON.stringify(userData));
-      localStorage.setItem('netflix_token', 'temp_token_' + this.userId);
-
-      // Navigate to home
-      this.router.navigate(['/home']);
-    },
-    error: (err) => {
-      console.error('❌ Failed to subscribe & create profile', err);
-      this.isLoading = false;
-      alert('Subscription failed. Please try again.');
-    }
-  });
+  return this.http.post(`${environment.apiUrl}/Profile/create`, defaultProfile);
 }
+
+  confirmPlan() {
+    if (!this.userId) {
+      console.error('❌ User ID not found for plan confirmation');
+      alert('Session expired. Please complete the signup process again.');
+      this.router.navigate(['/signup']);
+      return;
+    }
+
+    const planId = this.planToIdMap[this.selectedPlan];
+    console.log(`📡 Submitting subscription for userId=${this.userId}, planId=${planId}`);
+
+    this.isLoading = true;
+
+    this.http.post(`${environment.apiUrl}/Subscription/subscribe-and-bootstrap`, {
+      userId: this.userId,
+      planId: planId
+    }).subscribe({
+      next: () => {
+        console.log('✅ Backend responded - subscription created');
+        this.isLoading = false;
+
+        // Clear session after successful completion
+        // this.clearUserSession();
+
+        // Navigate to login
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('❌ Failed to subscribe & create profile', err);
+        this.isLoading = false;
+        alert('Subscription failed. Please try again.');
+      }
+    });
+  }
 
   resendOtp() {
     if (this.resendCooldown > 0) return;
 
+    // Validate email before attempting resend
+    if (!this.email || this.email.trim() === '') {
+      console.error('❌ Cannot resend OTP: Email is empty');
+      this.otpError = 'Email is required to resend verification code.';
+      return;
+    }
+
+    console.log('📤 Resending OTP to:', this.email);
+
     this.authService.resendOtp(this.email).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('✅ OTP resent successfully:', response);
         this.startResendCooldown();
         this.otpError = '';
       },
-      error: () => {
+      error: (error) => {
+        console.error('❌ Failed to resend OTP:', error);
         this.otpError = 'Failed to resend code. Please try again.';
       }
     });
@@ -1667,38 +1843,13 @@ export class SignupComponent implements OnInit {
     return plan ? plan.price : '240';
   }
 
-//   selectPaymentMethod(method: string) {
-//     this.selectedPaymentMethod = method;
-//     if (method === 'card') {
-//       this.nextStep();
-//     } else {
-//       // Handle cash payment method
-//       this.completeSignup();
-//     }
-//   }
-
-//   getSelectedPlanPrice(): string {
-//     const plan = this.plans.find(p => p.id === this.selectedPlan);
-//     return plan ? plan.price : '240';
-//   }
-
-//   getSelectedPlanName(): string {
-//     const plan = this.plans.find(p => p.id === this.selectedPlan);
-//     return plan ? plan.name : 'Premium';
-//   }
-
-//   goToPlanSelection() {
-//     this.currentStep = 3;
-//   }
-
-//   completeSignup() {
-//     this.router.navigate(['/Home']);
   getSelectedPlanName(): string {
     const plan = this.plans.find(p => p.id === this.selectedPlan);
     return plan ? plan.name : 'Premium';
   }
 
   goToLogin() {
+    this.clearUserSession();
     this.router.navigate(['/login']);
   }
 
@@ -1706,5 +1857,3 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
-
-// bootstrapApplication(SignupComponent);

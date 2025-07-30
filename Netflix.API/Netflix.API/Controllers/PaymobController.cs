@@ -23,12 +23,18 @@ namespace Netflix.API.Controllers
         {
             try
             {
+                _logger.LogInformation("🎬 Netflix Payment Request - Amount: {Amount}, Email: {Email}", 
+                    request?.AmountCents, request?.Email);
+
                 if (request == null || request.AmountCents <= 0)
                 {
+                    _logger.LogWarning("❌ Invalid payment request received");
                     return BadRequest(new { message = "Invalid payment request" });
                 }
 
                 var redirectUrl = await _paymobService.InitiatePaymentAsync(request);
+                
+                _logger.LogInformation("✅ Payment initiated successfully, redirect URL generated");
                 
                 return Ok(new { 
                     success = true,
@@ -38,10 +44,12 @@ namespace Netflix.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error initiating payment");
+                _logger.LogError(ex, "💥 Netflix Payment Error - Failed to initiate payment for amount: {Amount}", 
+                    request?.AmountCents);
                 return StatusCode(500, new { 
                     success = false,
-                    message = "Payment initiation failed"
+                    message = "Payment initiation failed",
+                    error = ex.Message
                 });
             }
         }

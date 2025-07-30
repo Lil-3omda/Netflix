@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatApiService, ChatRequest, ChatResponse, MovieRecommendation, Conversation, ChatMessageDto } from '../../services/chat-api.service';
@@ -416,11 +416,12 @@ import { Subject, takeUntil } from 'rxjs';
       padding: 16px;
       overflow-y: auto;
       background: #141414;
-      .chatbot-messages {
+      min-height: 100px;
+    }
 
-  min-height: 100px;
-  max-height: 400px;
-}
+    .chatbot-messages.with-conversations {
+      max-height: calc(100% - 300px);
+    }
 
     }
 
@@ -807,9 +808,9 @@ import { Subject, takeUntil } from 'rxjs';
     }
   `]
 })
-export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class AiChatbotComponent implements OnInit, OnDestroy {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
-
+  private isUserScrolledUp = false;
   isOpen = false;
   showConversations = false;
   messages: ChatMessageDto[] = [];
@@ -827,7 +828,8 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
   constructor(
     private chatApiService: ChatApiService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -847,8 +849,19 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.destroy$.complete();
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  // ngAfterViewChecked() {
+  //   this.scrollToBottom();
+  //   this.cdRef.detectChanges();
+  // }
+  ngAfterViewInit() {
+    if (this.messagesContainer) {
+      this.messagesContainer.nativeElement.addEventListener('scroll', () => {
+        const element = this.messagesContainer.nativeElement;
+        const threshold = 100;
+        this.isUserScrolledUp =
+          element.scrollHeight - (element.scrollTop + element.clientHeight) > threshold;
+      });
+    }
   }
 
   toggleChatbot() {
@@ -879,8 +892,7 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
       createdAt: new Date().toISOString()
     });
 
-    this.scrollToBottom();
-
+    this.scrollToBottom(true);
     try {
       const request: ChatRequest = {
         conversationId: this.currentConversationId,
@@ -922,7 +934,7 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     } finally {
       this.isLoading = false;
       this.isTyping = false;
-      this.scrollToBottom();
+      // this.scrollToBottom(true);
     }
   }
 
@@ -966,7 +978,7 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     } finally {
       this.isLoading = false;
       this.isTyping = false;
-      this.scrollToBottom();
+      // this.scrollToBottom(true);
     }
   }
 
@@ -997,7 +1009,7 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.currentConversationId = conversation.id;
         this.messages = conversation.messages;
         this.showConversations = false;
-        this.scrollToBottom();
+        // this.scrollToBottom(true);
       }
     } catch (error) {
       console.error('Error loading conversation:', error);
@@ -1030,12 +1042,18 @@ export class AiChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     return 'https://via.placeholder.com/300x450/333333/ffffff?text=Netflix';
   }
 
-  private scrollToBottom() {
+  private scrollToBottom(force: boolean = false): void {
+    if (!this.messagesContainer || (this.isUserScrolledUp && !force)) {
+      return;
+    }
+
     setTimeout(() => {
-      if (this.messagesContainer) {
+      try {
         const element = this.messagesContainer.nativeElement;
         element.scrollTop = element.scrollHeight;
+      } catch (err) {
+        console.warn('Scroll error:', err);
       }
-    }, 100);
+    }, 50);
   }
 }

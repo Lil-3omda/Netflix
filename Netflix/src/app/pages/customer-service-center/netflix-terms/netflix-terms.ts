@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { routes } from 'src/app/app.routes';
 
 @Component({
   selector: 'app-netflix-terms',
@@ -10,8 +11,7 @@ export class NetflixTerms {
   constructor() { }
 
   onBackToHelp(): void {
-    // Navigation logic here
-    console.log('Navigate to Help Home');
+    window.history.back();
   }
 
   onPrint(): void {

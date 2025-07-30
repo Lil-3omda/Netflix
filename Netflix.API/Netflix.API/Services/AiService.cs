@@ -338,7 +338,7 @@ namespace Netflix.API.Services
                     Rating = v.Ratings.Any() ? v.Ratings.Average(r => r.Stars) : 0,
                     RatingCount = v.Ratings.Count()
                 })
-                .Where(m => m.RatingCount >= 3) // Only movies with at least 3 ratings
+                .Where(m => m.RatingCount >= 3)
                 .OrderByDescending(m => m.Rating)
                 .ThenByDescending(m => m.RatingCount)
                 .Take(20)

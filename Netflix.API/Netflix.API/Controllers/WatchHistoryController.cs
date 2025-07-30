@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Netflix.API.DTOs;
 using Netflix.API.Models;
 using Netflix.API.Repositories.Interfaces;
+using Netflix.API.Repositories.WatchHistoryRepository;
 
 namespace Netflix.API.Controllers
 {
@@ -30,6 +32,13 @@ namespace Netflix.API.Controllers
             });
 
             return Ok(result);
+        }
+
+        [HttpGet("isWatched")]
+        public async Task<IActionResult> IsMovieWatched(int profileId, int videoId)
+        {
+            var alreadyWatched = await unitOfWork.WatchHistories.IsWatchedAsync(profileId, videoId);
+            return Ok(alreadyWatched);
         }
 
 

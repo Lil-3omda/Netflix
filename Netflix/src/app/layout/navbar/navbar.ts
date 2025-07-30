@@ -71,7 +71,7 @@ movies: any[] = [];
 filteredMovies: any[] = []; 
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private authService: AuthService,
     private router: Router,
     private movieService: MovieCategory,
@@ -80,8 +80,9 @@ filteredMovies: any[] = [];
   ngOnInit(): void {
     this.fetchCategories();
     this.checkAuthStatus();
+
      this.loadMovies();
-    
+
     // Subscribe to auth status changes
     this.authService.isAuthenticated$.subscribe(isAuth => {
       this.isAuthenticated = isAuth;
@@ -124,7 +125,7 @@ filteredMovies: any[] = [];
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
     localStorage.removeItem('userId');
-    
+
     // Clear any other Netflix-related localStorage items
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('netflix_') || key.includes('user') || key.includes('auth')) {
@@ -134,14 +135,14 @@ filteredMovies: any[] = [];
 
     // Use AuthService logout method
     this.authService.logout();
-    
+
     // Navigate to home page
     this.router.navigate(['/']);
   }
 
   navigateToProfile(): void {
     if (this.isAuthenticated) {
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/Profile']);
     }
   }
 
@@ -152,6 +153,7 @@ filteredMovies: any[] = [];
   navigateToSignup(): void {
     this.router.navigate(['/signup']);
   }
+
 toggleSearch() {
   this.showSearch = !this.showSearch;
 
@@ -188,3 +190,4 @@ goToMovie(id: number) {
   this.filteredMovies = [];
 }
 }
+

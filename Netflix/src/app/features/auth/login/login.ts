@@ -73,7 +73,7 @@ import { AuthService } from '../../../core/services/auth.service';
                 <input type="checkbox" id="remember" [(ngModel)]="rememberMe" name="remember">
                 <label for="remember">Remember me</label>
               </div>
-              <a href="#" class="need-help">Need help?</a>
+              <a href="#" class="need-help" (click)="showForgotPasswordForm()">Need help?</a>
             </div>
 
             <div class="form-footer">
@@ -108,6 +108,83 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
         </div>
       </footer>
+
+      <!-- Forgot Password Modal -->
+      <div class="modal-overlay" *ngIf="showForgotPassword" (click)="closeForgotPassword()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2>Reset Password</h2>
+            <button class="close-btn" (click)="closeForgotPassword()">×</button>
+          </div>
+          
+          <div class="modal-body" *ngIf="!showResetPassword">
+            <p>Enter your email address and we'll send you a verification code to reset your password.</p>
+            <form (ngSubmit)="onForgotPasswordSubmit()">
+              <div class="input-group">
+                <input
+                  type="email"
+                  [(ngModel)]="forgotPasswordEmail"
+                  name="forgotPasswordEmail"
+                  required
+                  class="modal-input"
+                  placeholder="Email address">
+                <div class="error-message" *ngIf="forgotPasswordError">{{ forgotPasswordError }}</div>
+              </div>
+              <button type="submit" class="modal-button" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Send Code</span>
+                <div *ngIf="isLoading" class="loading-spinner"></div>
+              </button>
+            </form>
+          </div>
+
+          <div class="modal-body" *ngIf="showResetPassword">
+            <p>Enter the verification code sent to {{ forgotPasswordEmail }} and your new password.</p>
+            <form (ngSubmit)="onResetPasswordSubmit()">
+              <div class="input-group">
+                <input
+                  type="text"
+                  [(ngModel)]="resetOtpCode"
+                  name="resetOtpCode"
+                  required
+                  maxlength="6"
+                  class="modal-input"
+                  placeholder="Verification code">
+                <div class="error-message" *ngIf="resetOtpError">{{ resetOtpError }}</div>
+              </div>
+              
+              <div class="input-group">
+                <input
+                  type="password"
+                  [(ngModel)]="newPassword"
+                  name="newPassword"
+                  required
+                  class="modal-input"
+                  placeholder="New password">
+              </div>
+              
+              <div class="input-group">
+                <input
+                  type="password"
+                  [(ngModel)]="confirmPassword"
+                  name="confirmPassword"
+                  required
+                  class="modal-input"
+                  placeholder="Confirm new password">
+                <div class="error-message" *ngIf="resetPasswordError">{{ resetPasswordError }}</div>
+              </div>
+              
+              <button type="submit" class="modal-button" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Reset Password</span>
+                <div *ngIf="isLoading" class="loading-spinner"></div>
+              </button>
+              
+              <button type="button" class="modal-button-secondary" (click)="backToEmailStep()">
+                Back
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   styles: [`
@@ -417,6 +494,133 @@ import { AuthService } from '../../../core/services/auth.service';
       font-size: 14px;
     }
 
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #141414;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 450px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #333;
+    }
+
+    .modal-header h2 {
+      color: white;
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      color: white;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-body p {
+      color: #b3b3b3;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-input {
+      width: 100%;
+      height: 50px;
+      padding: 16px 20px;
+      background: #333;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    .modal-input::placeholder {
+      color: #8c8c8c;
+    }
+
+    .modal-input:focus {
+      background: #454545;
+    }
+
+    .modal-button {
+      width: 100%;
+      height: 48px;
+      background: #e50914;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-button:hover:not(:disabled) {
+      background: #f40612;
+    }
+
+    .modal-button:disabled {
+      background: #8c8c8c;
+      cursor: not-allowed;
+    }
+
+    .modal-button-secondary {
+      width: 100%;
+      height: 48px;
+      background: transparent;
+      color: #b3b3b3;
+      border: 1px solid #333;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-button-secondary:hover {
+      background: #333;
+      color: white;
+    }
+
     @media (max-width: 740px) {
       .login-form-wrapper {
         background: transparent;
@@ -425,6 +629,11 @@ import { AuthService } from '../../../core/services/auth.service';
 
       .footer-links {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 10px;
       }
     }
   `]
@@ -437,8 +646,17 @@ export class Login {
   isLoading: boolean = false;
   emailError: string = '';
   passwordError: string = '';
+  showForgotPassword: boolean = false;
+  showResetPassword: boolean = false;
+  forgotPasswordEmail: string = '';
+  resetOtpCode: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  resetToken: string = '';
+  forgotPasswordError: string = '';
+  resetOtpError: string = '';
+  resetPasswordError: string = '';
 
-  // constructor(private router: Router, private authService: AuthService) {}
   constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit() {
@@ -508,5 +726,100 @@ export class Login {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  showForgotPasswordForm() {
+    this.showForgotPassword = true;
+    this.forgotPasswordEmail = this.email; // Pre-fill with login email if available
+  }
+
+  closeForgotPassword() {
+    this.showForgotPassword = false;
+    this.showResetPassword = false;
+    this.forgotPasswordEmail = '';
+    this.resetOtpCode = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
+    this.resetToken = '';
+    this.forgotPasswordError = '';
+    this.resetOtpError = '';
+    this.resetPasswordError = '';
+  }
+
+  onForgotPasswordSubmit() {
+    this.forgotPasswordError = '';
+    
+    if (!this.forgotPasswordEmail) {
+      this.forgotPasswordError = 'Please enter your email address.';
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.authService.forgotPassword(this.forgotPasswordEmail).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.showResetPassword = true;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.forgotPasswordError = error.error?.message || 'Failed to send reset code. Please try again.';
+      }
+    });
+  }
+
+  onResetPasswordSubmit() {
+    this.resetPasswordError = '';
+    this.resetOtpError = '';
+
+    if (!this.resetOtpCode || this.resetOtpCode.length !== 6) {
+      this.resetOtpError = 'Please enter a valid 6-digit verification code.';
+      return;
+    }
+
+    if (!this.newPassword || this.newPassword.length < 4) {
+      this.resetPasswordError = 'Password must be at least 4 characters long.';
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.resetPasswordError = 'Passwords do not match.';
+      return;
+    }
+
+    this.isLoading = true;
+
+    // First verify the OTP
+    this.authService.verifyResetOtp(this.forgotPasswordEmail, this.resetOtpCode).subscribe({
+      next: (response) => {
+        this.resetToken = response.resetToken;
+        
+        // Then reset the password
+        this.authService.resetPassword(this.forgotPasswordEmail, this.resetToken, this.newPassword).subscribe({
+          next: (resetResponse) => {
+            this.isLoading = false;
+            this.closeForgotPassword();
+            alert('Password reset successfully! You can now login with your new password.');
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.resetPasswordError = error.error?.message || 'Failed to reset password. Please try again.';
+          }
+        });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.resetOtpError = error.error?.message || 'Invalid or expired verification code.';
+      }
+    });
+  }
+
+  backToEmailStep() {
+    this.showResetPassword = false;
+    this.resetOtpCode = '';
+    this.newPassword = '';
+    this.confirmPassword = '';
+    this.resetOtpError = '';
+    this.resetPasswordError = '';
   }
 }

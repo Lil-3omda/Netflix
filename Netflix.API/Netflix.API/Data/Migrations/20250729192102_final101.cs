@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Netflix.API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class chatbot : Migration
+    public partial class final101 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,7 +61,8 @@ namespace Netflix.API.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -277,6 +278,8 @@ namespace Netflix.API.Data.Migrations
                     ViewCount = table.Column<int>(type: "int", nullable: false),
                     TotalView = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Duration = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     UploadedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -307,7 +310,8 @@ namespace Netflix.API.Data.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PlanId = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SubscriptionPlanId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -324,6 +328,11 @@ namespace Netflix.API.Data.Migrations
                         principalTable: "SubscriptionPlans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserSubscriptions_SubscriptionPlans_SubscriptionPlanId",
+                        column: x => x.SubscriptionPlanId,
+                        principalTable: "SubscriptionPlans",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -636,6 +645,11 @@ namespace Netflix.API.Data.Migrations
                 name: "IX_UserSubscriptions_PlanId",
                 table: "UserSubscriptions",
                 column: "PlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_SubscriptionPlanId",
+                table: "UserSubscriptions",
+                column: "SubscriptionPlanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSubscriptions_UserId",

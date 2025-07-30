@@ -55,7 +55,7 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
                 <p>View your support history</p>
               </div>
 
-              <div class="option-card">
+              <div class="option-card" (click)="goToFAQ()">
                 <div class="option-icon">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="#e50914" stroke-width="2"/>
@@ -592,5 +592,8 @@ export class CustomerSupportComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+  goToFAQ() {
+    this.router.navigate(['/frequently-asked-questions']);
   }
 }
