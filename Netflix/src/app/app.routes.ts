@@ -27,6 +27,10 @@ export const routes: Routes = [
     path: 'moviedetails/:id',
     loadComponent: () => import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis)
   },
+    {
+    path: 'watchMovie/:id',
+    loadComponent: () => import('./shared/watch-movie/watch-movie').then(m => m.WatchMovie)
+  },
   {
     path: 'Profile',
     loadComponent: () => import('./features/profile/choose-profile/choose-profile').then(m => m.ChooseProfile)

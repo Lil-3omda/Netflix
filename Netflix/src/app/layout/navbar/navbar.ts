@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { MovieCategory } from '../../core/services/movie-category';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,FormsModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
@@ -64,15 +65,22 @@ export class Navbar implements OnInit {
   isAuthenticated: boolean = false;
   currentUser: any = null;
 
+  searchTerm: string = '';
+showSearch: boolean = false;
+movies: any[] = []; 
+filteredMovies: any[] = []; 
+
   constructor(
     private http: HttpClient, 
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private movieService: MovieCategory,
   ) {}
 
   ngOnInit(): void {
     this.fetchCategories();
     this.checkAuthStatus();
+     this.loadMovies();
     
     // Subscribe to auth status changes
     this.authService.isAuthenticated$.subscribe(isAuth => {
@@ -144,4 +152,39 @@ export class Navbar implements OnInit {
   navigateToSignup(): void {
     this.router.navigate(['/signup']);
   }
+toggleSearch() {
+  this.showSearch = !this.showSearch;
+
+  if (!this.showSearch) {
+    this.searchTerm = '';
+    this.filteredMovies = [];
+  }
+}
+
+loadMovies() {
+  this.movieService.getAllMovies().subscribe({
+    next: data => {
+      this.movies = data;
+       console.log('Movies loaded:', this.movies);
+       
+    },
+    error: err => {
+      console.error('Error loading movies:', err);
+      this.movies = [];
+    }
+  });
+}
+
+onSearch() {
+  const term = this.searchTerm.toLowerCase();
+  this.filteredMovies = this.movies.filter(movie =>
+    movie.title.toLowerCase().includes(term)
+  );
+}
+goToMovie(id: number) {
+  this.router.navigate(['/moviedetails', id]);
+  this.showSearch = false;
+  this.searchTerm = '';
+  this.filteredMovies = [];
+}
 }
