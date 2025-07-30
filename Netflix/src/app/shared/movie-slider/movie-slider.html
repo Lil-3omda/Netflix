@@ -23,18 +23,22 @@
         </div>
 
         
-        <div class="movie-card" >
+        <div class="movie-card"
+        [routerLink]="['/moviedetails', movie.id]"
+        >
           <div class="movie-image">
             <img [src]="'https://localhost:7140/'+movie.imageUrl" class="img-fluid rounded" alt="{{ movie.title }}" />
           </div>
-          <div class="movie-title">{{ movie.title }}</div>
-          <div class="extra-info text-center mt-2">
+          <div class="addition">
+            <div class="movie-title">{{ movie.title }}</div>
+            <div class="extra-info text-center mt-2">
             <div class="d-flex justify-content-center gap-3 mb-2">
-              <a [routerLink]="['/moviedetails', movie.id]">
+              <a >
               <i class="fas fa-play-circle fs-3"></i>
               </a>
               <i class="fas fa-heart fs-3 d-none"></i>
             </div>
+          </div>
           </div>
         </div>
       </div>
