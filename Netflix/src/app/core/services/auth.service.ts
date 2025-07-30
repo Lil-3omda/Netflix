@@ -132,6 +132,17 @@ export class AuthService {
     }
   }
 
+  getUserRole(): string | null {
+    const token = localStorage.getItem('netflix_token');
+    if (!token) return null;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || null;
+    } catch (e) {
+      return null;
+    }
+  }
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('netflix_token');

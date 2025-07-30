@@ -20,7 +20,6 @@ export class SubscriptionGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const currentUrl = this.router.url;
 
-    // ✅ Skip guard check if user is already on signup page to avoid infinite loop
     if (currentUrl.startsWith('/signup')) {
       return of(true);
     }
@@ -36,7 +35,6 @@ export class SubscriptionGuard implements CanActivate {
         if (res && res.planName) {
           return true;
         } else {
-          // ✅ Redirect to step 4 of signup with message
           this.router.navigate(['/signup'], {
             queryParams: {
               step: 4,
@@ -47,11 +45,9 @@ export class SubscriptionGuard implements CanActivate {
         }
       }),
       catchError(() => {
-        // ✅ Redirect on API failure too
         this.router.navigate(['/signup'], {
           queryParams: {
             step: 4,
-            // message: 'Please choose a plan before accessing this page.'
           }
         });
         return of(false);

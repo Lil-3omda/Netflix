@@ -12,12 +12,12 @@ import { Subject, takeUntil } from 'rxjs';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="ai-chatbot-container" [class.open]="isOpen">
-      <!-- Chatbot Toggle Button -->
       <button class="chatbot-toggle" (click)="toggleChatbot()" [class.pulsing]="hasNewRecommendations">
         <div class="toggle-icon">
-          <svg *ngIf="!isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L13.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L10.91 8.26L12 2Z" fill="currentColor"/>
+          <svg *ngIf="!isOpen" width="28" height="28" viewBox="0 0 512 512" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M105.22 512H0V0h105.22l301.56 512H512V0H406.78L105.22 512Z"/>
           </svg>
+
           <svg *ngIf="isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none">
             <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
             <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
@@ -25,6 +25,7 @@ import { Subject, takeUntil } from 'rxjs';
         </div>
         <span class="ai-badge">AI</span>
       </button>
+
 
       <!-- Chatbot Window -->
       <div class="chatbot-window" *ngIf="isOpen">

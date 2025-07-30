@@ -120,7 +120,7 @@ export const routes: Routes = [
           { path: 'published', component: PublishedMovies },
           { path: 'archived', component: DeletedMovies },
           { path: 'add', component: AddMovie },
-          
+
         ]
       },
       { path: 'moviedetails/:id',  component: AdminMovieDeatils },
