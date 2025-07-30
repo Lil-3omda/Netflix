@@ -62,19 +62,18 @@ namespace Netflix.API.Controllers
 
             await unitOfWork.UserSubscriptions.AddAsync(subscription);
 
-            // Step 2: Create default profile
             var defaultProfile = new Profile
             {
-                Name = "Default",
-                UserId = dto.UserId
+                Name = "Kids",
+                UserId = dto.UserId,
             };
-            await unitOfWork.context.Profiles.AddAsync(defaultProfile);
+            await context.Profiles.AddAsync(defaultProfile);
 
-            // Final step: Save to database
             await unitOfWork.CompleteAsync();
 
-            return Ok(new { message = "Subscription and default profile created." });
+            return Ok(new { message = "Subscription and Kids profile created." });
         }
+
 
 
         [HttpGet("user/{userId}")]
