@@ -139,9 +139,17 @@ import { User } from '../../models/admin.interfaces';
               </div>
               <div class="mt-3 d-flex w-100 gap-2">
                 <button class="btn btn-sm btn-outline-light w-100" (click)="editUser(user)"><i class="bi bi-pencil"></i> Edit</button>
-                <button class="btn btn-sm w-100" [ngClass]="{'btn-danger': user.status === 'Active', 'btn-success': user.status !== 'Active'}" (click)="toggleUserStatus(user)">
-                  <i class="bi" [ngClass]="{'bi-x-lg': user.status === 'Active', 'bi-check-lg': user.status !== 'Active'}"></i>
-                </button>
+                <div class="btn-group w-100">
+                  <button class="btn btn-sm btn-warning" (click)="makeUserAdmin(user)" *ngIf="user.role !== 'Admin'">
+                    <i class="bi bi-shield-check"></i>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" (click)="removeAdminRole(user)" *ngIf="user.role === 'Admin'">
+                    <i class="bi bi-shield-x"></i>
+                  </button>
+                  <button class="btn btn-sm" [ngClass]="{'btn-danger': user.status === 'Active', 'btn-success': user.status !== 'Active'}" (click)="toggleUserStatus(user)">
+                    <i class="bi" [ngClass]="{'bi-x-lg': user.status === 'Active', 'bi-check-lg': user.status !== 'Active'}"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -234,68 +242,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
 
   // Sample data
-  users: User[] = [
-    {
-      id: 1,
-      name: 'John Smith',
-      email: 'john.smith@email.com',
-      status: 'Active',
-      subscription: 'Premium',
-      region: 'United States',
-      joinDate: '2023-01-15',
-      lastActive: '2024-01-10'
-    },
-    {
-      id: 2,
-      name: 'Emma Johnson',
-      email: 'emma.johnson@email.com',
-      status: 'Active',
-      subscription: 'Standard',
-      region: 'Canada',
-      joinDate: '2023-03-22',
-      lastActive: '2024-01-09'
-    },
-    {
-      id: 3,
-      name: 'Michael Brown',
-      email: 'michael.brown@email.com',
-      status: 'Active',
-      subscription: 'Basic',
-      region: 'United Kingdom',
-      joinDate: '2023-05-10',
-      lastActive: '2024-01-08'
-    },
-    {
-      id: 4,
-      name: 'Sarah Davis',
-      email: 'sarah.davis@email.com',
-      status: 'Inactive',
-      subscription: 'Premium',
-      region: 'Australia',
-      joinDate: '2023-02-28',
-      lastActive: '2023-12-15'
-    },
-    {
-      id: 5,
-      name: 'David Wilson',
-      email: 'david.wilson@email.com',
-      status: 'Suspended',
-      subscription: 'Standard',
-      region: 'Germany',
-      joinDate: '2023-04-05',
-      lastActive: '2023-11-20'
-    },
-    {
-      id: 6,
-      name: 'Lisa Anderson',
-      email: 'lisa.anderson@email.com',
-      status: 'Active',
-      subscription: 'Premium',
-      region: 'France',
-      joinDate: '2023-06-18',
-      lastActive: '2024-01-11'
-    }
-  ];
+  users: User[] = [];
 
   filteredUsers: User[] = [];
 
@@ -427,5 +374,35 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     }
     this.calculateStats();
     console.log(`User ${user.name} status changed to ${user.status}`);
+  }
+
+  makeUserAdmin(user: User): void {
+    if (confirm(`Are you sure you want to make ${user.name} an admin?`)) {
+      this.adminService.makeUserAdmin(user.id.toString()).subscribe({
+        next: (response) => {
+          alert('User successfully converted to admin');
+          this.loadUsers(); // Reload users list
+        },
+        error: (error) => {
+          console.error('Error making user admin:', error);
+          alert(error.error?.message || 'Failed to make user admin');
+        }
+      });
+    }
+  }
+
+  removeAdminRole(user: User): void {
+    if (confirm(`Are you sure you want to remove admin role from ${user.name}?`)) {
+      this.adminService.removeAdminRole(user.id.toString()).subscribe({
+        next: (response) => {
+          alert('Admin role removed successfully');
+          this.loadUsers(); // Reload users list
+        },
+        error: (error) => {
+          console.error('Error removing admin role:', error);
+          alert(error.error?.message || 'Failed to remove admin role');
+        }
+      });
+    }
   }
 }

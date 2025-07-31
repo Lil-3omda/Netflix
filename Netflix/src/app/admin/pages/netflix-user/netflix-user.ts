@@ -7,7 +7,7 @@ export interface User {
   email: string;
   phone?: string;
   subscription: 'basic' | 'standard' | 'premium';
-  role: 'admin' | 'moderator' | 'user';
+  role?: 'User' | 'Admin';
   status: 'active' | 'inactive' | 'suspended';
   country?: string;
   createdAt: string;
@@ -28,86 +28,7 @@ export interface Activity {
   styleUrl: './netflix-user.css'
 })
 export class NetflixUser implements OnInit {
-users: User[] = [
-    {
-      id: 1,
-      name: "John Smith",
-      email: "john.smith@gmail.com",
-      phone: "+1 555 123 4567",
-      subscription: "premium",
-      role: "admin",
-      status: "active",
-      country: "US",
-      createdAt: "2024-01-15",
-      lastLogin: "2024-03-10",
-      watchTime: "125 hours"
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      email: "sarah.johnson@outlook.com",
-      phone: "+1 555 234 5678",
-      subscription: "standard",
-      role: "user",
-      status: "active",
-      country: "CA",
-      createdAt: "2024-02-10",
-      lastLogin: "2024-03-09",
-      watchTime: "89 hours"
-    },
-    {
-      id: 3,
-      name: "Michael Brown",
-      email: "michael.brown@yahoo.com",
-      phone: "+1 555 345 6789",
-      subscription: "basic",
-      role: "moderator",
-      status: "inactive",
-      country: "UK",
-      createdAt: "2024-03-05",
-      lastLogin: "2024-02-28",
-      watchTime: "45 hours"
-    },
-    {
-      id: 4,
-      name: "Emily Davis",
-      email: "emily.davis@gmail.com",
-      phone: "+1 555 456 7890",
-      subscription: "premium",
-      role: "user",
-      status: "suspended",
-      country: "US",
-      createdAt: "2024-01-20",
-      lastLogin: "2024-02-15",
-      watchTime: "78 hours"
-    },
-    {
-      id: 5,
-      name: "David Wilson",
-      email: "david.wilson@hotmail.com",
-      phone: "+1 555 567 8901",
-      subscription: "standard",
-      role: "user",
-      status: "active",
-      country: "AU",
-      createdAt: "2024-02-28",
-      lastLogin: "2024-03-11",
-      watchTime: "112 hours"
-    },
-    {
-      id: 6,
-      name: "Lisa Anderson",
-      email: "lisa.anderson@gmail.com",
-      phone: "+1 555 678 9012",
-      subscription: "premium",
-      role: "user",
-      status: "active",
-      country: "DE",
-      createdAt: "2024-01-08",
-      lastLogin: "2024-03-11",
-      watchTime: "156 hours"
-    }
-  ];
+users: User[] = [];
 
   filteredUsers: User[] = [];
   activities: Activity[] = [];
@@ -154,7 +75,7 @@ users: User[] = [
   }
 
   getAdminUsers(): number {
-    return this.users.filter(u => u.role === 'admin').length;
+    return this.users.filter(u => u.role === 'Admin').length;
   }
 
   getPremiumUsers(): number {
@@ -397,9 +318,8 @@ users: User[] = [
   // Utility methods
   getRoleText(role: string): string {
     const roleMap: { [key: string]: string } = {
-      'admin': 'Administrator',
-      'moderator': 'Moderator',
-      'user': 'Regular User'
+      'Admin': 'Administrator',
+      'User': 'Regular User'
     };
     return roleMap[role] || role;
   }
