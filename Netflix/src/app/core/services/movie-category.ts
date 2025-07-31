@@ -9,10 +9,13 @@ import { Observable } from 'rxjs';
 export class MovieCategory {
   private baseUrl = 'https://localhost:7140/api/Videos';
    private apiUrl = 'https://localhost:7140/api/Category/names';
+   private allMoviesUrl = 'https://localhost:7140/api/Videos';
   constructor(private http: HttpClient) {}
 
 
-  
+   getAllMovies(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.allMoviesUrl}`);
+  }
  
   getTopViewed(count: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/TopViews?count=${count}`);

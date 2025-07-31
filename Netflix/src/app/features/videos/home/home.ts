@@ -7,6 +7,8 @@ import { MovieCategory } from '../../../core/services/movie-category';
 import { Navbar } from "../../../layout/navbar/navbar";
 import { Category } from "../../../shared/category/category";
 import { HomePageServices } from '../../../core/services/home-page-services';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,16 +24,25 @@ export class Home  {
 
 top10Movies: any[] = [];
 data: any[] = [];
+  showTrailer = false;
+    heroMovie: any; // أول فيلم من top 10
 
-constructor(private movieService: MovieCategory, private homeservices:HomePageServices) {}
+  sanitizedTrailerUrl: SafeResourceUrl = '';
+constructor(private movieService: MovieCategory,     private router: Router,
+ private sanitizer: DomSanitizer, private homeservices:HomePageServices) {}
 
-
-
+showTrailerNow(): void {
+  this.showTrailer = true;
+  const rawUrl = this.top10Movies[0]?.trailerUrl?.replace('"', '');
+  this.setTrailerUrl(rawUrl); // تأكد إنها هنا
+}
   ngOnInit(): void {
 
     this.movieService.getTopViewed(10).subscribe({
       next: (data:any) => {
         this.top10Movies = data;
+                this.heroMovie = data[0];
+        this.setTrailerUrl(this.heroMovie?.trailerUrl);
       },
       error: (err:any) => {
         console.error('Error fetching top 10:', err);
@@ -39,9 +50,27 @@ constructor(private movieService: MovieCategory, private homeservices:HomePageSe
     });
     this.loadCategories();
   }
+setTrailerUrl(url: string): void {
+  if (!url) return;
 
+  const videoId = this.extractYouTubeId(url);
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+  this.sanitizedTrailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+}
 
+extractYouTubeId(url: string): string | null {
+  const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^\s&]+)/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+goToMovie(id: number) {
+  this.router.navigate(['/watchMovie', id]);
+  this.showTrailer = false;
+}
 
+backToHero(): void {
+  this.showTrailer = false;
+}
 scrollLeft() {
   this.slider.nativeElement.scrollBy({ left: -300, behavior: 'smooth' });
 }
@@ -65,26 +94,11 @@ scrollRight() {
 
   }
 
-  videoUrl: string = 'https://vgfdprgqzkwvoxsnfdlr.supabase.co/storage/v1/object/public/pickup/instructor/42/video/.mp4/311792bc-49d0-48d1-a2bc-23cf3b3b3127.mp4';
-  posterUrl: string = 'https://strandreleasing.com/wp-content/uploads/bfi_thumb/FrontCover_StrandBanner-nrye8w3wpafkaixcp4gn06xmf7k4q0h3ka6wis2ydk.jpg';
-
-  playVideo(video: HTMLVideoElement) {
-    video.play();
-  }
 
 
-resetVideo(video: HTMLVideoElement) {
-  video.pause();
-  video.currentTime = 0;
 
-  const src = video.src;
-  video.src = '';
-  video.load(); // clear
-  video.src = src;
-}
 
-// model
-
+  rating = 9.3;
   isModalOpen:boolean = false;
   selectedMovie:any=null;
   openMovieModal(movie:any) {

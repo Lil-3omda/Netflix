@@ -1,0 +1,6 @@
+<div *ngIf="movie">
+  <video class="w-100 rounded-4 shadow" style="height: 100vh;" controls autoplay>
+    <source [attr.src]="'https://localhost:7140/' + movie.videoUrl" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
