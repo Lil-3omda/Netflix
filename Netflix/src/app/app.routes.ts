@@ -22,7 +22,7 @@ export const routes: Routes = [
 
   { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.Login), canActivate: [GuestGuard] },
   { path: 'signup', loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent), canActivate: [GuestGuard] },
-  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home), canActivate: [AuthGuard, SubscriptionGuard] },
+  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home), },
 
   {
     path: 'category/:name',

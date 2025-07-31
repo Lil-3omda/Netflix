@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { MovieCategory } from '../../core/services/movie-category';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -64,12 +64,11 @@ export class Navbar implements OnInit {
   errorMessage: string | null = null;
   isAuthenticated: boolean = false;
   currentUser: any = null;
-
   searchTerm: string = '';
-showSearch: boolean = false;
-movies: any[] = []; 
-filteredMovies: any[] = []; 
-
+  showSearch: boolean = false;
+  movies: any[] = []; 
+  filteredMovies: any[] = []; 
+  hovering = false;
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -183,11 +182,46 @@ onSearch() {
     movie.title.toLowerCase().includes(term)
   );
 }
+
 goToMovie(id: number) {
   this.router.navigate(['/moviedetails', id]);
   this.showSearch = false;
   this.searchTerm = '';
   this.filteredMovies = [];
 }
+
+startVoiceSearch() {
+  const recognition = new (window as any).webkitSpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+
+  recognition.onresult = (event: any) => {
+    const query = event.results[0][0].transcript.toLowerCase();
+    console.log("Recognized voice:", query);
+    this.filterMovies(query);
+  };
+
+  recognition.onerror = (event: any) => {
+    console.error('Speech recognition error:', event.error);
+  };
+
+  recognition.start();
+
+  
+  if (!this.showSearch) {
+    this.searchTerm = '';
+    this.filteredMovies = [];
+  }
+}
+
+filterMovies(query: string) {
+  
+  this.filteredMovies = this.movies.filter(movie =>
+    movie.title.toLowerCase().includes(query) ||
+    movie.genre?.toLowerCase().includes(query) ||
+    movie.description?.toLowerCase().includes(query)
+  );
+}
+
 }
 
