@@ -148,4 +148,12 @@ export class AdminService {
     return this.http.delete(`${this.apiUrl}/admin/Subscriptions/${id}`);
   }
 
+  // User management methods
+  makeUserAdmin(userId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/make-admin`, { userId });
+  }
+
+  removeAdminRole(userId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/remove-admin`, { userId });
+  }
 }

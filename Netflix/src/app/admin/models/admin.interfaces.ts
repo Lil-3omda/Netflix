@@ -6,6 +6,7 @@ export interface User {
   email: string;
   subscription: 'Basic' | 'Standard' | 'Premium';
   status: 'Active' | 'Inactive' | 'Suspended';
+  role: 'User' | 'Admin';
   joinDate: string;
   lastActive: string;
   region: string;
