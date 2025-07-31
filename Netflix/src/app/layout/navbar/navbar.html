@@ -57,11 +57,24 @@
 
       <!-- Profile dropdown -->
       <div class="dropdown">
-        <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" width="32" height="32" class="rounded" alt="avatar" />
+        <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" (click)="navigateToProfile()">
+          <img [src]="currentProfile ? getProfileImage(currentProfile.name) : 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'" width="32" height="32" class="rounded" alt="avatar" />
+          <span class="ms-2 d-none d-md-inline text-white" *ngIf="currentProfile">{{ currentProfile.name }}</span>
         </div>
         <ul class="dropdown-menu dropdown-menu-end bg-dark border-dark">
-          <li><a class="dropdown-item text-white" (click)="navigateToProfile()"><i class="bi bi-person me-2"></i>Profile</a></li>
+          <!-- Profile Selection -->
+          <li *ngIf="userProfiles.length > 1" class="dropdown-header text-white-50">Switch Profile</li>
+          <li *ngFor="let profile of userProfiles">
+            <a class="dropdown-item text-white d-flex align-items-center" (click)="selectProfile(profile)">
+              <img [src]="getProfileImage(profile.name)" width="24" height="24" class="rounded me-2" alt="avatar" />
+              {{ profile.name }}
+              <i class="bi bi-check-lg ms-auto text-success" *ngIf="currentProfile?.id === profile.id"></i>
+            </a>
+          </li>
+          <li *ngIf="userProfiles.length > 1"><hr class="dropdown-divider border-secondary"></li>
+          
+          <!-- Profile Management -->
+          <li><a class="dropdown-item text-white" (click)="switchProfile()"><i class="bi bi-person-plus me-2"></i>Manage Profiles</a></li>
           <li><a class="dropdown-item text-white" routerLink="/account"><i class="bi bi-gear me-2"></i>Account</a></li>
           <li><hr class="dropdown-divider border-secondary"></li>
           <li><a class="dropdown-item text-white" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>

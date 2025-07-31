@@ -697,7 +697,13 @@ export class Login {
           if (response.user.isAdmin) {
             this.router.navigate(['/admin/dashboard']);
           } else {
-            this.router.navigate(['/Profile']);
+            // Check if user has a profile selected
+            const profileId = localStorage.getItem('profileId');
+            if (profileId) {
+              this.router.navigate(['/Home']);
+            } else {
+              this.router.navigate(['/Profile']);
+            }
           }
         } else {
           this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';

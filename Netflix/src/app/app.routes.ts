@@ -14,27 +14,38 @@ import { AddMovie } from './features/admin/pages/admin-movies/add-movie/add-movi
 import { MoviesStatistics } from './features/admin/pages/admin-movies/movies-statistics/movies-statistics';
 import { AdminMovieDeatils } from './features/admin/pages/admin-movies/movie-deatils/movie-deatils';
 
-
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-
-  {path: 'dashboard', loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent) },
-
-  { path: 'login', loadComponent: () => import('./features/auth/login/login').then(m => m.Login), canActivate: [GuestGuard] },
-  { path: 'signup', loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent), canActivate: [GuestGuard] },
-  { path: 'Home', loadComponent: () => import('./features/videos/home/home').then(m => m.Home), canActivate: [AuthGuard, SubscriptionGuard] },
-
-  {
-    path: 'category/:name',
-    loadComponent: () => import('./shared/category/category').then(m => m.Category)
+  // Root redirect - check authentication and role
+  { 
+    path: '', 
+    redirectTo: '/dashboard', 
+    pathMatch: 'full' 
   },
+
+  // Landing page for guests
   {
-    path: 'moviedetails/:id',
-    loadComponent: () => import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis)
+    path: 'dashboard', 
+    loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent),
+    canActivate: [GuestGuard]
   },
-    {
-    path: 'watchMovie/:id',
-    loadComponent: () => import('./shared/watch-movie/watch-movie').then(m => m.WatchMovie)
+
+  // Authentication routes (guests only)
+  { 
+    path: 'login', 
+    loadComponent: () => import('./features/auth/login/login').then(m => m.Login), 
+    canActivate: [GuestGuard] 
+  },
+  { 
+    path: 'signup', 
+    loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent), 
+    canActivate: [GuestGuard] 
+  },
+
+  // User routes (authenticated users only)
+  { 
+    path: 'Home', 
+    loadComponent: () => import('./features/videos/home/home').then(m => m.Home), 
+    canActivate: [AuthGuard, SubscriptionGuard] 
   },
   {
     path: 'Profile',
@@ -46,6 +57,32 @@ export const routes: Routes = [
     loadComponent: () => import('./features/account/account.component').then(m => m.AccountComponent),
     canActivate: [AuthGuard]
   },
+
+  // Content routes
+  {
+    path: 'category/:name',
+    loadComponent: () => import('./shared/category/category').then(m => m.Category),
+    canActivate: [AuthGuard, SubscriptionGuard]
+  },
+  {
+    path: 'moviedetails/:id',
+    loadComponent: () => import('./pages/movive-detalis/movive-detalis').then(m => m.MoviveDetalis),
+    canActivate: [AuthGuard, SubscriptionGuard]
+  },
+  {
+    path: 'watchMovie/:id',
+    loadComponent: () => import('./shared/watch-movie/watch-movie').then(m => m.WatchMovie),
+    canActivate: [AuthGuard, SubscriptionGuard]
+  },
+
+  // Payment route
+  { 
+    path: 'payment',
+    loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
+    canActivate: [AuthGuard]
+  },
+
+  // Public information pages
   {
     path: 'only-on-netflix',
     loadComponent: () => import('./features/Footer/only-on-netflix').then(m => m.OnlyOnNetflixComponent)
@@ -90,13 +127,15 @@ export const routes: Routes = [
     path: 'contact-us',
     loadComponent: () => import('./pages/netflix-contact/netflix-contact').then(m => m.NetflixContact)
   },
-  { path: 'payment',
-    loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
+
+  // Support routes
+  {
+    path: 'support',
+    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent),
     canActivate: [AuthGuard]
   },
 
-
-  // Admin Section
+  // Admin Section (admin users only)
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
@@ -124,23 +163,26 @@ export const routes: Routes = [
           { path: 'published', component: PublishedMovies },
           { path: 'archived', component: DeletedMovies },
           { path: 'add', component: AddMovie },
-
         ]
       },
-      { path: 'moviedetails/:id',  component: AdminMovieDeatils },
+      { path: 'moviedetails/:id', component: AdminMovieDeatils },
     ]
   },
 
-  // Shared Support (customer)
-  {
-    path: 'support',
-    loadComponent: () => import('./features/communication/components/customer-support/customer-support.component').then(m => m.CustomerSupportComponent)
-  },
+  // Admin chat route
   {
     path: 'admin/chat',
-    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent)
+    loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
+    canActivate: [AdminGuard]
   },
 
-  // Wildcard
-  { path: '**', redirectTo: '' }
+  // 404 Not Found - must be last
+  { 
+    path: '404', 
+    loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent) 
+  },
+  { 
+    path: '**', 
+    redirectTo: '/404' 
+  }
 ];

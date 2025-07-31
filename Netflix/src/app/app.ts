@@ -5,6 +5,7 @@ import { RouterOutlet, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AiChatbotComponent } from './features/communication/components/ai-chatbot/ai-chatbot.component';
 import { AuthService } from './core/services/auth.service';
+import { ProfileService } from './core/services/profile.service';
 
 @Component({
   selector: 'app-root',
@@ -24,18 +25,10 @@ export class App {
 
   private router = inject(Router);
   private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
 
   constructor() {
-    const role = this.authService.getUserRole();
-    const currentUrl = this.router.url;
-
-    if (currentUrl === '/' || currentUrl.toLowerCase() === '/home') {
-      if (role === 'Admin') {
-        this.router.navigate(['/admin/dashboard']);
-      } else if (role === 'User') {
-        this.router.navigate(['/home']);
-      }
-    }
+    this.handleInitialNavigation();
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -45,4 +38,26 @@ export class App {
     });
   }
 
+  private handleInitialNavigation(): void {
+    const isAuthenticated = this.authService.isAuthenticated();
+    const user = this.authService.getCurrentUser();
+    const currentUrl = this.router.url;
+
+    // Only redirect if user is on root path
+    if (currentUrl === '/' || currentUrl === '/dashboard') {
+      if (isAuthenticated && user) {
+        if (user.isAdmin) {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          // Check if user has selected a profile
+          const profileId = localStorage.getItem('profileId');
+          if (profileId) {
+            this.router.navigate(['/Home']);
+          } else {
+            this.router.navigate(['/Profile']);
+          }
+        }
+      }
+    }
+  }
 }

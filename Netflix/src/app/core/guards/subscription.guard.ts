@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +17,10 @@ export class SubscriptionGuard implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const currentUrl = this.router.url;
+    const currentUrl = route.url.join('/');
 
-    if (currentUrl.startsWith('/signup')) {
+    // Allow signup pages
+    if (currentUrl.startsWith('signup')) {
       return of(true);
     }
 
@@ -28,6 +28,11 @@ export class SubscriptionGuard implements CanActivate {
     if (!user || !user.id) {
       this.router.navigate(['/login']);
       return of(false);
+    }
+
+    // Admin users don't need subscription check
+    if (user.isAdmin) {
+      return of(true);
     }
 
     return this.http.get<any>(`${environment.apiUrl}/Subscription/user-subscription/${user.id}`).pipe(
@@ -38,7 +43,7 @@ export class SubscriptionGuard implements CanActivate {
           this.router.navigate(['/signup'], {
             queryParams: {
               step: 4,
-              message: 'Please choose a plan before accessing this page.'
+              message: 'Please choose a plan to access this content.'
             }
           });
           return false;
@@ -48,11 +53,11 @@ export class SubscriptionGuard implements CanActivate {
         this.router.navigate(['/signup'], {
           queryParams: {
             step: 4,
+            message: 'Please choose a plan to access this content.'
           }
         });
         return of(false);
       })
     );
   }
-
 }

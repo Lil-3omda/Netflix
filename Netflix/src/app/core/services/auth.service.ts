@@ -93,6 +93,7 @@ export class AuthService {
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
     localStorage.removeItem('userId');
+    localStorage.removeItem('profileId');
 
     Object.keys(localStorage).forEach(key => {
       if (
@@ -110,7 +111,7 @@ export class AuthService {
 
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
-    this.router.navigate(['/']);
+    this.router.navigate(['/dashboard']);
   }
 
   getCurrentUser(): DecodedToken | null {
