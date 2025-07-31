@@ -32,21 +32,35 @@
   </div>
 
   <!-- Result (Optional List Placeholder) -->
-  <div *ngIf="filteredMovies.length > 0" class="row g-3 mt-3">
-    <div class="col-md-3" *ngFor="let item of filteredMovies | paginate: { itemsPerPage: 12, currentPage: page }"
-    [routerLink]="'/admin/moviedetails/'+ item.id">
-      <div class="bg-dark rounded shadow-sm small-media-card text-center p-2">
-        <img [src]="'https://localhost:7140/'+item.imageUrl" alt="Poster" class="img-fluid rounded mb-1"
-        style="width: 100%; height: auto; max-height: 200px; object-fit: contain; background-color: #000;" />
-        <div class="text-truncate fw-bold" style="font-size: 0.85rem;">{{ item.title }}</div>
-        <div class="text-truncate" style="font-size: 0.75rem;">{{ item.categoryName }}</div>
-        <div class="text-light" style="font-size: 0.75rem;">👁️ {{ item.totalView }}</div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="filteredMovies.length === 0" class="text-muted mt-3 text-center">
-    No movies found.
-  </div>
+  <div *ngIf="filteredMovies.length > 0" class="table-responsive mt-3">
+  <table class="table table-dark table-hover table-bordered align-middle text-center">
+    <thead class="table-active">
+      <tr>
+       
+        <th>Title</th>
+        <th>Category</th>
+        <th>Views</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let item of filteredMovies | paginate: { itemsPerPage: 12, currentPage: page }"
+        [routerLink]="'/admin/moviedetails/' + item.id"
+        class="table-row-link"
+      >
+       
+        <td class="fw-bold">{{ item.title }}</td>
+        <td>{{ item.categoryName }}</td>
+        <td>👁️ {{ item.totalView }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="filteredMovies.length === 0" class="text-muted mt-3 text-center">
+  No movies found.
+</div>
+
 
 
   <pagination-controls class="text-center" (pageChange)="page = $event"></pagination-controls>
