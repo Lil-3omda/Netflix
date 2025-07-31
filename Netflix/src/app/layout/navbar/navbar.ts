@@ -5,6 +5,8 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { MovieCategory } from '../../core/services/movie-category';
 import { CommonModule } from '@angular/common';
+import { ProfileService, Profile } from '../../core/services/profile.service';
+
 
 @Component({
   selector: 'app-navbar',
@@ -64,6 +66,12 @@ export class Navbar implements OnInit {
   errorMessage: string | null = null;
   isAuthenticated: boolean = false;
   currentUser: any = null;
+
+  currentProfile: Profile | null = null;
+  userProfiles: Profile[] = [];
+  showProfileDropdown: boolean = false;
+
+
   searchTerm: string = '';
   showSearch: boolean = false;
   movies: any[] = []; 
@@ -74,6 +82,7 @@ export class Navbar implements OnInit {
     private authService: AuthService,
     private router: Router,
     private movieService: MovieCategory,
+    private profileService: ProfileService
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +98,19 @@ export class Navbar implements OnInit {
 
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
+      if (user && user.id) {
+        this.profileService.loadUserProfiles(user.id);
+      }
+    });
+
+    // Subscribe to current profile changes
+    this.profileService.currentProfile$.subscribe(profile => {
+      this.currentProfile = profile;
+    });
+
+    // Subscribe to user profiles
+    this.profileService.profiles$.subscribe(profiles => {
+      this.userProfiles = profiles;
     });
   }
 
@@ -124,6 +146,7 @@ export class Navbar implements OnInit {
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
     localStorage.removeItem('userId');
+    localStorage.removeItem('profileId');
 
     // Clear any other Netflix-related localStorage items
     Object.keys(localStorage).forEach(key => {
@@ -134,6 +157,9 @@ export class Navbar implements OnInit {
 
     // Use AuthService logout method
     this.authService.logout();
+    
+    // Clear profile service
+    this.profileService.clearCurrentProfile();
 
     // Navigate to home page
     this.router.navigate(['/']);
@@ -141,8 +167,44 @@ export class Navbar implements OnInit {
 
   navigateToProfile(): void {
     if (this.isAuthenticated) {
-      this.router.navigate(['/Profile']);
+      // If no current profile is selected, go to profile selection
+      if (!this.currentProfile) {
+        this.router.navigate(['/Profile']);
+      } else {
+        // If profile is selected, show profile dropdown
+        this.showProfileDropdown = !this.showProfileDropdown;
+      }
     }
+  }
+
+  selectProfile(profile: Profile): void {
+    this.profileService.setCurrentProfile(profile);
+    this.showProfileDropdown = false;
+    // Optionally reload the current page to reflect profile change
+    window.location.reload();
+  }
+
+  switchProfile(): void {
+    this.router.navigate(['/Profile']);
+    this.showProfileDropdown = false;
+  }
+
+  getProfileImage(name: string): string {
+    const avatars = [
+      '/assets/images/netflix2.jpg',
+      '/assets/images/netflix3.jpg',
+      '/assets/images/netflix4.jpg',
+      '/assets/images/Netflix-avatar.png',
+      'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'
+    ];
+
+    // Use name hash to consistently assign avatar
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+
+    return avatars[Math.abs(hash) % avatars.length];
   }
 
   navigateToLogin(): void {

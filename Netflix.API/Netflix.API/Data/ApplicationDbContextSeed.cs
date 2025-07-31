@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Netflix.API.Models;
 
 namespace Netflix.API.Data
@@ -7,7 +7,6 @@ namespace Netflix.API.Data
     {
         public static async Task SeedAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            // Seed Roles
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
@@ -18,7 +17,6 @@ namespace Netflix.API.Data
                 await roleManager.CreateAsync(new IdentityRole("User"));
             }
 
-            // Seed Admin User
             var adminEmail = "admin@netflix.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             
@@ -41,7 +39,47 @@ namespace Netflix.API.Data
                 }
             }
 
-            // Seed Subscription Plans
+            if (!context.UserSubscriptions.Any(s => s.UserId == adminUser.Id))
+            {
+                var defaultPlan = context.SubscriptionPlans.FirstOrDefault(p => p.Name == "Premium"); 
+
+                if (defaultPlan != null)
+                {
+                    var adminSubscription = new UserSubscription
+                    {
+                        UserId = adminUser.Id,
+                        PlanId = defaultPlan.Id,
+                        StartDate = DateTime.UtcNow,
+                        EndDate = DateTime.UtcNow.AddMonths(1),
+                    };
+
+                    context.UserSubscriptions.Add(adminSubscription);
+                    await context.SaveChangesAsync();
+
+                    try
+                    {
+                        Console.WriteLine("Attempting to create Admin profile...");
+
+                        var profile = new Profile
+                        {
+                            UserId = adminUser.Id,
+                            Name = "Admin",
+                        };
+
+                        context.Profiles.Add(profile);
+                        await context.SaveChangesAsync();
+
+                        Console.WriteLine("Admin profile created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("❌ Failed to create profile: " + ex.Message);
+                    }
+
+                }
+            }
+
+
             if (!context.SubscriptionPlans.Any())
             {
                 var plans = new List<SubscriptionPlan>
@@ -55,7 +93,6 @@ namespace Netflix.API.Data
                 await context.SaveChangesAsync();
             }
 
-            // Seed Categories
             if (!context.Categories.Any())
             {
                 var categories = new List<Category>

@@ -153,12 +153,13 @@ namespace Netflix.API.Controllers
         public async Task<IActionResult> GetUserSubscriptions()
         {
             var subscriptions = await _context.UserSubscriptions
+                .Where(us => !us.IsDeleted)
                 .Include(us => us.User)
                 .Include(us => us.Plan)
                 .Select(us => new UserSubscriptionRow
                 {
                     Id = us.Id,
-                    UserId = us.UserId, // ✅ ADD THIS LINE
+                    UserId = us.UserId, 
                     UserName = us.User.UserName,
                     UserEmail = us.User.Email,
                     PlanName = us.Plan.Name,
@@ -227,53 +228,6 @@ namespace Netflix.API.Controllers
             }
         }
 
-
-        //[HttpGet("statistics")]
-        //public async Task<IActionResult> GetSubscriptionStatistics()
-        //{
-        //    try
-        //    {
-        //        var totalSubscriptions = await _context.UserSubscriptions.CountAsync();
-        //        var activeSubscriptions = await _context.UserSubscriptions.CountAsync(s => s.IsActive);
-        //        var expiredSubscriptions = totalSubscriptions - activeSubscriptions;
-
-        //        var planDistribution = await _context.UserSubscriptions
-        //            .Include(s => s.Plan)
-        //            .Where(s => s.IsActive && s.Plan != null)
-        //            .GroupBy(s => s.Plan.Name)
-        //            .Select(g => new { PlanName = g.Key, Count = g.Count() })
-        //            .ToListAsync();
-
-        //        var monthlyRevenue = await _context.UserSubscriptions
-        //            .Include(s => s.Plan)
-        //            .Where(s => s.IsActive && s.Plan != null)
-        //            .SumAsync(s => s.Plan != null ? s.Plan.Price : 0);
-
-        //        var expiringThisMonth = await _context.UserSubscriptions
-        //            .CountAsync(s => s.IsActive &&
-        //                             s.EndDate.Month == DateTime.UtcNow.Month &&
-        //                             s.EndDate.Year == DateTime.UtcNow.Year);
-
-        //        return Ok(new
-        //        {
-        //            totalSubscriptions,
-        //            activeSubscriptions,
-        //            expiredSubscriptions,
-        //            planDistribution,
-        //            monthlyRevenue,
-        //            expiringThisMonth,
-        //            churnRate = totalSubscriptions > 0
-        //                ? Math.Round((double)expiredSubscriptions / totalSubscriptions * 100, 2)
-        //                : 0
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error getting subscription statistics");
-        //        return StatusCode(500, new { message = "Failed to retrieve statistics" });
-        //    }
-        //}
-
         [HttpPost("users/{userId}/extend")]
         public async Task<IActionResult> ExtendSubscription(string userId, [FromBody] ExtendSubscriptionDTO dto)
         {
@@ -328,20 +282,19 @@ namespace Netflix.API.Controllers
         }
 
 
-        [HttpPost("subscriptions/{subscriptionId}/cancel")]
-        public async Task<IActionResult> CancelSubscriptionById(int subscriptionId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSubscription(int id)
         {
-            var subscription = await _context.UserSubscriptions
-                .FirstOrDefaultAsync(s => s.Id == subscriptionId && s.IsActive);
-
+            var subscription = await _context.UserSubscriptions.FindAsync(id);
             if (subscription == null)
-                return NotFound(new { message = "Active subscription not found" });
+                return NotFound();
 
-            subscription.EndDate = DateTime.UtcNow;
+            subscription.IsDeleted = true;
+
             await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Subscription cancelled successfully" });
+            return NoContent();
         }
+
     }
 
     public class CreateSubscriptionPlanDTO

@@ -145,3 +145,28 @@
   object-fit: cover;
   border-radius: 5px;
 }
+
+/* Profile dropdown styles */
+.dropdown-menu {
+  min-width: 200px;
+}
+
+.dropdown-header {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(229, 9, 20, 0.1) !important;
+}
+
+.dropdown-item img {
+  object-fit: cover;
+}

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ProfileService } from '../../../core/services/profile.service';
 
 interface SubscriptionInfo {
   planName: string;
@@ -170,7 +171,8 @@ export class ChooseProfile implements OnInit {
   constructor(
     private profilesService: ProfilesService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private profileService: ProfileService
   ) {}
 
   ngOnInit(): void {
@@ -191,7 +193,7 @@ export class ChooseProfile implements OnInit {
     }
 
     this.loadProfiles();
-    this.loadSubscriptionInfo();
+    // this.loadSubscriptionInfo();
   }
 
   loadProfiles(): void {
@@ -236,8 +238,14 @@ export class ChooseProfile implements OnInit {
   }
 
   selectProfile(profileId: number): void {
-    localStorage.setItem('profileId', JSON.stringify(profileId));
-    this.router.navigate(['/Home']);
+    const selectedProfile = this.profiles.find(p => p.id === profileId);
+    if (selectedProfile) {
+    this.profileService.setCurrentProfile({
+      ...selectedProfile,
+      userId: selectedProfile.userId.toString()
+    });
+      this.router.navigate(['/Home']);
+    }
   }
 
   canAddProfile(): boolean {

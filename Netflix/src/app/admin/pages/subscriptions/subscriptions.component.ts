@@ -41,7 +41,6 @@ interface UserSubscription {
         <p class="lead">Manage subscription plans and user subscriptions</p>
       </div>
 
-      <!-- Stats -->
       <div class="row mb-5 g-4">
         <div class="col-md-3" *ngFor="let stat of [
           { label: 'Total Subscriptions', value: statistics.totalSubscriptions, class: 'danger' },
@@ -58,7 +57,6 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- Filters -->
       <div class="card text-bg-dark border-secondary mb-4">
         <div class="card-body d-flex gap-3 align-items-center flex-wrap">
           <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="filterSubscriptions()" placeholder="Search users...">
@@ -70,7 +68,6 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- User Subscriptions Table -->
       <div class="card text-bg-dark border-secondary">
         <div class="card-body table-responsive">
           <table class="table table-dark table-hover table-bordered align-middle">
@@ -119,10 +116,10 @@ interface UserSubscription {
                 </td>
                 <td>
                   <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit">
+                    <button class="btn btn-outline-info" (click)="openEditModal(sub)" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Subscription">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-danger" (click)="confirmDelete(sub)" title="Delete">
+                    <button class="btn btn-outline-danger" (click)="confirmDelete(sub)" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Subscription">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -139,13 +136,12 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- Delete Confirmation Modal -->
       <div *ngIf="showDeleteModal && selectedSubscription" class="modal fade show d-block bg-dark bg-opacity-75" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content text-bg-dark border-danger">
           <div class="modal-header">
             <h5 class="modal-title text-danger">Confirm Deletion</h5>
-            <button type="button" class="btn-close btn-close-white" (click)="closeModals()"></button>
+            <button type="button" class="btn-close btn-close-white" (click)="closeModals()" ></button>
           </div>
           <div class="modal-body">
             Are you sure you want to delete the subscription of
@@ -159,13 +155,12 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- Edit Subscription Modal -->
       <div *ngIf="showEditModal && selectedSubscription" class="modal fade show d-block bg-dark bg-opacity-75" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content text-bg-dark border-secondary">
             <div class="modal-header">
               <h5 class="modal-title">Edit Subscription</h5>
-              <button type="button" class="btn-close btn-close-white" (click)="closeModals()"></button>
+              <button type="button" class="btn-close btn-close-white" (click)="closeModals()" ></button>
             </div>
             <div class="modal-body">
               <div class="mb-3">
@@ -174,7 +169,6 @@ interface UserSubscription {
                   <option *ngFor="let plan of subscriptionPlans" [value]="plan.id">{{ plan.name }}</option>
                 </select>
               </div>
-              <!-- Add more editable fields if you want -->
             </div>
             <div class="modal-footer">
               <button class="btn btn-secondary" (click)="closeModals()">Cancel</button>
@@ -260,7 +254,6 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ------- Filters
   filterSubscriptions(): void {
     this.filteredUserSubscriptions = this.userSubscriptions.filter(sub => {
       const matchesSearch = sub.userName.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -297,9 +290,8 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     if (!this.selectedSubscription) return;
     console.log('Deleting subscription', this.selectedSubscription);
 
-    // If you actually want to "delete", create deleteUserSubscription()
-    // Using cancelSubscription here as you had before.
-    this.adminService.cancelSubscription(this.selectedSubscription.userId)
+
+    this.adminService.cancelSubscription(+this.selectedSubscription.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -317,14 +309,13 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     if (!this.selectedSubscription) return;
     console.log('Saving edited subscription', this.selectedSubscription, ' -> ', this.editModel);
 
-    // Implement this on your AdminService
-    // Example payload: only planName for now
+
    this.adminService.updateUserSubscription(this.editingSubscription.id, {
         planId: this.editModel.planId
       })
       .subscribe({
         next: () => {
-          this.closeModals(); // ✅ correct method
+          this.closeModals();
           this.loadUserSubscriptions();
         },
         error: (err) => {
