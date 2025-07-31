@@ -193,7 +193,7 @@ export class ChooseProfile implements OnInit {
     }
 
     this.loadProfiles();
-    this.loadSubscriptionInfo();
+    // this.loadSubscriptionInfo();
   }
 
   loadProfiles(): void {

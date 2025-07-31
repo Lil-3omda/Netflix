@@ -19,7 +19,7 @@
     <!-- Right side -->
     <div class="d-flex align-items-center gap-3 ms-auto" >
       <!-- Search -->
-<div class="search-container" [class.active]="showSearch" *ngif="isAuthenticated">
+<div class="search-container" [class.active]="showSearch">
   <span (click)="toggleSearch()">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
   </span>
@@ -72,7 +72,7 @@
             </a>
           </li>
           <li *ngIf="userProfiles.length > 1"><hr class="dropdown-divider border-secondary"></li>
-          
+
           <!-- Profile Management -->
           <li><a class="dropdown-item text-white" (click)="switchProfile()"><i class="bi bi-person-plus me-2"></i>Manage Profiles</a></li>
           <li><a class="dropdown-item text-white" routerLink="/account"><i class="bi bi-gear me-2"></i>Account</a></li>

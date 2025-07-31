@@ -1,10 +1,10 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http'; // ✅ keep this
 import { ProfileService } from './core/services/profile.service';
 
 export const appConfig: ApplicationConfig = {
@@ -13,7 +13,11 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
     ProfileService
   ]
 };

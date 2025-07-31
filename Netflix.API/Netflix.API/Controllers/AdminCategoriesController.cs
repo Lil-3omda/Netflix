@@ -8,7 +8,7 @@ namespace Netflix.API.Controllers
 {
     [Route("api/admin/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

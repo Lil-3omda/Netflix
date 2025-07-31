@@ -10,6 +10,8 @@ namespace Netflix.API.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public bool IsActive => DateTime.UtcNow >= StartDate && DateTime.UtcNow <= EndDate;
 
         public ApplicationUser User { get; set; }
