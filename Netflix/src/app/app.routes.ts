@@ -21,8 +21,6 @@ export const routes: Routes = [
     redirectTo: '/dashboard',
     pathMatch: 'full'
   },
-
-  // Landing page for guests
   {
     path: 'dashboard',
     loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent),

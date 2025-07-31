@@ -1,7 +1,7 @@
 .slider-arrow {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-35%);
   border-radius: 50%;
   width: fit-content;
   height: fit-content;
@@ -18,7 +18,7 @@
 }
 
 .slide-item{
-  margin-left:95px;
+  margin-left:10px;
 }
 
 .left-arrow {
@@ -41,14 +41,14 @@
 
 .movie-card {
    position: relative;
-  overflow: hidden;
-  width: 200px;
-  margin: 10px;
-  height: 300px;
-  border-radius: 8px;
-  transition: transform 0.5s ease;
-  text-align: center;
-}
+    overflow: hidden;
+    width: 200px;
+    margin: 10px;
+    height: fit-content;
+    border-radius: 8px;
+    transition: transform 0.5s ease;
+    text-align: center;
+} 
 
 .movie-card:hover {
   transform: scale(1.08);
@@ -61,7 +61,7 @@
 
 .movie-image img {
   width: 100%;
-  height: 100%;
+  height: 180px;
   object-fit: cover;
   border-bottom: 1px solid #333;
   position: relative;
@@ -73,7 +73,7 @@
 .addition{
   position: absolute;
   width: 100%;
-  height: 30%;
+  height: 90%;
   z-index: 9;
   bottom: 0;
   background: linear-gradient(to top, rgba(229, 9, 20, 0.9), rgba(229, 9, 20, 0));
@@ -145,12 +145,12 @@
 .rank-number {
   position: absolute;
   color:black;
-  font-size: 260px;
+  font-size: 180px;
   font-weight: 900;
   -webkit-text-stroke: 5px #555; 
   z-index: 0;
   top: -20px;
-  right: 180px;
+  right: 195px;
   line-height: 1.25;
   pointer-events: none;
   user-select: none;
@@ -159,12 +159,12 @@
 .ten-number{
   position: absolute;
   color:black;
-  font-size: 200px;
+  font-size:140px;
   font-weight: 900;
   -webkit-text-stroke: 5px #555; 
   z-index: 0;
-  top: -20px;
-  right: 180px;
+  letter-spacing: -20px;
+  right: 208px;
   line-height: 1.7;
   pointer-events: none;
   user-select: none;
