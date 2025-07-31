@@ -66,8 +66,8 @@
   border-bottom: 1px solid #333;
   position: relative;
   z-index: 8;
- 
-} 
+
+}
 
 
 .addition{
@@ -80,7 +80,7 @@
   transition: all 0.4s ease;
   transform: translateY(20px);
   opacity: 0;
-}  
+}
 .movie-title,
 .extra-info {
   position: absolute;
@@ -94,7 +94,7 @@
   opacity: 0;
   transform: translateY(20px);
 
-  
+
 }
 
 
@@ -111,7 +111,7 @@
 .movie-card:hover .addition {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);  
+  transform: translateY(0);
 }
 
 .movie-title {
@@ -135,7 +135,7 @@
 }
 .extra-info a:hover{
   color: red;
-} 
+}
 
 .extra-info .meta {
   font-size: 0.85rem;
@@ -147,7 +147,7 @@
   color:black;
   font-size: 260px;
   font-weight: 900;
-  -webkit-text-stroke: 5px #555; 
+  -webkit-text-stroke: 5px #555;
   z-index: 0;
   top: -20px;
   right: 180px;
@@ -161,7 +161,7 @@
   color:black;
   font-size: 200px;
   font-weight: 900;
-  -webkit-text-stroke: 5px #555; 
+  -webkit-text-stroke: 5px #555;
   z-index: 0;
   top: -20px;
   right: 180px;
@@ -184,5 +184,16 @@
 }
 
 .no-rank {
-  margin-right: 0.25rem; 
+  margin-right: 0.25rem;
+}
+
+/* Heart Icon */
+.fas.fa-heart {
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.fas.fa-heart.text-danger {
+  color: red;
 }

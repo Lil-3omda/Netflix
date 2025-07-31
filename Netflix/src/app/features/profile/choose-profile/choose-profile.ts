@@ -240,6 +240,8 @@ export class ChooseProfile implements OnInit {
   selectProfile(profileId: number): void {
     const selectedProfile = this.profiles.find(p => p.id === profileId);
     if (selectedProfile) {
+
+
     this.profileService.setCurrentProfile({
       ...selectedProfile,
       userId: selectedProfile.userId.toString()

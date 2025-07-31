@@ -1,0 +1,20 @@
+<div class="favorite-page">
+  <h2>❤️ My Favorite Videos</h2>
+
+  <div *ngIf="favoriteVideos.length === 0" class="empty-msg">
+    No favorite videos yet.
+  </div>
+
+  <div class="favorites-container">
+    <div class="video-card" *ngFor="let video of favoriteVideos">
+      <img [src]="video.imageUrl" alt="{{ video.videoTitle }}" class="thumbnail">
+
+      <div class="video-info">
+        <h3>{{ video.videoTitle }}</h3>
+        <p>{{ video.videoDescription }}</p>
+        <a [href]="video.videoUrl" target="_blank" class="btn btn-watch">Watch</a>
+        <button (click)="removeFromFavorites(video.videoId)" class="btn btn-remove">Remove ❌</button>
+      </div>
+    </div>
+  </div>
+</div>

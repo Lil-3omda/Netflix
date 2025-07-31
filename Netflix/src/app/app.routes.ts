@@ -16,36 +16,36 @@ import { AdminMovieDeatils } from './features/admin/pages/admin-movies/movie-dea
 
 export const routes: Routes = [
   // Root redirect - check authentication and role
-  { 
-    path: '', 
-    redirectTo: '/dashboard', 
-    pathMatch: 'full' 
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
   },
 
   // Landing page for guests
   {
-    path: 'dashboard', 
+    path: 'dashboard',
     loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent),
     canActivate: [GuestGuard]
   },
 
   // Authentication routes (guests only)
-  { 
-    path: 'login', 
-    loadComponent: () => import('./features/auth/login/login').then(m => m.Login), 
-    canActivate: [GuestGuard] 
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login').then(m => m.Login),
+    canActivate: [GuestGuard]
   },
-  { 
-    path: 'signup', 
-    loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent), 
-    canActivate: [GuestGuard] 
+  {
+    path: 'signup',
+    loadComponent: () => import('./features/auth/signup/signup').then(m => m.SignupComponent),
+    canActivate: [GuestGuard]
   },
 
   // User routes (authenticated users only)
-  { 
-    path: 'Home', 
-    loadComponent: () => import('./features/videos/home/home').then(m => m.Home), 
-    canActivate: [AuthGuard, SubscriptionGuard] 
+  {
+    path: 'Home',
+    loadComponent: () => import('./features/videos/home/home').then(m => m.Home),
+    canActivate: [AuthGuard, SubscriptionGuard]
   },
   {
     path: 'Profile',
@@ -76,7 +76,7 @@ export const routes: Routes = [
   },
 
   // Payment route
-  { 
+  {
     path: 'payment',
     loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
     canActivate: [AuthGuard]
@@ -177,12 +177,19 @@ export const routes: Routes = [
   },
 
   // 404 Not Found - must be last
-  { 
-    path: '404', 
-    loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent) 
+  {
+    path: '404',
+    loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent)
   },
-  { 
-    path: '**', 
-    redirectTo: '/404' 
-  }
+  {
+    path: '**',
+    redirectTo: '/404'
+  },
+  {
+  path: 'favorite',
+  loadComponent: () => import('./pages/favorite/favorite').then(m => m.FavoriteComponent),
+  canActivate: [AuthGuard, SubscriptionGuard]
+}
+
 ];
+
