@@ -1,0 +1,15 @@
+.table-img {
+  width: 100px;
+  height: 120px;
+  object-fit: contain;
+  background-color: #000;
+}
+
+.table-row-link {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.table-row-link:hover {
+  background-color: #333 !important;
+}

@@ -21,8 +21,6 @@ export const routes: Routes = [
     redirectTo: '/dashboard',
     pathMatch: 'full'
   },
-
-  // Landing page for guests
   {
     path: 'dashboard',
     loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent),
@@ -145,9 +143,9 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./features/admin/pages/home-page/home-page').then(m => m.HomePage) },
       { path: 'content', loadComponent: () => import('./admin/pages/content-management/content-management.component').then(m => m.ContentManagementComponent) },
       { path: 'users', loadComponent: () => import('./admin/pages/user-management/user-management.component').then(m => m.UserManagementComponent) },
-      { path: 'analytics', loadComponent: () => import('./admin/pages/analytics/analytics.component').then(m => m.AnalyticsComponent) },
-      { path: 'chatbot', loadComponent: () => import('./admin/pages/chatbot/chatbot.component').then(m => m.ChatbotComponent) },
-      { path: 'chatbot1', loadComponent: () => import('./features/communication/components/chatbot/chatbot.component').then(m => m.ChatbotComponent) },
+      // { path: 'analytics', loadComponent: () => import('./admin/pages/analytics/analytics.component').then(m => m.AnalyticsComponent) },
+      // { path: 'chatbot', loadComponent: () => import('./admin/pages/chatbot/chatbot.component').then(m => m.ChatbotComponent) },
+      { path: 'chatbot', loadComponent: () => import('./features/communication/components/chatbot/chatbot.component').then(m => m.ChatbotComponent) },
       { path: 'support', loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent) },
       { path: 'settings', loadComponent: () => import('./admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings').then(m => m.MainNetflixAdmainSettings) },
       { path: 'categories', loadComponent: () => import('./admin/pages/categories/categories.component').then(m => m.CategoriesComponent) },
@@ -184,6 +182,7 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '/404'
+
   },
   {
   path: 'favorite',
@@ -192,4 +191,5 @@ export const routes: Routes = [
 }
 
 ];
+
 

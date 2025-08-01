@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminService } from '../../services/admin.service';
+import { AnalyticsData } from '../../models/admin.interfaces';
 
 interface SubscriptionPlan {
   id: number;
@@ -14,6 +15,7 @@ interface SubscriptionPlan {
 interface PlanDistribution {
   planName: string;
   count: number;
+  revenue: number;
 }
 
 interface UserSubscription {
@@ -41,13 +43,13 @@ interface UserSubscription {
         <p class="lead">Manage subscription plans and user subscriptions</p>
       </div>
 
-      <!-- Stats -->
+      <!-- First Row of Stats -->
       <div class="row mb-5 g-4">
         <div class="col-md-3" *ngFor="let stat of [
-          { label: 'Total Subscriptions', value: statistics.totalSubscriptions, class: 'danger' },
-          { label: 'Active Subscriptions', value: statistics.activeSubscriptions, class: 'success' },
-          { label: 'Monthly Revenue', value: 'EGP ' + statistics.monthlyRevenue, class: 'warning' },
-          { label: 'Churn Rate', value: statistics.churnRate + '%', class: 'info' }
+          { label: 'Total Subscriptions', value: analyticsData?.totalSubscriptions || 0, class: 'danger' },
+          { label: 'Active Subscriptions', value: analyticsData?.activeSubscriptions || 0, class: 'success' },
+          { label: 'Monthly Revenue', value: 'EGP ' + (analyticsData?.monthlyRevenue | number:'1.2-2'), class: 'warning' },
+          { label: 'Renewal Rate', value: (analyticsData?.renewalRate || 0) + '%', class: 'info' }
         ]">
           <div class="card border-{{ stat.class }} text-bg-dark h-100">
             <div class="card-body">
@@ -58,7 +60,59 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- Filters -->
+      <!-- Second Row of Stats -->
+      <div class="row mb-5 g-4">
+        <div class="col-md-3" *ngFor="let stat of [
+          { label: 'Customer Lifetime Value', value: 'EGP ' + (analyticsData?.customerLifetimeValue | number:'1.2-2'), class: 'primary' },
+          { label: 'Retention Rate', value: (analyticsData?.retentionRate || 0) + '%', class: 'success' },
+          { label: 'Growth Rate', value: analyticsData?.growthRate || 0, class: 'warning' },
+          { label: 'ARPU', value: 'EGP ' + (analyticsData?.ARPU | number:'1.2-2'), class: 'info' }
+        ]">
+          <div class="card border-{{ stat.class }} text-bg-dark h-100">
+            <div class="card-body">
+              <small class="text-secondary">{{ stat.label }}</small>
+              <h3 class="card-title">{{ stat.value }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Distribution -->
+      <div class="card text-bg-dark border-secondary mb-4" *ngIf="analyticsData?.planDistribution?.length">
+        <div class="card-header">
+          <h5>Plan Distribution</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-dark">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Subscribers</th>
+                  <th>Revenue</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let plan of analyticsData.planDistribution">
+                  <td>{{ plan.planName || 'N/A' }}</td>
+                  <td>{{ plan.count || 0 }}</td>
+                  <td>EGP {{ (plan.revenue | number:'1.2-2') || '0.00' }}</td>
+                  <td>
+                    {{ analyticsData.totalSubscriptions > 0 ?
+                      ((plan.count / analyticsData.totalSubscriptions * 100) | number:'1.0-2') : 0 }}%
+                  </td>
+                </tr>
+                <tr *ngIf="analyticsData.planDistribution.length === 0">
+                  <td colspan="4" class="text-center text-muted">No plan distribution data available</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search and Filter -->
       <div class="card text-bg-dark border-secondary mb-4">
         <div class="card-body d-flex gap-3 align-items-center flex-wrap">
           <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="filterSubscriptions()" placeholder="Search users...">
@@ -70,7 +124,7 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- User Subscriptions Table -->
+      <!-- Subscriptions Table -->
       <div class="card text-bg-dark border-secondary">
         <div class="card-body table-responsive">
           <table class="table table-dark table-hover table-bordered align-middle">
@@ -119,10 +173,10 @@ interface UserSubscription {
                 </td>
                 <td>
                   <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit">
+                    <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit Subscription">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-danger" (click)="confirmDelete(sub)" title="Delete">
+                    <button class="btn btn-outline-danger" (click)="confirmDelete(sub)" title="Delete Subscription">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -139,27 +193,27 @@ interface UserSubscription {
         </div>
       </div>
 
-      <!-- Delete Confirmation Modal -->
+      <!-- Delete Modal -->
       <div *ngIf="showDeleteModal && selectedSubscription" class="modal fade show d-block bg-dark bg-opacity-75" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content text-bg-dark border-danger">
-          <div class="modal-header">
-            <h5 class="modal-title text-danger">Confirm Deletion</h5>
-            <button type="button" class="btn-close btn-close-white" (click)="closeModals()"></button>
+            <div class="modal-header">
+              <h5 class="modal-title text-danger">Confirm Deletion</h5>
+              <button type="button" class="btn-close btn-close-white" (click)="closeModals()"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete the subscription of
+              <strong>{{ selectedSubscription.userName }}</strong>?
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="closeModals()">Cancel</button>
+              <button class="btn btn-danger" (click)="deleteSubscription()">Delete</button>
+            </div>
           </div>
-          <div class="modal-body">
-            Are you sure you want to delete the subscription of
-            <strong>{{ selectedSubscription.userName }}</strong>?
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModals()">Cancel</button>
-            <button class="btn btn-danger" (click)="deleteSubscription()">Delete</button>
-          </div>
-        </div>
         </div>
       </div>
 
-      <!-- Edit Subscription Modal -->
+      <!-- Edit Modal -->
       <div *ngIf="showEditModal && selectedSubscription" class="modal fade show d-block bg-dark bg-opacity-75" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content text-bg-dark border-secondary">
@@ -174,7 +228,6 @@ interface UserSubscription {
                   <option *ngFor="let plan of subscriptionPlans" [value]="plan.id">{{ plan.name }}</option>
                 </select>
               </div>
-              <!-- Add more editable fields if you want -->
             </div>
             <div class="modal-footer">
               <button class="btn btn-secondary" (click)="closeModals()">Cancel</button>
@@ -186,7 +239,7 @@ interface UserSubscription {
     </div>
   `,
   styles: [`
-    .modal.fade.show { display: block; } /* makes Angular's *ngIf modal visible */
+    .modal.fade.show { display: block; }
   `]
 })
 export class SubscriptionsComponent implements OnInit, OnDestroy {
@@ -211,7 +264,20 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
   showDeleteModal = false;
   showEditModal = false;
 
-  // Separate model so we don't mutate the table row before save
+  // Initialize analyticsData with default values
+  analyticsData: AnalyticsData = {
+    totalSubscriptions: 0,
+    activeSubscriptions: 0,
+    monthlyRevenue: 0,
+    renewalRate: 0,
+    customerLifetimeValue: 0,
+    retentionRate: 0,
+    growthRate: 0,
+    ARPU: 0,
+    planDistribution: []
+  };
+
+  // Separate model for edit form
   editModel: { planId: number } = { planId: 0 };
 
   private destroy$ = new Subject<void>();
@@ -222,6 +288,46 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     this.loadSubscriptionPlans();
     this.loadStatistics();
     this.loadUserSubscriptions();
+    this.loadAnalytics();
+  }
+
+  private loadStatistics(): void {
+    this.adminService.getSubscriptionStatistics()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (stats) => {
+          this.statistics = stats;
+          // Merge stats with analyticsData
+          this.analyticsData = {
+            ...this.analyticsData,
+            totalSubscriptions: stats.totalSubscriptions,
+            activeSubscriptions: stats.activeSubscriptions,
+            monthlyRevenue: stats.monthlyRevenue,
+            planDistribution: stats.planDistribution || []
+          };
+        },
+        error: (e) => console.error('Error loading stats', e)
+      });
+  }
+
+  private loadAnalytics(): void {
+    this.adminService.getAnalyticsOverview()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          console.log('Raw analytics data:', data);
+          this.analyticsData = {
+            ...this.analyticsData,
+            ...data,
+            renewalRate: data.renewalRate || 0,
+            customerLifetimeValue: data.customerLifetimeValue || 0,
+            retentionRate: data.retentionRate || 0,
+            growthRate: data.growthRate || 0,
+            ARPU: data.ARPU || 0
+          };
+        },
+        error: (err) => console.error('Failed to load analytics', err)
+      });
   }
 
   ngOnDestroy(): void {
@@ -229,22 +335,12 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ------- Loaders
   private loadSubscriptionPlans(): void {
     this.adminService.getSubscriptionPlans()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (plans) => this.subscriptionPlans = plans || [],
         error: (e) => console.error('Error loading plans', e)
-      });
-  }
-
-  private loadStatistics(): void {
-    this.adminService.getSubscriptionStatistics()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (stats) => this.statistics = stats,
-        error: (e) => console.error('Error loading stats', e)
       });
   }
 
@@ -260,7 +356,6 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ------- Filters
   filterSubscriptions(): void {
     this.filteredUserSubscriptions = this.userSubscriptions.filter(sub => {
       const matchesSearch = sub.userName.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -275,16 +370,13 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ------- Actions
   confirmDelete(sub: UserSubscription): void {
-    console.log('Open delete modal for', sub);
     this.selectedSubscription = sub;
     this.showDeleteModal = true;
     this.showEditModal = false;
   }
 
   openEditModal(sub: UserSubscription): void {
-    console.log('Open edit modal for', sub);
     this.selectedSubscription = sub;
     this.editingSubscription = sub;
     const selectedPlan = this.subscriptionPlans.find(p => p.name === sub.planName);
@@ -295,11 +387,8 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
 
   deleteSubscription(): void {
     if (!this.selectedSubscription) return;
-    console.log('Deleting subscription', this.selectedSubscription);
 
-    // If you actually want to "delete", create deleteUserSubscription()
-    // Using cancelSubscription here as you had before.
-    this.adminService.cancelSubscription(this.selectedSubscription.userId)
+    this.adminService.cancelSubscription(+this.selectedSubscription.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -315,16 +404,13 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
 
   saveEditedSubscription(): void {
     if (!this.selectedSubscription) return;
-    console.log('Saving edited subscription', this.selectedSubscription, ' -> ', this.editModel);
 
-    // Implement this on your AdminService
-    // Example payload: only planName for now
-   this.adminService.updateUserSubscription(this.editingSubscription.id, {
+    this.adminService.updateUserSubscription(this.editingSubscription.id, {
         planId: this.editModel.planId
       })
       .subscribe({
         next: () => {
-          this.closeModals(); // ✅ correct method
+          this.closeModals();
           this.loadUserSubscriptions();
         },
         error: (err) => {

@@ -43,21 +43,19 @@ export class App {
     const user = this.authService.getCurrentUser();
     const currentUrl = this.router.url;
 
-    // Only redirect if user is on root path
-    if (currentUrl === '/' || currentUrl === '/dashboard') {
-      if (isAuthenticated && user) {
-        if (user.isAdmin) {
-          this.router.navigate(['/admin/dashboard']);
-        } else {
-          // Check if user has selected a profile
-          const profileId = localStorage.getItem('profileId');
-          if (profileId) {
-            this.router.navigate(['/Home']);
-          } else {
-            this.router.navigate(['/Profile']);
-          }
-        }
-      }
-    }
+    // if (currentUrl === '/' || currentUrl === '/dashboard') {
+    //   if (isAuthenticated && user) {
+    //     if (user.isAdmin) {
+    //       this.router.navigate(['/admin/dashboard']);
+    //     } else {
+    //       const profileId = localStorage.getItem('profileId');
+    //       if (profileId) {
+    //         this.router.navigate(['/Home']);
+    //       } else {
+    //         this.router.navigate(['/Profile']);
+    //       }
+    //     }
+    //   }
+    // }
   }
 }

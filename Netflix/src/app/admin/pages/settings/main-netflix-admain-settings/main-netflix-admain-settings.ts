@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component,OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ToggleSwitch } from '../toggle-switch/toggle-switch';
-import { InputField } from '../input-field/input-field';
 import { GeneralSettings } from '../general-settings/general-settings';
 import { ContentManagement } from '../content-management/content-management';
 import { NotificationSettings } from '../notification-settings/notification-settings';
@@ -13,7 +11,7 @@ import { Settings } from '../settings';
 import { Tab } from '../settings';
 @Component({
   selector: 'app-main-netflix-admain-settings',
-  imports: [CommonModule,FormsModule,ToggleSwitch,InputField,GeneralSettings,ContentManagement,NotificationSettings,SecuritySettings,SystemSettings,UserManagement],
+  imports: [CommonModule,FormsModule,GeneralSettings,ContentManagement,NotificationSettings,SecuritySettings,SystemSettings,UserManagement],
   templateUrl: './main-netflix-admain-settings.html',
   styleUrl: './main-netflix-admain-settings.css'
 })

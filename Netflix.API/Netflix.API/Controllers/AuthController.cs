@@ -328,7 +328,6 @@ namespace Netflix.API.Controllers
                 return BadRequest(new { message = "Failed to reset password", errors = result.Errors });
             }
 
-            // Clear OTP after successful password reset
             user.OtpCode = null;
             user.OtpExpiry = null;
             await userManager.UpdateAsync(user);
@@ -343,5 +342,85 @@ namespace Netflix.API.Controllers
                 await roleManager.CreateAsync(new IdentityRole(roleName));
             }
         }
+
+        [HttpPost("make-admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MakeUserAdmin([FromBody] MakeAdminDTO dto)
+        {
+            var user = await userManager.FindByIdAsync(dto.UserId);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            if (user.IsAdmin)
+            {
+                return BadRequest(new { message = "User is already an admin" });
+            }
+
+            var currentRoles = await userManager.GetRolesAsync(user);
+            if (currentRoles.Any())
+            {
+                await userManager.RemoveFromRolesAsync(user, currentRoles);
+            }
+
+            await userManager.AddToRoleAsync(user, "Admin");
+
+            user.IsAdmin = true;
+            await userManager.UpdateAsync(user);
+
+            return Ok(new
+            {
+                message = "User successfully converted to admin",
+                user = new
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    fullName = user.FullName,
+                    isAdmin = user.IsAdmin
+                }
+            });
+        }
+
+        [HttpPost("remove-admin")]
+        public async Task<IActionResult> RemoveAdminRole([FromBody] MakeAdminDTO dto)
+        {
+            var user = await userManager.FindByIdAsync(dto.UserId);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            if (!user.IsAdmin)
+            {
+                return BadRequest(new { message = "User is not an admin" });
+            }
+
+            await userManager.RemoveFromRoleAsync(user, "Admin");
+
+            await userManager.AddToRoleAsync(user, "User");
+
+            user.IsAdmin = false;
+            await userManager.UpdateAsync(user);
+
+            return Ok(new
+            {
+                message = "Admin role removed successfully",
+                user = new
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    fullName = user.FullName,
+                    isAdmin = user.IsAdmin
+                }
+            });
+        }
     }
 }
+
+public class MakeAdminDTO
+{
+    public string UserId { get; set; }
+}
+
+

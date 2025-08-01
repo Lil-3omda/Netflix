@@ -19,7 +19,28 @@
     <!-- Right side -->
     <div class="d-flex align-items-center gap-3 ms-auto" >
       <!-- Search -->
-<div class="search-container" [class.active]="showSearch" *ngif="isAuthenticated">
+
+  <button 
+  (click)="startVoiceSearch()" 
+  aria-label="Start voice search"
+  style="
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  "
+  (mouseenter)="hovering = true"
+  (mouseleave)="hovering = false"
+  [style.transform]="hovering ? 'scale(1.2)' : 'scale(1)'"
+  [style.color]="hovering ? 'red' : 'white'"
+    
+>
+  <i class="fa-solid fa-microphone"></i>
+</button>
+  <div class="search-container" [class.active]="showSearch">
+
   <span (click)="toggleSearch()">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
   </span>
@@ -31,19 +52,22 @@
     placeholder="Search movies..."
     class="search-input"
   />
+  
+  
+
 
   <!-- Dropdown results -->
-<ul *ngIf="showSearch && filteredMovies.length > 0" class="dropdown-results">
-<li *ngFor="let movie of filteredMovies" class="movie-card" (click)="goToMovie(movie.id)">
-    <div class="d-flex align-items-center gap-2">
-      <img [src]="'https://localhost:7140/' + movie.imageUrl" alt="{{ movie.title }}" class="movie-thumbnail" />
-      <div>
-        <h6 class="mb-1 fw-bold">{{ movie.title }}</h6>
-        <p class="mb-0 text-muted small">{{ movie.categoryName }} • Views: {{ movie.viewCount }}</p>
+  <ul *ngIf="showSearch && filteredMovies.length > 0" class="dropdown-results">
+  <li *ngFor="let movie of filteredMovies" class="movie-card" (click)="goToMovie(movie.id)">
+      <div class="d-flex align-items-center gap-2">
+        <img [src]="'https://localhost:7140/' + movie.imageUrl" alt="{{ movie.title }}" class="movie-thumbnail" />
+        <div>
+          <h6 class="mb-1 fw-bold">{{ movie.title }}</h6>
+          <p class="mb-0 text-muted small">{{ movie.categoryName }} • Views: {{ movie.viewCount }}</p>
+        </div>
       </div>
-    </div>
-  </li>
-</ul>
+    </li>
+  </ul>
 
   <!-- Error message -->
   <p *ngIf="showSearch && searchTerm && filteredMovies.length === 0" class="search-error">
@@ -72,7 +96,7 @@
             </a>
           </li>
           <li *ngIf="userProfiles.length > 1"><hr class="dropdown-divider border-secondary"></li>
-          
+
           <!-- Profile Management -->
           <li><a class="dropdown-item text-white" (click)="switchProfile()"><i class="bi bi-person-plus me-2"></i>Manage Profiles</a></li>
           <li><a class="dropdown-item text-white" routerLink="/account"><i class="bi bi-gear me-2"></i>Account</a></li>

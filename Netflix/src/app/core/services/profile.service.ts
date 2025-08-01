@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Profile {
@@ -15,7 +16,7 @@ export interface Profile {
 export class ProfileService {
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);
   private profilesSubject = new BehaviorSubject<Profile[]>([]);
-  
+
   currentProfile$ = this.currentProfileSubject.asObservable();
   profiles$ = this.profilesSubject.asObservable();
 
@@ -40,6 +41,11 @@ export class ProfileService {
     }
   }
 
+
+  getHashedProfileId(profileId: number): Observable<string> {
+    return this.http.get<{ hashedId: string }>(`${this.apiUrl}/hash/${profileId}`)
+      .pipe(map(res => res.hashedId));
+  }
   getProfilesByUserId(userId: string): Observable<Profile[]> {
     return this.http.get<Profile[]>(`${this.apiUrl}/profile/${userId}`);
   }
@@ -48,10 +54,14 @@ export class ProfileService {
     return this.http.get<Profile>(`${this.apiUrl}/id?id=${id}`);
   }
 
+
   setCurrentProfile(profile: Profile): void {
-    localStorage.setItem('profileId', profile.id.toString());
-    this.currentProfileSubject.next(profile);
+    this.getHashedProfileId(profile.id).subscribe(hashedId => {
+      localStorage.setItem("activeProfile", hashedId);
+      this.currentProfileSubject.next(profile);
+    });
   }
+
 
   getCurrentProfile(): Profile | null {
     return this.currentProfileSubject.value;

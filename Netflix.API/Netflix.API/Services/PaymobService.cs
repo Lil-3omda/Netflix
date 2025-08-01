@@ -25,8 +25,22 @@ namespace Netflix.API.Services
                 var apiKey = _configuration["Paymob:ApiKey"];
                 var integrationId = _configuration["Paymob:IntegrationId"];
                 var iframeId = _configuration["Paymob:IframeId"];
+                var isDeveloperMode = _configuration.GetValue<bool>("Paymob:DeveloperMode");
 
-                _logger.LogInformation("🚀 Starting Paymob payment initiation for amount: {Amount}", request.AmountCents);
+                _logger.LogInformation("🚀 Starting Paymob payment initiation for amount: {Amount} (Developer Mode: {DevMode})", 
+                    request.AmountCents, isDeveloperMode);
+
+                // In developer mode, simulate successful payment
+                if (isDeveloperMode)
+                {
+                    _logger.LogInformation("🔧 Developer mode: Simulating payment process");
+                    
+                    // Generate a fake iframe URL for testing
+                    var fakeIframeUrl = $"https://accept.paymob.com/api/acceptance/iframes/{iframeId}?payment_token=fake_dev_token_{Guid.NewGuid()}";
+                    
+                    _logger.LogInformation("🎯 Developer mode iframe URL: {Url}", fakeIframeUrl);
+                    return fakeIframeUrl;
+                }
 
                 // Step 1: Get auth token
                 var authRequest = new { api_key = apiKey };
@@ -112,7 +126,8 @@ namespace Netflix.API.Services
                         state = "Cairo"
                     },
                     currency = "EGP",
-                    integration_id = int.Parse(integrationId)
+                    integration_id = int.Parse(integrationId),
+                    lock_order_when_paid = true
                 };
 
                 var paymentKeyJson = JsonSerializer.Serialize(paymentKeyRequest);
@@ -159,6 +174,14 @@ namespace Netflix.API.Services
             try
             {
                 var apiKey = _configuration["Paymob:ApiKey"];
+                var isDeveloperMode = _configuration.GetValue<bool>("Paymob:DeveloperMode");
+
+                // In developer mode, simulate successful verification
+                if (isDeveloperMode)
+                {
+                    _logger.LogInformation("🔧 Developer mode: Simulating successful payment verification for transaction: {TransactionId}", transactionId);
+                    return true;
+                }
                 
                 // Get auth token
                 var authRequest = new { api_key = apiKey };
@@ -204,6 +227,21 @@ namespace Netflix.API.Services
             try
             {
                 var apiKey = _configuration["Paymob:ApiKey"];
+                var isDeveloperMode = _configuration.GetValue<bool>("Paymob:DeveloperMode");
+
+                // In developer mode, return fake successful status
+                if (isDeveloperMode)
+                {
+                    _logger.LogInformation("🔧 Developer mode: Returning fake payment status for order: {OrderId}", orderId);
+                    return new PaymentStatusDTO
+                    {
+                        Status = "Completed",
+                        TransactionId = $"fake_txn_{orderId}",
+                        Amount = 100, // Default amount for testing
+                        Currency = "EGP",
+                        CreatedAt = DateTime.UtcNow
+                    };
+                }
                 
                 // Get auth token
                 var authRequest = new { api_key = apiKey };
