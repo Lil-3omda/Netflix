@@ -149,25 +149,24 @@ namespace Netflix.API.Controllers
 
 
         [HttpGet("users")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserSubscriptions()
         {
             var subscriptions = await _context.UserSubscriptions
-                .Where(us => !us.IsDeleted)
                 .Include(us => us.User)
                 .Include(us => us.Plan)
                 .Select(us => new UserSubscriptionRow
                 {
                     Id = us.Id,
-                    UserId = us.UserId, 
+                    UserId = us.UserId,
                     UserName = us.User.UserName,
                     UserEmail = us.User.Email,
                     PlanName = us.Plan.Name,
                     PlanPrice = us.Plan.Price,
                     StartDate = us.StartDate,
                     EndDate = us.EndDate,
-                    IsActive = us.EndDate > DateTime.UtcNow,
-                    DaysRemaining = (us.EndDate - DateTime.UtcNow).Days
+                    IsActive = !us.IsDeleted && us.EndDate > DateTime.UtcNow,
+                    DaysRemaining = us.IsDeleted ? 0 : (us.EndDate - DateTime.UtcNow).Days,
+                    IsDeleted = us.IsDeleted
                 })
                 .ToListAsync();
 
@@ -183,41 +182,103 @@ namespace Netflix.API.Controllers
             return Ok(response);
         }
 
-
         [HttpGet("statistics")]
         public async Task<IActionResult> GetSubscriptionStatistics()
         {
             try
             {
-                var totalSubscriptions = await _context.UserSubscriptions.CountAsync();
+                var allSubscriptions = await _context.UserSubscriptions
+                    .Where(us => !us.IsDeleted)
+                    .Include(us => us.Plan)
+                    .ToListAsync();
 
-                var activeSubscriptions = await _context.UserSubscriptions
-                    .CountAsync(u => DateTime.UtcNow >= u.StartDate && DateTime.UtcNow <= u.EndDate);
+                var activeSubscriptions = allSubscriptions
+                    .Count(u => DateTime.UtcNow >= u.StartDate && DateTime.UtcNow <= u.EndDate);
 
-                var monthlyRevenue = await _context.UserSubscriptions
-                    .Where(u => u.StartDate.Month == DateTime.UtcNow.Month &&
-                                u.StartDate.Year == DateTime.UtcNow.Year)
-                    .SumAsync(u => (decimal?)u.Plan.Price) ?? 0;
+                var monthlyRevenue = allSubscriptions
+                    .Where(u => u.Plan != null &&
+                               DateTime.UtcNow >= u.StartDate &&
+                               DateTime.UtcNow <= u.EndDate)
+                    .Sum(u => (decimal?)u.Plan.Price) ?? 0;
 
-                var churnRate = totalSubscriptions > 0
-                    ? Math.Round(((double)(totalSubscriptions - activeSubscriptions) / totalSubscriptions) * 100, 2)
+                var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
+                var expiredSubscriptions = allSubscriptions
+                    .Where(u => u.EndDate >= thirtyDaysAgo && u.EndDate < DateTime.UtcNow)
+                    .ToList();
+
+                var renewedSubscriptions = await Task.WhenAll(expiredSubscriptions.Select(async u =>
+                    await _context.UserSubscriptions.AnyAsync(us =>
+                        us.UserId == u.UserId &&
+                        us.StartDate > u.EndDate &&
+                        us.StartDate <= DateTime.UtcNow)));
+
+                var renewalCount = renewedSubscriptions.Count(x => x);
+                var renewalRate = expiredSubscriptions.Count > 0
+                    ? Math.Round(((double)renewalCount / expiredSubscriptions.Count) * 100, 2)
                     : 0;
 
-                var planDistribution = await _context.UserSubscriptions
+                var totalRevenue = allSubscriptions
+                    .Where(u => u.Plan != null)
+                    .Sum(u => u.Plan.Price);
+                var uniqueUsers = allSubscriptions.Select(u => u.UserId).Distinct().Count();
+                var clv = uniqueUsers > 0 ? Math.Round(totalRevenue / uniqueUsers, 2) : 0;
+
+                var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+                var startOfLastMonth = startOfMonth.AddMonths(-1);
+
+                var previousMonthActiveUsers = allSubscriptions
+                    .Where(u => u.StartDate <= startOfMonth && u.EndDate >= startOfMonth)
+                    .Select(u => u.UserId)
+                    .Distinct()
+                    .Count();
+
+                var currentMonthActiveUsers = allSubscriptions
+                    .Where(u => u.StartDate <= DateTime.UtcNow && u.EndDate >= DateTime.UtcNow)
+                    .Select(u => u.UserId)
+                    .Distinct()
+                    .Count();
+
+                var retentionRate = previousMonthActiveUsers > 0
+                    ? Math.Round((double)currentMonthActiveUsers / previousMonthActiveUsers * 100, 2)
+                    : 0;
+
+                var newSubsThisMonth = allSubscriptions
+                    .Count(u => u.StartDate >= startOfMonth && u.StartDate <= DateTime.UtcNow);
+
+                var canceledSubsThisMonth = allSubscriptions
+                    .Count(u => u.EndDate >= startOfMonth &&
+                               u.EndDate <= DateTime.UtcNow &&
+                               !_context.UserSubscriptions.Any(us =>
+                                   us.UserId == u.UserId &&
+                                   us.StartDate > u.EndDate));
+
+                var growthRate = newSubsThisMonth - canceledSubsThisMonth;
+
+                var arpu = currentMonthActiveUsers > 0
+                    ? Math.Round((double)monthlyRevenue / currentMonthActiveUsers, 2)
+                    : 0;
+
+                var planDistribution = allSubscriptions
+                    .Where(u => u.Plan != null)
                     .GroupBy(u => u.Plan.Name)
                     .Select(g => new
                     {
                         PlanName = g.Key,
-                        Count = g.Count()
+                        Count = g.Count(),
+                        Revenue = g.Sum(u => u.Plan.Price)
                     })
-                    .ToListAsync();
+                    .ToList();
 
                 return Ok(new
                 {
-                    TotalSubscriptions = totalSubscriptions,
+                    TotalSubscriptions = allSubscriptions.Count,
                     ActiveSubscriptions = activeSubscriptions,
                     MonthlyRevenue = monthlyRevenue,
-                    ChurnRate = churnRate,
+                    RenewalRate = renewalRate,
+                    CustomerLifetimeValue = clv,
+                    RetentionRate = retentionRate,
+                    GrowthRate = growthRate,
+                    ARPU = arpu,
                     PlanDistribution = planDistribution
                 });
             }
@@ -296,6 +357,7 @@ namespace Netflix.API.Controllers
         }
 
     }
+
 
     public class CreateSubscriptionPlanDTO
     {

@@ -3,11 +3,10 @@ import { Moviedetails } from '../../core/services/moviedetails';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { Navbar } from '../../layout/navbar/navbar';
 
 @Component({
   selector: 'app-watch-movie',
-  imports: [Navbar, CommonModule],
+  imports: [ CommonModule],
   templateUrl: './watch-movie.html',
   styleUrl: './watch-movie.css'
 })
@@ -40,8 +39,8 @@ ngOnInit(): void {
   });
 }
 
-  
 
 
- 
+
+
 }

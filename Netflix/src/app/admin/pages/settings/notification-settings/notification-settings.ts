@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Settings } from '../settings';
-import { ToggleSwitch } from '../toggle-switch/toggle-switch';
 @Component({
   selector: 'app-notification-settings',
-  imports: [CommonModule,ToggleSwitch],
+  imports: [CommonModule],
   templateUrl: './notification-settings.html',
   styleUrl: './notification-settings.css'
 })

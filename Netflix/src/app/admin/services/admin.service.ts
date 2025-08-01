@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AdminPageType, User, Content, StatCardData, AnalyticsData, ChatMessage, Conversation } from '../models/admin.interfaces';
+import { AdminPageType, AnalyticsData } from '../models/admin.interfaces';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -30,7 +30,6 @@ export class AdminService {
     this.sidebarOpenSubject.next(open);
   }
 
-  // API methods
   getUsers(page: number = 1, pageSize: number = 10, search: string = ''): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/users?page=${page}&pageSize=${pageSize}&search=${search}`);
   }
@@ -51,15 +50,14 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/admin/content/statistics`);
   }
 
-  getAnalyticsOverview(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/admin/analytics/overview`);
+  getAnalyticsOverview(): Observable<AnalyticsData> {
+    return this.http.get<AnalyticsData>(`${this.apiUrl}/admin/Subscriptions/statistics`);
   }
 
   getConversationStats(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/Admin/conversations/stats`);
   }
 
-  // Category management methods - Fixed to match API
   getCategories(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/Categories`);
   }
@@ -84,7 +82,6 @@ export class AdminService {
     return this.http.put<any>(`${this.apiUrl}/admin/Categories/restore/${id}`,id);
   }
 
-  // Review management methods - Fixed to match API
   getReviews(page: number = 1, pageSize: number = 200): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/Reviews?page=${page}&pageSize=${pageSize}`);
   }
@@ -105,29 +102,35 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/admin/Reviews/flagged`);
   }
 
-  // Subscription management methods - Fixed to match API
   getSubscriptionPlans(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/admin/Subscriptions/plans`);
+  }
+
+  getSubscriptionStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/statistics`);
   }
 
   getUserSubscriptions(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/users`)
       .pipe(
         map((response: any) => {
-          // Handle both direct array response and wrapped response
           if (response.subscriptions) {
-            return response.subscriptions;
+            return response.subscriptions.map((sub: any) => ({
+              ...sub,
+              status: sub.IsDeleted ? 'Inactive' :
+                    (sub.IsActive ? 'Active' : 'Expired')
+            }));
           } else if (Array.isArray(response)) {
-            return response;
+            return response.map((sub: any) => ({
+              ...sub,
+              status: sub.IsDeleted ? 'Inactive' :
+                    (sub.IsActive ? 'Active' : 'Expired')
+            }));
           } else {
             return [];
           }
         })
       );
-  }
-
-  getSubscriptionStatistics(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/statistics`);
   }
 
   createSubscriptionPlan(planData: any): Observable<any> {

@@ -12,7 +12,27 @@ export interface User {
   region: string;
   avatar?: string;
 }
+// export interface AnalyticsData {
 
+// }
+
+export interface AnalyticsData {
+  totalSubscriptions: number;
+  activeSubscriptions: number;
+  monthlyRevenue: number;
+  renewalRate: number;
+  customerLifetimeValue: number;
+  retentionRate: number;
+  growthRate: number;
+  ARPU: number;
+  planDistribution: PlanDistribution[];
+}
+
+export interface PlanDistribution {
+  planName: string;
+  count: number;
+  revenue: number;
+}
 export interface Content {
   id: number;
   title: string;
@@ -81,12 +101,6 @@ export interface ChartData {
   }[];
 }
 
-export interface AnalyticsData {
-  revenue: ChartData;
-  users: ChartData;
-  content: ChartData;
-  engagement: ChartData;
-}
 
 export type Stars = 1 | 2 | 3 | 4 | 5;
 

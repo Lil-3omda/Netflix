@@ -102,6 +102,7 @@ interface SubscriptionPlan {
         <!-- Step 2: OTP Verification -->
         <div class="signup-form-wrapper" *ngIf="currentStep === 2">
           <form class="signup-form" (ngSubmit)="onOtpSubmit()">
+            <img src="/assets/images/AAAAAYL3Poat96BIA7iKG0irg4MM5cXH4o6cb46c2ci_jINem1kWl-CbgntjgPFQVw.png" class="w-100 mb-5"/>
             <h1>Verify your email</h1>
             <p class="step-description">We sent a verification code to {{ email }}. Enter it below to verify your account.</p>
 
@@ -528,8 +529,8 @@ interface SubscriptionPlan {
 
     .otp-input {
       text-align: center;
-      font-size: 24px;
-      letter-spacing: 8px;
+      font-size: 20px;
+      letter-spacing: 6px;
       padding: 16px 20px;
     }
 
