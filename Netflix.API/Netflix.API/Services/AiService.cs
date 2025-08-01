@@ -230,28 +230,65 @@ namespace Netflix.API.Services
                 var watchHistoryAnalysis = await AnalyzeWatchHistoryAsync(userId);
                 var topMovies = await GetTopRatedMoviesByUserPreferencesAsync(userId);
 
+                // Log intermediate data for debugging
+                _logger.LogInformation($"Watch history analysis: {watchHistoryAnalysis}");
+                _logger.LogInformation($"Top movies found: {topMovies.Count}");
+
+                if (!topMovies.Any())
+                {
+                    _logger.LogWarning("No movies available for recommendations");
+                    return new List<MovieRecommendation>();
+                }
+
                 var prompt = $@"
-                Based on the user's watch history analysis: {watchHistoryAnalysis}
+        USER PREFERENCES ANALYSIS:
+        {watchHistoryAnalysis}
 
-                User message: {userMessage}
+        USER REQUEST:
+        {userMessage}
 
-                Available top-rated movies: {JsonSerializer.Serialize(topMovies)}
+        AVAILABLE MOVIES (ordered by relevance):
+        {JsonSerializer.Serialize(topMovies.Select(m => new {
+                    m.Id,
+                    m.Title,
+                    m.Category,
+                    Views = m.TotalViews,
+                    IsFavorite = m.IsFavorite
+                }), new JsonSerializerOptions { WriteIndented = true })}
 
-                Please recommend 3-5 movies from the available list that best match the user's preferences. 
-                For each recommendation, provide a brief reason why it matches their taste.
-                Respond in JSON format:
-                {{
-                  ""recommendations"": [
-                    {{
-                      ""movieId"": 1,
-                      ""reason"": ""explanation""
-                    }}
-                  ]
-                }}";
+        INSTRUCTIONS:
+        1. Select 3-5 movies from AVAILABLE MOVIES that best match the user's preferences
+        2. For each recommendation, include:
+           - movieId: The ID from AVAILABLE MOVIES
+           - reason: Brief explanation why it matches their taste
+        3. Format response as valid JSON with 'recommendations' array
+
+        EXAMPLE RESPONSE:
+        {{
+          ""recommendations"": [
+            {{
+              ""movieId"": 123,
+              ""reason"": ""You've watched similar movies in this category""
+            }}
+          ]
+        }}
+
+        YOUR RECOMMENDATIONS:";
 
                 var aiResponse = await GenerateResponseAsync(prompt, new List<ChatMessageDto>(), "movie_recommendation");
-                
-                return ParseMovieRecommendations(aiResponse, topMovies);
+
+                _logger.LogInformation($"AI Response: {aiResponse}");
+
+                var recommendations = ParseMovieRecommendations(aiResponse, topMovies);
+
+                if (!recommendations.Any())
+                {
+                    _logger.LogWarning("No recommendations could be parsed from AI response");
+                    // Return popular fallback if parsing fails
+                    return GetPopularFallbackRecommendations(topMovies);
+                }
+
+                return recommendations;
             }
             catch (Exception ex)
             {
@@ -260,6 +297,24 @@ namespace Netflix.API.Services
             }
         }
 
+        private List<MovieRecommendation> GetPopularFallbackRecommendations(List<dynamic> availableMovies)
+        {
+            return availableMovies
+                .OrderByDescending(m => m.IsFavorite)
+                .ThenByDescending(m => m.TotalViews)
+                .Take(3)
+                .Select(m => new MovieRecommendation
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Description = m.Description,
+                    ImageUrl = m.ImageUrl,
+                    Category = m.Category,
+                    Reason = m.IsFavorite ?
+                        "You've marked this as a favorite" :
+                        $"Popular in {m.Category} category ({m.TotalViews} views)"
+                }).ToList();
+        }
         public async Task<string> AnalyzeWatchHistoryAsync(string userId)
         {
             try
@@ -267,8 +322,6 @@ namespace Netflix.API.Services
                 var watchHistory = await _context.WatchHistories
                     .Include(wh => wh.Video)
                     .ThenInclude(v => v.Category)
-                    .Include(wh => wh.Video)
-                    .ThenInclude(v => v.Ratings)
                     .Where(wh => wh.Profile.UserId == userId)
                     .OrderByDescending(wh => wh.WatchedAt)
                     .Take(50)
@@ -285,21 +338,21 @@ namespace Netflix.API.Services
                     {
                         Category = g.Key,
                         Count = g.Count(),
-                        AverageRating = g.Average(wh => wh.Video.Ratings.Any() ? wh.Video.Ratings.Average(r => r.Stars) : 0)
+                        LastWatched = g.Max(wh => wh.WatchedAt)
                     })
                     .OrderByDescending(cs => cs.Count)
+                    .ThenByDescending(cs => cs.LastWatched)
                     .ToList();
 
-                var topCategory = categoryStats.FirstOrDefault();
-                var recentMovies = watchHistory.Take(10).Select(wh => wh.Video.Title).ToList();
+                var topCategories = string.Join(", ", categoryStats.Take(3).Select(cs => $"{cs.Category} ({cs.Count} views)"));
+                var recentMovies = watchHistory.Take(5).Select(wh => wh.Video.Title).ToList();
 
                 return $@"
-                User's top category: {topCategory?.Category} ({topCategory?.Count} movies watched)
-                Recent movies: {string.Join(", ", recentMovies)}
-                Category preferences: {string.Join(", ", categoryStats.Take(3).Select(cs => $"{cs.Category} ({cs.Count})"))}
-                Average rating preference: {categoryStats.Average(cs => cs.AverageRating):F1}/5
-                ";
-            }
+                    User's top categories: {topCategories}
+                    Recently watched: {string.Join(", ", recentMovies)}
+                    Total movies watched: {watchHistory.Count}
+                    ";
+                }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error analyzing watch history for user {UserId}", userId);
@@ -319,7 +372,6 @@ namespace Netflix.API.Services
 
             var query = _context.Videos
                 .Include(v => v.Category)
-                .Include(v => v.Ratings)
                 .Where(v => !v.IsDeleted);
 
             if (userCategories.Any())
@@ -335,12 +387,11 @@ namespace Netflix.API.Services
                     v.Description,
                     v.ImageUrl,
                     Category = v.Category.Name,
-                    Rating = v.Ratings.Any() ? v.Ratings.Average(r => r.Stars) : 0,
-                    RatingCount = v.Ratings.Count()
+                    TotalViews = v.TotalView,
+                    IsFavorite = v.Favorites.Any(f => f.Profile.UserId == userId)
                 })
-                .Where(m => m.RatingCount >= 3)
-                .OrderByDescending(m => m.Rating)
-                .ThenByDescending(m => m.RatingCount)
+                .OrderByDescending(m => m.IsFavorite) 
+                .ThenByDescending(m => m.TotalViews) 
                 .Take(20)
                 .ToListAsync();
 
@@ -382,19 +433,23 @@ namespace Netflix.API.Services
                     }
                 }
 
-                // Fallback: if parsing fails, return top 3 movies
-                if (!recommendations.Any())
+                if (!recommendations.Any() && availableMovies.Any())
                 {
-                    recommendations = availableMovies.Take(3).Select(m => new MovieRecommendation
-                    {
-                        Id = m.Id,
-                        Title = m.Title,
-                        Description = m.Description,
-                        ImageUrl = m.ImageUrl,
-                        Rating = m.Rating,
-                        Category = m.Category,
-                        Reason = "Highly rated movie that matches your viewing preferences"
-                    }).ToList();
+                    recommendations = availableMovies
+                        .OrderByDescending(m => m.IsFavorite)
+                        .ThenByDescending(m => m.TotalViews)
+                        .Take(3)
+                        .Select(m => new MovieRecommendation
+                        {
+                            Id = m.Id,
+                            Title = m.Title,
+                            Description = m.Description,
+                            ImageUrl = m.ImageUrl,
+                            Category = m.Category,
+                            Reason = m.IsFavorite ?
+                                "You've marked this as a favorite" :
+                                $"Popular in {m.Category} category ({m.TotalViews} views)"
+                        }).ToList();
                 }
 
                 return recommendations;
