@@ -23,7 +23,7 @@ ngOnInit(): void {
 
 
   loadFavorites() {
-     if (!this.profileId) return;
+    if (!this.profileId) return;
 
     this.favoriteService.getFavorites(this.profileId).subscribe(favs => {
       this.favoriteVideos = favs;

@@ -48,7 +48,7 @@
     border-radius: 8px;
     transition: transform 0.5s ease;
     text-align: center;
-} 
+}
 
 .movie-card:hover {
   transform: scale(1.08);
@@ -196,4 +196,8 @@
 
 .fas.fa-heart.text-danger {
   color: red;
+}
+.fa-heart {
+  pointer-events: auto !important;
+  cursor: pointer;
 }

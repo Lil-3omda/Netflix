@@ -17,11 +17,11 @@
     </ul>
 
     <!-- Right side -->
-    <div class="d-flex align-items-center gap-3 ms-auto" >
+    <div class="d-flex align-items-center gap-2 ms-auto" >
       <!-- Search -->
 
-  <button 
-  (click)="startVoiceSearch()" 
+  <button
+  (click)="startVoiceSearch()"
   aria-label="Start voice search"
   style="
     background: none;
@@ -35,11 +35,11 @@
   (mouseleave)="hovering = false"
   [style.transform]="hovering ? 'scale(1.2)' : 'scale(1)'"
   [style.color]="hovering ? 'red' : 'white'"
-    
+
 >
   <i class="fa-solid fa-microphone"></i>
 </button>
-  <div class="search-container" [class.active]="showSearch">
+  <div class="search-container ms-3" [class.active]="showSearch">
 
   <span (click)="toggleSearch()">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -52,8 +52,8 @@
     placeholder="Search movies..."
     class="search-input"
   />
-  
-  
+
+
 
 
   <!-- Dropdown results -->
@@ -76,9 +76,11 @@
 </div >
       <!-- Other items -->
       <div class="d-flex align-items-center gap-2" *ngIf="isAuthenticated">
-         <span class="text-white d-none d-md-inline">Kids</span>
-      <i class="bi bi-bell fs-5 text-white cursor-pointer"></i>
-
+         <!-- <span class="text-white d-none d-md-inline">Kids</span> -->
+        <a routerLink="/favorite" class="nav-link me-2">
+          <i class="fas fa-heart fs-5 text-white"></i>
+          <span class="visually-hidden">Favorites</span>
+        </a>
       <!-- Profile dropdown -->
       <div class="dropdown">
         <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" (click)="navigateToProfile()">
@@ -90,7 +92,7 @@
           <li *ngIf="userProfiles.length > 1" class="dropdown-header text-white-50">Switch Profile</li>
           <li *ngFor="let profile of userProfiles">
             <a class="dropdown-item text-white d-flex align-items-center" (click)="selectProfile(profile)">
-              <img [src]="getProfileImage(profile.name)" width="24" height="24" class="rounded me-2" alt="avatar" />
+              <img [src]="getProfileImage(profile.name)" width="24" height="24" class="rounded" alt="avatar" />
               {{ profile.name }}
               <i class="bi bi-check-lg ms-auto text-success" *ngIf="currentProfile?.id === profile.id"></i>
             </a>
