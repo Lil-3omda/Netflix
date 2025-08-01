@@ -2,10 +2,9 @@
   <div class="container">
     <h2 class="text-white mb-4">{{ title }}</h2>
 
-    
+
     <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
     <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
-
     
     <div class="d-flex overflow-auto scrollbar-hide px-5" #slider style="scroll-behavior: smooth;">
       <div
@@ -14,7 +13,7 @@
         *ngFor="let movie of movies; let i = index"
         [style.minWidth.px]="showRank ? 250 : 180"
       >
-       
+
         <div *ngIf="showRank && i<9" class="rank-number">
           {{ i + 1 }}
         </div>
@@ -22,7 +21,7 @@
           {{ i + 1 }}
         </div>
 
-        
+
         <div class="movie-card"
         [routerLink]="['/moviedetails', movie.id]"
         >
@@ -36,7 +35,12 @@
               <a >
               <i class="fas fa-play-circle fs-3"></i>
               </a>
-              <i class="fas fa-heart fs-3 d-none"></i>
+              <i
+  class="fas fa-heart fs-3"
+  [class.text-danger]="movie.isFavorite"
+  (click)="toggleFavorite(movie, $event)">
+</i>
+
             </div>
           </div>
           </div>

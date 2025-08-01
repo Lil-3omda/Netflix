@@ -182,5 +182,14 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '/404'
-  }
+
+  },
+  {
+  path: 'favorite',
+  loadComponent: () => import('./pages/favorite/favorite').then(m => m.FavoriteComponent),
+  canActivate: [AuthGuard, SubscriptionGuard]
+}
+
 ];
+
+
