@@ -46,6 +46,13 @@ export class ProfileService {
     return this.http.get<{ hashedId: string }>(`${this.apiUrl}/hash/${profileId}`)
       .pipe(map(res => res.hashedId));
   }
+
+  getProfileIdFromHash(hashId: string): Observable<number> {
+    const encodedHash = encodeURIComponent(hashId);
+    return this.http.get<number>(`${this.apiUrl}/resolve/${encodedHash}`);
+  }
+
+
   getProfilesByUserId(userId: string): Observable<Profile[]> {
     return this.http.get<Profile[]>(`${this.apiUrl}/profile/${userId}`);
   }
