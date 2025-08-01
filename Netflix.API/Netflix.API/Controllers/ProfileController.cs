@@ -125,16 +125,18 @@ namespace Netflix.API.Controllers
         [HttpGet("resolve/{hash}")]
         public IActionResult ResolveProfileByHash(string hash)
         {
+            var decodedHash = Uri.UnescapeDataString(hash); 
             var profiles = _context.Profiles.ToList();
 
             var matchedProfile = profiles.FirstOrDefault(p =>
-                ProfileHashingService.HashProfileId(p.Id) == hash);
+                ProfileHashingService.HashProfileId(p.Id) == decodedHash);
 
             if (matchedProfile == null)
                 return NotFound(new { message = "Profile not found for given hash." });
 
-            return Ok(matchedProfile);
+            return Ok(matchedProfile.Id);
         }
+
 
         [HttpGet("hash/{id}")]
         public IActionResult GetHashedProfileId(int id)
