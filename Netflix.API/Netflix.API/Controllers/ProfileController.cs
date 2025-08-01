@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.Data;
 using Netflix.API.DTOs.ProfileDTOs;
+using Netflix.API.Services;
 
 namespace Netflix.API.Controllers
 {
@@ -17,7 +18,6 @@ namespace Netflix.API.Controllers
             _context = context;
         }
 
-        // GET: api/profile
 
 
         [HttpGet]
@@ -27,7 +27,6 @@ namespace Netflix.API.Controllers
             return Ok(profiles);
         }
 
-        //Get : api/profile/{id}
         [HttpGet("id")]
         public IActionResult GetProfileById([FromQuery] int id)
         {
@@ -39,7 +38,6 @@ namespace Netflix.API.Controllers
             return Ok(profile);
         }
 
-        // GET: api/profile/{id}
         [HttpGet("profile/{userId}")]
         public IActionResult GetProfilesToUser([FromRoute] string userId)
         {
@@ -80,7 +78,6 @@ namespace Netflix.API.Controllers
                 return BadRequest(new { message = $"Profile limit reached. Max allowed: {activeSubscription.Plan.MaxProfiles}" });
             }
 
-            // Create and save the new profile
             var newProfile = new Models.Profile
             {
                 UserId = ProDTO.UserId,
@@ -125,6 +122,32 @@ namespace Netflix.API.Controllers
             return Ok(new { message = "Default Kids profile created successfully." });
         }
 
+        [HttpGet("resolve/{hash}")]
+        public IActionResult ResolveProfileByHash(string hash)
+        {
+            var profiles = _context.Profiles.ToList();
+
+            var matchedProfile = profiles.FirstOrDefault(p =>
+                ProfileHashingService.HashProfileId(p.Id) == hash);
+
+            if (matchedProfile == null)
+                return NotFound(new { message = "Profile not found for given hash." });
+
+            return Ok(matchedProfile);
+        }
+
+        [HttpGet("hash/{id}")]
+        public IActionResult GetHashedProfileId(int id)
+        {
+            var profile = _context.Profiles.FirstOrDefault(p => p.Id == id);
+            if (profile == null)
+            {
+                return NotFound(new { message = "Profile not found." });
+            }
+
+            var hashedId = ProfileHashingService.HashProfileId(profile.Id);
+            return Ok(new { hashedId });
+        }
 
     }
 }
