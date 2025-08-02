@@ -16,5 +16,7 @@ namespace Netflix.API.DTOs.VideoDTO
         // Required for [FromForm] file uploads
         public IFormFile VideoFile { get; set; }
         public IFormFile ImageFile { get; set; }
+
+        public IFormFile CoverFile { get; set; }
     }
 }

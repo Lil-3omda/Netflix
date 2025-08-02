@@ -47,11 +47,11 @@ namespace Netflix.API.Controllers
                 v.VideoUrl,
                 v.TrailerUrl,
                 v.ImageUrl,
+                v.CoverUrl,
                 CategoryName = v.Category.Name,
                 v.Type,
                 v.Duration,
                 v.Status,
-                v.ViewCount,
                 v.TotalView,
                 v.IsDeleted,
                 RatingsCount = v.Ratings.Count(),
@@ -77,11 +77,11 @@ namespace Netflix.API.Controllers
                 v.VideoUrl,
                 v.TrailerUrl,
                 v.ImageUrl,
+                v.CoverUrl,
                 CategoryName = v.Category.Name,
                 v.Type,
                 v.Duration,
                 v.Status,
-                v.ViewCount,
                 v.TotalView,
                 v.IsDeleted,
                 RatingsCount = v.Ratings.Count(),
@@ -109,11 +109,11 @@ namespace Netflix.API.Controllers
                 v.VideoUrl,
                 v.TrailerUrl,
                 v.ImageUrl,
+                v.CoverUrl,
                 CategoryName = v.Category.Name,
                 v.Type,
                 v.Duration,
                 v.Status,
-                v.ViewCount,
                 v.TotalView,
                 v.IsDeleted,
                 RatingsCount = v.Ratings.Count(),
@@ -202,7 +202,7 @@ namespace Netflix.API.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadVideo([FromForm] AdminUploadMovieDTO model)
         {
-            if (model.VideoFile == null || model.ImageFile == null)
+            if (model.VideoFile == null || model.ImageFile == null || model.CoverFile == null)
             {
                 return BadRequest(new { message = "Video file and image file are required." });
             }
@@ -211,14 +211,19 @@ namespace Netflix.API.Controllers
 
             string videosPath = Path.Combine(_webHostEnvironment.WebRootPath, "videos");
             string imagesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            string coversPath = Path.Combine(_webHostEnvironment.WebRootPath, "covers");
+
             Directory.CreateDirectory(videosPath);
             Directory.CreateDirectory(imagesPath);
+            Directory.CreateDirectory(coversPath);
 
             string videoFileName = Guid.NewGuid() + Path.GetExtension(model.VideoFile.FileName);
             string imageFileName = Guid.NewGuid() + Path.GetExtension(model.ImageFile.FileName);
+            string coverFileName = Guid.NewGuid() + Path.GetExtension(model.CoverFile.FileName);
 
             string videoFullPath = Path.Combine(videosPath, videoFileName);
             string imageFullPath = Path.Combine(imagesPath, imageFileName);
+            string coverFullPath =  Path.Combine(coversPath, coverFileName);
 
             using (var videoStream = new FileStream(videoFullPath, FileMode.Create))
             {
@@ -230,6 +235,10 @@ namespace Netflix.API.Controllers
                 await model.ImageFile.CopyToAsync(imageStream);
             }
 
+            using (var coverStream = new FileStream(coverFullPath, FileMode.Create)) {
+                await model.CoverFile.CopyToAsync(coverStream);
+            }
+
             var video = new Video
             {
                 Title = model.Title,
@@ -237,11 +246,11 @@ namespace Netflix.API.Controllers
                 VideoUrl = Path.Combine("videos", videoFileName).Replace("\\", "/"),
                 TrailerUrl = model.TrailerUrl,
                 ImageUrl = Path.Combine("images", imageFileName).Replace("\\", "/"),
+                CoverUrl = Path.Combine("covers",coverFileName).Replace("\\", "/"),
                 CategoryId = model.CategoryId,
                 Type = VideoType.Movie,
                 Duration = "",
                 Status = "Published",
-                ViewCount = 0,
                 TotalView = 0,
                 IsDeleted = false,
                 Ratings = new List<Rating>(),
@@ -254,7 +263,8 @@ namespace Netflix.API.Controllers
             {
                 message = "Video uploaded successfully",
                 videoUrl = $"{baseUrl}/videos/{videoFileName}",
-                imageUrl = $"{baseUrl}/images/{imageFileName}"
+                imageUrl = $"{baseUrl}/images/{imageFileName}",
+                coverUrl= $"{baseUrl}/covers/{coverFullPath}",
             });
         }
 

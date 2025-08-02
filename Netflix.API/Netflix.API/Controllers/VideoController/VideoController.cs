@@ -79,7 +79,6 @@ namespace Netflix.API.Controllers.VideoController
         {
             var video = _mapper.Map<Video>(dto);
 
-            video.ViewCount = 0;
             video.TotalView = 0;
             video.Ratings = new List<Rating>();
 

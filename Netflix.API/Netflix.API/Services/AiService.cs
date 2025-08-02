@@ -334,6 +334,7 @@ namespace Netflix.API.Services
                     v.Title,
                     v.Description,
                     v.ImageUrl,
+                    v.CoverUrl,
                     Category = v.Category.Name,
                     Rating = v.Ratings.Any() ? v.Ratings.Average(r => r.Stars) : 0,
                     RatingCount = v.Ratings.Count()
