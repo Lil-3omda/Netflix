@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
+import { PopupService } from '../../../shared/services/popup.service';
 import { environment } from '../../../../environments/environment';
 
 interface SubscriptionPlan {
@@ -204,8 +205,8 @@ interface SubscriptionPlan {
         <!-- Step 4: Payment -->
         <div class="signup-form-wrapper payment-step" *ngIf="currentStep === 4">
           <div class="payment-container">
-            <h1>Set up your payment</h1>
-            <p class="step-description">Your membership starts immediately after payment.</p>
+            <h1>{{ isPlanChange ? 'Complete Plan Change Payment' : 'Set up your payment' }}</h1>
+            <p class="step-description">{{ isPlanChange ? 'Complete your plan change payment to continue.' : 'Your membership starts immediately after payment.' }}</p>
 
             <!-- Selected Plan Summary -->
             <div class="plan-summary" *ngIf="getSelectedPlanDetails()">
@@ -297,7 +298,7 @@ interface SubscriptionPlan {
               class="start-membership-button"
               (click)="processPayment()"
               [disabled]="!paymentMethod || isLoading || isProcessingPayment">
-              <span *ngIf="!isLoading && !isProcessingPayment">Start Membership</span>
+              <span *ngIf="!isLoading && !isProcessingPayment">{{ isPlanChange ? 'Complete Payment' : 'Start Membership' }}</span>
               <span *ngIf="isProcessingPayment">Processing Payment...</span>
               <div *ngIf="isLoading" class="loading-spinner"></div>
             </button>
@@ -323,8 +324,8 @@ interface SubscriptionPlan {
                 <path d="M9 12L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <h1>Welcome to Netflix!</h1>
-            <p>Your account has been created successfully. You can now enjoy unlimited movies and TV shows!</p>
+            <h1>{{ isPlanChange ? 'Plan Changed Successfully!' : 'Welcome to Netflix!' }}</h1>
+            <p>{{ isPlanChange ? 'Your plan has been updated successfully. You can now enjoy your new features!' : 'Your account has been created successfully. You can now enjoy unlimited movies and TV shows!' }}</p>
 
             <div class="success-details">
               <div class="detail-item">
@@ -338,8 +339,8 @@ interface SubscriptionPlan {
               </div>
             </div>
 
-            <button class="start-watching-button" (click)="goToProfiles()">
-              Start Watching
+            <button class="start-watching-button" (click)="isPlanChange ? goToAccount() : goToProfiles()">
+              {{ isPlanChange ? 'Go to Account' : 'Start Watching' }}
             </button>
           </div>
         </div>
@@ -995,6 +996,8 @@ export class SignupComponent implements OnInit {
   isProcessingPayment: boolean = false;
   showPaymentModal: boolean = false;
   isDeveloperMode: boolean = false;
+  isPlanChange: boolean = false;
+  userId: string | null = null;
 
   // Error messages
   emailError: string = '';
@@ -1009,7 +1012,8 @@ export class SignupComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private popupService: PopupService
   ) {}
 
   ngOnInit() {
@@ -1023,6 +1027,14 @@ export class SignupComponent implements OnInit {
       }
       if (params['step']) {
         this.currentStep = parseInt(params['step']);
+      }
+      if (params['planId']) {
+        this.selectedPlan = parseInt(params['planId']);
+      }
+      if (params['planChange'] === 'true') {
+        // This is a plan change, not a new signup
+        this.isPlanChange = true;
+        this.userId = params['userId'];
       }
     });
 
@@ -1150,7 +1162,7 @@ export class SignupComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         // Show success message or update UI
-        alert('Verification code sent successfully!');
+                  this.popupService.showSuccess('Verification code sent successfully!', 'Code Sent');
       },
       error: (error) => {
         this.isLoading = false;
@@ -1211,7 +1223,7 @@ export class SignupComponent implements OnInit {
       console.error('Payment error:', error);
       this.isProcessingPayment = false;
       this.showPaymentModal = false;
-      alert('Payment failed. Please try again.');
+              this.popupService.showError('Payment failed. Please try again.');
     }
   }
 
@@ -1220,28 +1232,52 @@ export class SignupComponent implements OnInit {
     await new Promise(resolve => setTimeout(resolve, 3000));
 
     try {
-      // Create subscription
-      const subscriptionData = {
-        userId: user.id,
-        planId: plan.id
-      };
+      if (this.isPlanChange) {
+        // Handle plan change payment
+        const planChangeData = {
+          userId: this.userId,
+          planId: plan.id,
+          amountCents: plan.price * 100,
+          email: this.email,
+          name: this.fullName
+        };
 
-      await this.http.post(`${environment.apiUrl}/Subscription/subscribe-and-bootstrap`, subscriptionData).toPromise();
+        await this.http.post(`${environment.apiUrl}/Subscription/process-plan-change`, planChangeData).toPromise();
 
-      // Simulate payment success
-      const paymentResponse = await this.http.post(`${environment.apiUrl}/Paymob/simulate-success`, {
-        email: this.email,
-        name: this.fullName,
-        amountCents: plan.price * 100,
-        userId: user.id,
-        planId: plan.id
-      }).toPromise();
+        console.log('🔧 Developer mode plan change simulation:', planChangeData);
 
-      console.log('🔧 Developer mode payment simulation:', paymentResponse);
+        this.isProcessingPayment = false;
+        this.showPaymentModal = false;
+        
+        // Show success and redirect to account
+        this.popupService.showSuccess('Plan changed successfully!', 'Success');
+        setTimeout(() => {
+          this.router.navigate(['/account']);
+        }, 2000);
+      } else {
+        // Create new subscription
+        const subscriptionData = {
+          userId: user.id,
+          planId: plan.id
+        };
 
-      this.isProcessingPayment = false;
-      this.showPaymentModal = false;
-      this.currentStep = 5; // Success step
+        await this.http.post(`${environment.apiUrl}/Subscription/subscribe-and-bootstrap`, subscriptionData).toPromise();
+
+        // Simulate payment success
+        const paymentResponse = await this.http.post(`${environment.apiUrl}/Paymob/simulate-success`, {
+          email: this.email,
+          name: this.fullName,
+          amountCents: plan.price * 100,
+          userId: user.id,
+          planId: plan.id
+        }).toPromise();
+
+        console.log('🔧 Developer mode payment simulation:', paymentResponse);
+
+        this.isProcessingPayment = false;
+        this.showPaymentModal = false;
+        this.currentStep = 5; // Success step
+      }
 
     } catch (error) {
       console.error('Simulation error:', error);
@@ -1254,7 +1290,10 @@ export class SignupComponent implements OnInit {
       amountCents: plan.price * 100,
       email: this.email,
       name: this.fullName,
-      phone: '+201000000000' // You might want to collect this in the form
+      phone: '+201000000000', // You might want to collect this in the form
+      userId: this.isPlanChange ? this.userId : user.id,
+      planId: plan.id,
+      isPlanChange: this.isPlanChange
     };
 
     const response = await this.http.post<any>(`${environment.apiUrl}/Paymob/initiate`, paymentRequest).toPromise();
@@ -1319,6 +1358,10 @@ export class SignupComponent implements OnInit {
 
   goToProfiles() {
     this.router.navigate(['/Profile']);
+  }
+
+  goToAccount() {
+    this.router.navigate(['/account']);
   }
 
   goToLogin() {

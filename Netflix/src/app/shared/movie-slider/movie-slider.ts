@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FavoriteService } from 'src/app/pages/favorite/favoriteservice';
 import { ProfileService } from 'src/app/core/services/profile.service';
+import { PopupService } from '../services/popup.service';
 
 @Component({
   selector: 'app-movie-slider',
@@ -19,6 +20,7 @@ export class MovieSliderSectionComponent implements OnInit {
   @Input() title: string = '';
   @Input() categoryName: string = '';
   @Input() isTop10: boolean = false;
+  @Input() customMovies: any[] = [];
 
   movies: any[] = [];
   profileId: number | null = null;
@@ -29,13 +31,19 @@ export class MovieSliderSectionComponent implements OnInit {
     private http: HttpClient,
     private favoriteService: FavoriteService,
     private profileService: ProfileService,
+
+    private popupService: PopupService
   ) {}
 
   ngOnInit(): void {
     this.loadProfileId();
     
 
-    if (this.categoryName === 'Top 10') {
+    // If custom movies are provided, use them instead of fetching
+    if (this.customMovies && this.customMovies.length > 0) {
+      this.movies = this.customMovies;
+      this.loadFavorites();
+    } else if (this.categoryName === 'Top 10') {
       this.loadTop10Movies();
     } else if (this.categoryName) {
       this.loadMoviesByCategory();
@@ -138,7 +146,7 @@ export class MovieSliderSectionComponent implements OnInit {
     }
 
     if (!this.profileId) {
-      alert('Please select a profile first');
+                this.popupService.showWarning('Please select a profile first', 'Profile Required');
       return;
     }
 
@@ -153,7 +161,7 @@ export class MovieSliderSectionComponent implements OnInit {
       movie.isFavorite = !movie.isFavorite;
     } catch (err) {
       console.error('Error toggling favorite:', err);
-      alert('Failed to update favorite. Please try again.');
+                  this.popupService.showError('Failed to update favorite. Please try again.');
     } finally {
       movie.isLoading = false;
     }

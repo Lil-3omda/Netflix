@@ -20,6 +20,7 @@ using Netflix.API.Repositories.MessageRepository;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Features;
+using Netflix.API.Services.BackgroundServices;
 
 
 namespace Netflix.API
@@ -54,6 +55,10 @@ namespace Netflix.API
             builder.Services.AddScoped<IAiService, AiService>();
             builder.Services.AddHttpClient<AiService>();
             builder.Services.AddScoped<IPaymobService, PaymobService>();
+
+            // Add subscription notification services
+            builder.Services.AddScoped<ISubscriptionNotificationService, SubscriptionNotificationService>();
+            builder.Services.AddHostedService<SubscriptionExpirationService>();
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>

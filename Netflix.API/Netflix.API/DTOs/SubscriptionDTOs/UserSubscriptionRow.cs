@@ -1,4 +1,4 @@
-﻿namespace Netflix.API.DTOs.SubscriptionDTOs
+namespace Netflix.API.DTOs.SubscriptionDTOs
 {
     public class UserSubscriptionRow
     {
@@ -14,6 +14,7 @@
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
         public int DaysRemaining { get; set; }
+        public string Status { get; set; }
     }
 
 }
