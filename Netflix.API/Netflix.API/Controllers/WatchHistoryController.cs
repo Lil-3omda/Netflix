@@ -28,7 +28,8 @@ namespace Netflix.API.Controllers
                 VideoId = h.VideoId,
                 Title = h.Video.Title,
                 WatchedAt = h.WatchedAt,
-                ThumbnailPath = h.Video.ImageUrl 
+                ImagerUrl = h.Video.ImageUrl,
+                CoverUrl= h.Video.CoverUrl
             });
 
             return Ok(result);

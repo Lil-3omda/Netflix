@@ -386,6 +386,7 @@ namespace Netflix.API.Services
                     v.Title,
                     v.Description,
                     v.ImageUrl,
+                    v.CoverUrl,
                     Category = v.Category.Name,
                     TotalViews = v.TotalView,
                     IsFavorite = v.Favorites.Any(f => f.Profile.UserId == userId)

@@ -16,7 +16,8 @@
         public string TrailerUrl { get; set; }  
         public string ImageUrl { get; set; }    
 
-        public int ViewCount { get; set; }
+        public string CoverUrl { get; set; }
+
         public int TotalView { get; set; }
 
         public bool IsDeleted { get; set; }
