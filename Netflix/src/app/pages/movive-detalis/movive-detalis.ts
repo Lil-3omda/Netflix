@@ -2,7 +2,7 @@ import { ProfileService } from './../../core/services/profile.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { Navbar } from '../../layout/navbar/navbar';
 import { Moviedetails } from '../../core/services/moviedetails';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { WatchHistoryService } from '../../core/services/watch-history.service';
@@ -10,7 +10,7 @@ import { WatchHistoryService } from '../../core/services/watch-history.service';
 
 @Component({
   selector: 'app-movive-detalis',
-  imports: [Navbar, CommonModule],
+  imports: [Navbar, CommonModule, RouterLink],
   templateUrl: './movive-detalis.html',
   styleUrl: './movive-detalis.css'
 })
@@ -25,8 +25,9 @@ export class MoviveDetalis implements OnInit {
   movie: any;
   safeTrailerUrl!: SafeResourceUrl;
   safeVideoUrl!: SafeResourceUrl;
-  showTrailer: boolean = true;
+  showTrailer: boolean = false;
   activeTab: string = 'details';
+  
 
   // constructor(private sanitizer: DomSanitizer,   private profileService: ProfileService,) {}
 
@@ -115,5 +116,9 @@ export class MoviveDetalis implements OnInit {
     } else {
       this.showTrailer = true;
     }
+  }
+
+  onShowTrailer() {
+    this.showTrailer = !this.showTrailer;
   }
 }
