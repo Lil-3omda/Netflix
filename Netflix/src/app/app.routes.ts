@@ -178,6 +178,10 @@ export const routes: Routes = [
     // canActivate: [AuthGuard, SubscriptionGuard]
   },
   {
+    path:'watchHistory',
+    loadComponent:()=> import('./pages/watch-history/watch-history').then(m => m.WatchHistory)
+  },
+  {
     path: '**',
     redirectTo: '/404'
 

@@ -1,5 +1,7 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Netflix.API.Data;
 using Netflix.API.DTOs;
 using Netflix.API.Models;
 using Netflix.API.Repositories.Interfaces;
@@ -12,10 +14,12 @@ namespace Netflix.API.Controllers
     public class WatchHistoryController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly ApplicationDbContext dbContext;
 
-        public WatchHistoryController(IUnitOfWork unitOfWork)
+        public WatchHistoryController(IUnitOfWork unitOfWork, ApplicationDbContext dbContext)
         {
             this.unitOfWork = unitOfWork;
+            this.dbContext = dbContext;
         }
 
         [HttpGet("Profile/{profileId}")]
@@ -54,6 +58,15 @@ namespace Netflix.API.Controllers
                 VideoId = dto.VideoId,
                 WatchedAt = dto.WatchedAt
             };
+
+
+            if (await unitOfWork.WatchHistories.IsWatchedAsync(dto.ProfileId, dto.VideoId)) {
+                return Ok(new { message = "already Watched" });
+            }
+
+            var video = dbContext.Videos.FirstOrDefault(v=>v.Id==dto.VideoId);
+            video.TotalView = video.TotalView+1;
+            dbContext.SaveChanges();
 
             await unitOfWork.WatchHistories.AddAsync(watchHistory);
             await unitOfWork.CompleteAsync();

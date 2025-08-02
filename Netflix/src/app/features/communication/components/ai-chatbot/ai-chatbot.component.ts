@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +9,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-ai-chatbot',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="ai-chatbot-container" [class.open]="isOpen">
       <button class="chatbot-toggle" (click)="toggleChatbot()" [class.pulsing]="hasNewRecommendations">
@@ -145,9 +145,9 @@ import { Subject, takeUntil } from 'rxjs';
           <div class="recommendations-section" *ngIf="currentRecommendations.length > 0">
             <h5>🎬 Recommended for You</h5>
             <div class="recommendations-grid">
-              <div class="recommendation-card" *ngFor="let rec of currentRecommendations">
-                <div class="movie-poster">
-                  <img [src]="rec.imageUrl || getDefaultPoster()" [alt]="rec.title" />
+              <div class="recommendation-card" *ngFor="let rec of currentRecommendations" [routerLink]="['/moviedetails', rec.id]">
+                <div class="movie-poster" >
+                  <img [src]="'https://localhost:7140/'+rec.imageUrl || getDefaultPoster()" [alt]="rec.title"  />
                   <div class="movie-overlay">
                     <button class="play-btn">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

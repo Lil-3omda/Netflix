@@ -28,7 +28,8 @@ export class AddMovie {
       categoryId: ['', Validators.required],
       videoFile: [null, Validators.required],
       imageFile: [null, Validators.required],
-      coverFile: [null, Validators.required]
+      coverFile:[null, Validators.required]
+
     });
 
     this.loadCategories();

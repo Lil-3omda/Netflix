@@ -31,11 +31,13 @@ export class MovieSliderSectionComponent implements OnInit {
     private http: HttpClient,
     private favoriteService: FavoriteService,
     private profileService: ProfileService,
+
     private popupService: PopupService
   ) {}
 
   ngOnInit(): void {
     this.loadProfileId();
+    
 
     // If custom movies are provided, use them instead of fetching
     if (this.customMovies && this.customMovies.length > 0) {
@@ -102,6 +104,7 @@ export class MovieSliderSectionComponent implements OnInit {
         const favIds = favs.map(f => f.videoId);
         this.movies.forEach(movie => {
           movie.isFavorite = favIds.includes(movie.id);
+          console.log(favIds)
         });
       },
       error: (err) => console.error('Error loading favorites:', err)
