@@ -1,39 +1,80 @@
 <div class="movie-slider-section py-5" style="background-color: #1a1a1a; position: relative;">
   <div class="container">
-    <h2 class="text-white mb-4">{{ title }}</h2>
+    <!-- Loading indicator for profile -->
+    <div *ngIf="isLoadingProfile" class="text-center py-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading profile...</span>
+      </div>
+    </div>
 
-    
-    <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
-    <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
+    <!-- Main content when profile is loaded -->
+    <div *ngIf="!isLoadingProfile">
+      <h2 class="text-white mb-4">{{ title }}</h2>
 
-    
-    <div class="d-flex overflow-auto scrollbar-hide" #slider style="scroll-behavior: smooth;">
-      <div
-        class="slide-item d-flex align-items-center flex-shrink-0"
-        [ngClass]="showRank ? 'with-rank me-4' : 'no-rank me-2'"
-        *ngFor="let movie of movies; let i = index"
-        [style.minWidth.px]="showRank ? 250 : 180"
-      >
-       
-        <div *ngIf="showRank && i<9" class="rank-number">
-          {{ i + 1 }}
-        </div>
-        <div *ngIf="showRank && i==9" class="ten-number">
-          {{ i + 1 }}
-        </div>
+      <!-- Warning when no profile is selected -->
+      <div *ngIf="!profileId" class="alert alert-warning mb-4">
+        Please select a profile to manage favorites
+      </div>
 
-        
-        <div class="movie-card" >
-          <div class="movie-image">
-            <img [src]="'https://localhost:7140/'+movie.imageUrl" class="img-fluid rounded" alt="{{ movie.title }}" />
+      <!-- Slider controls -->
+      <button class="slider-arrow left-arrow" (click)="scrollLeft()">&#8249;</button>
+      <button class="slider-arrow right-arrow" (click)="scrollRight()">&#8250;</button>
+
+      <!-- Movie slider -->
+      <div class="d-flex overflow-auto scrollbar-hide px-5" #slider style="scroll-behavior: smooth;">
+        <div
+          class="slide-item d-flex align-items-center flex-shrink-0"
+          [ngClass]="showRank ? 'with-rank me-4' : 'no-rank me-2'"
+          *ngFor="let movie of movies; let i = index"
+          [style.minWidth.px]="showRank ? 250 : 180"
+        >
+          <!-- Rank indicators -->
+          <div *ngIf="showRank && i<9" class="rank-number">
+            {{ i + 1 }}
           </div>
-          <div class="movie-title">{{ movie.title }}</div>
-          <div class="extra-info text-center mt-2">
-            <div class="d-flex justify-content-center gap-3 mb-2">
-              <a [routerLink]="['/moviedetails', movie.id]">
-              <i class="fas fa-play-circle fs-3"></i>
-              </a>
-              <i class="fas fa-heart fs-3 d-none"></i>
+          <div *ngIf="showRank && i==9" class="ten-number">
+            {{ i + 1 }}
+          </div>
+
+          <!-- Movie card -->
+          <div class="movie-card">
+            <!-- Clickable image for movie details -->
+            <div class="movie-image" [routerLink]="['/moviedetails', movie.id]">
+              <img
+                [src]="'https://localhost:7140/' + movie.imageUrl"
+                class="img-fluid rounded"
+                alt="{{ movie.title }}"
+                (error)="movie.imageUrl = 'assets/default-movie.jpg'"
+              />
+            </div>
+
+            <div class="addition">
+              <!-- Clickable title for movie details -->
+              <div class="movie-title" [routerLink]="['/moviedetails', movie.id]">
+                {{ movie.title }}
+              </div>
+
+              <!-- Action buttons -->
+              <div class="extra-info text-center mt-2">
+                <div class="d-flex justify-content-center gap-3 mb-2">
+                  <!-- Play button -->
+                  <a class="play-button">
+                    <i class="fas fa-play-circle fs-3"></i>
+                  </a>
+
+                  <!-- Favorite heart with loading state -->
+                  <div class="heart-container"
+                       (click)="toggleFavorite(movie, $event)"
+                       [title]="movie.isFavorite ? 'Remove from favorites' : 'Add to favorites'">
+                    <i class="fas fs-3"
+                       [class.fa-heart]="!movie.isLoading"
+                       [class.fa-spinner]="movie.isLoading"
+                       [class.fa-pulse]="movie.isLoading"
+                       [class.text-danger]="movie.isFavorite && !movie.isLoading">
+                    </i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -41,5 +82,3 @@
     </div>
   </div>
 </div>
-
-

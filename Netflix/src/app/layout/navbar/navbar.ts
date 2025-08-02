@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { MovieCategory } from '../../core/services/movie-category';
+import { CommonModule } from '@angular/common';
+import { ProfileService, Profile } from '../../core/services/profile.service';
+
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,FormsModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
@@ -64,15 +67,29 @@ export class Navbar implements OnInit {
   isAuthenticated: boolean = false;
   currentUser: any = null;
 
+  currentProfile: Profile | null = null;
+  userProfiles: Profile[] = [];
+  showProfileDropdown: boolean = false;
+
+
+  searchTerm: string = '';
+  showSearch: boolean = false;
+  movies: any[] = []; 
+  filteredMovies: any[] = []; 
+  hovering = false;
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private movieService: MovieCategory,
+    private profileService: ProfileService
   ) {}
 
   ngOnInit(): void {
     this.fetchCategories();
     this.checkAuthStatus();
+
+     this.loadMovies();
 
     // Subscribe to auth status changes
     this.authService.isAuthenticated$.subscribe(isAuth => {
@@ -81,6 +98,19 @@ export class Navbar implements OnInit {
 
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
+      if (user && user.id) {
+        this.profileService.loadUserProfiles(user.id);
+      }
+    });
+
+    // Subscribe to current profile changes
+    this.profileService.currentProfile$.subscribe(profile => {
+      this.currentProfile = profile;
+    });
+
+    // Subscribe to user profiles
+    this.profileService.profiles$.subscribe(profiles => {
+      this.userProfiles = profiles;
     });
   }
 
@@ -116,6 +146,7 @@ export class Navbar implements OnInit {
     localStorage.removeItem('netflix_token');
     localStorage.removeItem('netflix_user');
     localStorage.removeItem('userId');
+    localStorage.removeItem('profileId');
 
     // Clear any other Netflix-related localStorage items
     Object.keys(localStorage).forEach(key => {
@@ -126,6 +157,9 @@ export class Navbar implements OnInit {
 
     // Use AuthService logout method
     this.authService.logout();
+    
+    // Clear profile service
+    this.profileService.clearCurrentProfile();
 
     // Navigate to home page
     this.router.navigate(['/']);
@@ -133,8 +167,44 @@ export class Navbar implements OnInit {
 
   navigateToProfile(): void {
     if (this.isAuthenticated) {
-      this.router.navigate(['/Profile']);
+      // If no current profile is selected, go to profile selection
+      if (!this.currentProfile) {
+        this.router.navigate(['/Profile']);
+      } else {
+        // If profile is selected, show profile dropdown
+        this.showProfileDropdown = !this.showProfileDropdown;
+      }
     }
+  }
+
+  selectProfile(profile: Profile): void {
+    this.profileService.setCurrentProfile(profile);
+    this.showProfileDropdown = false;
+    // Optionally reload the current page to reflect profile change
+    window.location.reload();
+  }
+
+  switchProfile(): void {
+    this.router.navigate(['/Profile']);
+    this.showProfileDropdown = false;
+  }
+
+  getProfileImage(name: string): string {
+    const avatars = [
+      '/assets/images/netflix2.jpg',
+      '/assets/images/netflix3.jpg',
+      '/assets/images/netflix4.jpg',
+      '/assets/images/Netflix-avatar.png',
+      'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'
+    ];
+
+    // Use name hash to consistently assign avatar
+    const hash = name.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+
+    return avatars[Math.abs(hash) % avatars.length];
   }
 
   navigateToLogin(): void {
@@ -144,4 +214,76 @@ export class Navbar implements OnInit {
   navigateToSignup(): void {
     this.router.navigate(['/signup']);
   }
+
+toggleSearch() {
+  this.showSearch = !this.showSearch;
+
+  if (!this.showSearch) {
+    this.searchTerm = '';
+    this.filteredMovies = [];
+  }
 }
+
+loadMovies() {
+  this.movieService.getAllMovies().subscribe({
+    next: data => {
+      this.movies = data;
+       console.log('Movies loaded:', this.movies);
+       
+    },
+    error: err => {
+      console.error('Error loading movies:', err);
+      this.movies = [];
+    }
+  });
+}
+
+onSearch() {
+  const term = this.searchTerm.toLowerCase();
+  this.filteredMovies = this.movies.filter(movie =>
+    movie.title.toLowerCase().includes(term)
+  );
+}
+
+goToMovie(id: number) {
+  this.router.navigate(['/moviedetails', id]);
+  this.showSearch = false;
+  this.searchTerm = '';
+  this.filteredMovies = [];
+}
+
+startVoiceSearch() {
+  const recognition = new (window as any).webkitSpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+
+  recognition.onresult = (event: any) => {
+    const query = event.results[0][0].transcript.toLowerCase();
+    console.log("Recognized voice:", query);
+    this.filterMovies(query);
+  };
+
+  recognition.onerror = (event: any) => {
+    console.error('Speech recognition error:', event.error);
+  };
+
+  recognition.start();
+
+  
+  if (!this.showSearch) {
+    this.searchTerm = '';
+    this.filteredMovies = [];
+  }
+}
+
+filterMovies(query: string) {
+  
+  this.filteredMovies = this.movies.filter(movie =>
+    movie.title.toLowerCase().includes(query) ||
+    movie.genre?.toLowerCase().includes(query) ||
+    movie.description?.toLowerCase().includes(query)
+  );
+}
+
+}
+

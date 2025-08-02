@@ -817,6 +817,26 @@ export class LandingComponent {
 
   constructor(private router: Router, private authService: AuthService) {}
 
+  ngOnInit() {
+    // Check if user is already authenticated and redirect accordingly
+    const isAuthenticated = this.authService.isAuthenticated();
+    if (isAuthenticated) {
+      const user = this.authService.getCurrentUser();
+      if (user?.isAdmin) {
+        this.router.navigate(['/admin/dashboard']);
+        return;
+      } else {
+        const profileId = localStorage.getItem('profileId');
+        if (profileId) {
+          this.router.navigate(['/Home']);
+        } else {
+          this.router.navigate(['/Profile']);
+        }
+        return;
+      }
+    }
+  }
+
   goToLogin() {
     this.router.navigate(['/login']);
   }

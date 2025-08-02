@@ -83,7 +83,7 @@ namespace Netflix.API.Services
 
         public async Task<List<string>> GetCategoryNamesAsync()
         {
-            return await context.Categories
+            return await context.Categories.Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
                 .ToListAsync();
         }
