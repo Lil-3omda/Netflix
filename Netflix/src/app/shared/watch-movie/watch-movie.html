@@ -1,4 +1,14 @@
-<div *ngIf="movie">
+<div *ngIf="movie" class="video-container">
+  <div class="video-controls">
+    <button
+      class="back-button"
+      (click)="goBack()"
+      (mouseenter)="isHovered = true"
+      (mouseleave)="isHovered = false"
+      [ngClass]="{'hovered': isHovered}">
+      ← Back
+    </button>
+  </div>
   <video class="w-100 rounded-4 shadow" style="height: 100vh;" controls autoplay>
     <source [attr.src]="'https://localhost:7140/' + movie.videoUrl" type="video/mp4" />
     Your browser does not support the video tag.
