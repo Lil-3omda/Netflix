@@ -100,12 +100,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <a href="#">Cookie Preferences</a>
             <a href="#">Corporate Information</a>
           </div>
-          <div class="language-selector">
-            <select class="language-select">
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-            </select>
-          </div>
+          
         </div>
       </footer>
 

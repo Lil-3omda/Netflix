@@ -29,10 +29,7 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
             <div class="header-actions">
               <div class="language-selector">
-                <select class="language-select">
-                  <option value="en">🌐 English</option>
-                  <option value="ar">🌐 العربية</option>
-                </select>
+          
               </div>
               <button class="signin-btn" (click)="goToLogin()">Sign In</button>
             </div>
@@ -220,10 +217,7 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
           </div>
           <div class="footer-language">
-            <select class="language-select">
-              <option value="en">🌐 English</option>
-              <option value="ar">🌐 العربية</option>
-            </select>
+         
           </div>
           <p class="footer-country">Netflix Egypt</p>
         </div>
