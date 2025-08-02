@@ -9,6 +9,7 @@ import { SystemSettings } from '../system-settings/system-settings';
 import { UserManagement } from '../user-management/user-management';
 import { Settings } from '../settings';
 import { Tab } from '../settings';
+import { PopupService } from '../../../../shared/services/popup.service';
 @Component({
   selector: 'app-main-netflix-admain-settings',
   imports: [CommonModule,FormsModule,GeneralSettings,ContentManagement,NotificationSettings,SecuritySettings,SystemSettings,UserManagement],
@@ -49,6 +50,8 @@ export class MainNetflixAdmainSettings {
     { id: 'system', label: 'System', icon: 'globe' }
   ];
 
+  constructor(private popupService: PopupService) {}
+
   ngOnInit(): void {
     // Load settings from API
     this.loadSettings();
@@ -66,6 +69,6 @@ export class MainNetflixAdmainSettings {
   handleSave(): void {
     // TODO: Implement API call to save settings
     console.log('Settings to save:', this.settings);
-    alert('Settings saved successfully!');
+            this.popupService.showSuccess('Settings saved successfully!', 'Settings Updated');
   }
 }

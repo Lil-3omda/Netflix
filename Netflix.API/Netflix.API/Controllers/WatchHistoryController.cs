@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.DTOs;
 using Netflix.API.Models;
@@ -42,7 +42,6 @@ namespace Netflix.API.Controllers
             return Ok(alreadyWatched);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AddToHistory([FromBody] AddWatchHistoryDTO dto)
         {
@@ -62,6 +61,46 @@ namespace Netflix.API.Controllers
             return Ok(new { message = "Watch history added successfully." });
         }
 
+        [HttpGet("PersonalizedCategories/{userId}")]
+        public async Task<IActionResult> GetPersonalizedCategories(string userId)
+        {
+            var watchedCategories = await unitOfWork.WatchHistories.GetWatchedCategoriesByUserIdAsync(userId);
+            return Ok(watchedCategories);
+        }
 
+        [HttpGet("PersonalizedHomepage/{userId}")]
+        public async Task<IActionResult> GetPersonalizedHomepage(string userId)
+        {
+            var watchedCategories = await unitOfWork.WatchHistories.GetWatchedCategoriesByUserIdAsync(userId);
+            
+            var personalizedSections = new List<object>();
+
+            foreach (var category in watchedCategories)
+            {
+                var movies = await unitOfWork.WatchHistories.GetMoviesByCategoryOrderedByViewsAsync(category, 10);
+                
+                if (movies.Any())
+                {
+                    personalizedSections.Add(new
+                    {
+                        name = category,
+                        videos = movies.Select(m => new
+                        {
+                            id = m.Id,
+                            title = m.Title,
+                            description = m.Description,
+                            imageUrl = m.ImageUrl,
+                            coverUrl = m.CoverUrl,
+                            duration = m.Duration,
+                            totalView = m.TotalView,
+                            trailerUrl = m.TrailerUrl,
+                            categoryName = m.Category?.Name
+                        })
+                    });
+                }
+            }
+
+            return Ok(personalizedSections);
+        }
     }
 }

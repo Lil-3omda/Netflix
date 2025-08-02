@@ -73,12 +73,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard, SubscriptionGuard]
   },
 
-  // Payment route
-  {
-    path: 'payment',
-    loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
-    canActivate: [AuthGuard]
-  },
+
 
   // Public information pages
   {

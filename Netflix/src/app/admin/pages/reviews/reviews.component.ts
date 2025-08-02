@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminService } from '../../services/admin.service';
 import { Review, ReviewStatistics, Stars } from '../../models/admin.interfaces';
+import { PopupService } from '../../../shared/services/popup.service';
 
 @Component({
   selector: 'app-reviews',
@@ -202,7 +203,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
     ratingDistribution: {} as Partial<Record<Stars, number>>
   };
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private popupService: PopupService) {}
 
   get statsCards() {
     return [
@@ -235,7 +236,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: () => {
-          alert('Failed to load reviews');
+          this.popupService.showError('Failed to load reviews');
           this.isLoading = false;
         }
       });
@@ -279,24 +280,29 @@ export class ReviewsComponent implements OnInit, OnDestroy {
   }
 
   deleteReview(review: Review): void {
-    if (confirm(`Delete review by ${review.profileName}?`)) {
-      this.isLoading = true;
-      this.adminService.deleteReview(review.id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            this.reviews = this.reviews.filter(r => r.id !== review.id);
-            this.filterReviews();
-            this.loadStatistics();
-            alert('Review deleted.');
-            this.isLoading = false;
-          },
-          error: () => {
-            alert('Error deleting review.');
-            this.isLoading = false;
-          }
-        });
-    }
+    this.popupService.showConfirm(
+      `Are you sure you want to delete the review by ${review.profileName}?`,
+      () => {
+        this.isLoading = true;
+        this.adminService.deleteReview(review.id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.reviews = this.reviews.filter(r => r.id !== review.id);
+              this.filterReviews();
+              this.loadStatistics();
+              this.popupService.showSuccess('Review deleted successfully', 'Review Deleted');
+              this.isLoading = false;
+            },
+            error: () => {
+              this.popupService.showError('Error deleting review.');
+              this.isLoading = false;
+            }
+          });
+      },
+      undefined,
+      'Delete Review'
+    );
   }
 
   loadFlaggedReviews(): void {
@@ -311,7 +317,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: () => {
-          alert('Error loading flagged reviews');
+          this.popupService.showError('Error loading flagged reviews');
           this.isLoading = false;
         }
       });
@@ -338,11 +344,13 @@ export class ReviewsComponent implements OnInit, OnDestroy {
   }
 
   viewFullReview(review: Review): void {
-    alert(`User: ${review.profileName}
+    const reviewDetails = `User: ${review.profileName}
 Video: ${review.videoTitle || 'Unknown'} (ID: ${review.videoId})
 Rating: ${review.rating}/5
 Date: ${this.formatDate(review.createdAt)}
-Comment: ${review.comment}`);
+Comment: ${review.comment}`;
+
+    this.popupService.showInfo(reviewDetails, 'Review Details');
   }
 
   trackByReviewId(index: number, review: Review): number {

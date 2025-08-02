@@ -27,7 +27,8 @@ export class AddMovie {
       trailerUrl: ['', Validators.required],
       categoryId: ['', Validators.required],
       videoFile: [null, Validators.required],
-      imageFile: [null, Validators.required]
+      imageFile: [null, Validators.required],
+      coverFile: [null, Validators.required]
     });
 
     this.loadCategories();
@@ -61,6 +62,7 @@ onSubmit(): void {
     formData.append('CategoryId', this.movieForm.get('categoryId')?.value);
     formData.append('VideoFile', this.movieForm.get('videoFile')?.value);
     formData.append('ImageFile', this.movieForm.get('imageFile')?.value);
+    formData.append('CoverFile', this.movieForm.get('coverFile')?.value);
     this.uploading = true;
     this.dashboardServices.uploadMovie(formData).subscribe({
       next: (event) => {
