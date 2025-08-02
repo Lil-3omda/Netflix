@@ -8,6 +8,8 @@ import { filter } from 'rxjs/operators';
 
 import { AiChatbotComponent } from './features/communication/components/ai-chatbot/ai-chatbot.component';
 import { NetflixUser } from './admin/pages/netflix-user/netflix-user';
+import { UserManagement } from './admin/pages/settings/user-management/user-management';
+import { MainNetflixAdmainSettings } from './admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings';
 
 @Component({
   selector: 'app-root',
