@@ -121,3 +121,4 @@ export interface ReviewStatistics {
   averageRating: number;
   ratingDistribution: Partial<Record<Stars, number>>;
 }
+

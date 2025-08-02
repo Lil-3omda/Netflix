@@ -385,7 +385,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       title: 'Admin Confirmation Required',
       message: `You are about to grant admin privileges to ${user.name}. This action will give them full administrative access to the Netflix platform.\n\nPlease enter your admin password to confirm this action.`,
       onConfirm: (password: string) => {
-        this.adminService.makeUserAdmin(user.id.toString()).subscribe({
+        this.adminService.makeUserAdmin(user.id).subscribe({
           next: (response) => {
             this.popupService.showSuccess(`${user.name} has been successfully promoted to admin.`, 'Admin Promotion Successful');
             this.loadUsers(); // Reload users list
@@ -407,7 +407,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.popupService.showConfirm(
       `Are you sure you want to remove admin role from ${user.name}? This will revoke all administrative privileges.`,
       () => {
-        this.adminService.removeAdminRole(user.id.toString()).subscribe({
+        this.adminService.removeAdminRole(user.id).subscribe({
           next: (response) => {
             this.popupService.showSuccess(`Admin role removed from ${user.name} successfully`, 'Admin Role Removed');
             this.loadUsers(); // Reload users list
