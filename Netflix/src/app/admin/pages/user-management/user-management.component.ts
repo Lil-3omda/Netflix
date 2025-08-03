@@ -6,6 +6,7 @@ import { AdminService } from '../../services/admin.service';
 import { User } from '../../models/admin.interfaces';
 import { PopupService } from '../../../shared/services/popup.service';
 import { PasswordConfirmService } from '../../../shared/services/password-confirm.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-user-management',
@@ -147,24 +148,29 @@ import { PasswordConfirmService } from '../../../shared/services/password-confir
                 <td>{{ formatDate(user.joinDate) }}</td>
                 <td class="text-end">
                   <div class="d-flex justify-content-end gap-2">
-
-                    <button class="btn btn-sm btn-warning" (click)="makeUserAdmin(user)" *ngIf="user.role !== 'Admin'" title="Make Admin">
+                    <!-- Show "Make Admin" only for non-admin users -->
+                    <button class="btn btn-sm btn-warning"
+                            (click)="makeUserAdmin(user)"
+                            *ngIf="user.role !== 'Admin' && !user.isAdmin"
+                            title="Make Admin">
                       <i class="bi bi-shield-check"></i>
                     </button>
 
-                    <button class="btn btn-sm btn-secondary" (click)="removeAdminRole(user)" *ngIf="user.role === 'Admin'" title="Remove Admin">
+                    <!-- Show "Remove Admin" only for admin users -->
+                    <button class="btn btn-sm btn-secondary"
+                            (click)="removeAdminRole(user)"
+                            *ngIf="user.role !== 'Admin' || user.isAdmin"
+                            title="Remove Admin">
                       <i class="bi bi-shield-x"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user)" title="Delete User">
-                      <i class="bi bi-trash"></i>
-                    </button>
 
-                    <!-- <button class="btn btn-sm"
-                            [ngClass]="{'btn-danger': user.status === 'Active', 'btn-success': user.status !== 'Active'}"
-                            (click)="toggleUserStatus(user)"
-                            [title]="user.status === 'Active' ? 'Suspend User' : 'Activate User'">
-                      <i class="bi" [ngClass]="{'bi-x-lg': user.status === 'Active', 'bi-check-lg': user.status !== 'Active'}"></i>
-                    </button> -->
+                    <!-- Delete button (show for all except current user) -->
+                    <button class="btn btn-sm btn-outline-danger"
+                          (click)="deleteUser(user)"
+                          *ngIf="!isCurrentUser(user.id)"
+                          title="Delete User">
+                    <i class="bi bi-trash"></i>
+                  </button>
                   </div>
                 </td>
               </tr>
@@ -303,7 +309,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     private adminService: AdminService,
     private fb: FormBuilder,
     private popupService: PopupService,
-    private passwordConfirmService: PasswordConfirmService
+    private passwordConfirmService: PasswordConfirmService,
+    private authService: AuthService
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -367,6 +374,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   filterUsers(): void {
     this.currentPage = 1; // Reset to first page when filtering
     this.loadUsers();
+  }
+
+  isCurrentUser(userId: string): boolean {
+    const currentUserId = this.authService.getCurrentUserId();
+    return currentUserId ? userId === currentUserId : false;
   }
 
   nextPage(): void {
