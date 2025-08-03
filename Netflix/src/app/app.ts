@@ -20,7 +20,7 @@ import { ProfileService } from './core/services/profile.service';
     RouterOutlet,
     RouterModule,
     CommonModule,
-    AiChatbotComponent
+    AiChatbotComponent,UserManagement
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
