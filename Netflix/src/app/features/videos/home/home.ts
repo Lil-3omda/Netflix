@@ -9,6 +9,7 @@ import { Category } from "../../../shared/category/category";
 import { HomePageServices } from '../../../core/services/home-page-services';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { PopupService } from '../../../shared/services/popup.service';
 
 @Component({
   selector: 'app-home',
@@ -24,12 +25,19 @@ export class Home  {
 
 top10Movies: any[] = [];
 data: any[] = [];
+personalizedData: any[] = [];
+subscriptionNotification: any = null;
   showTrailer = false;
     heroMovie: any; // أول فيلم من top 10
 
   sanitizedTrailerUrl: SafeResourceUrl = '';
-constructor(private movieService: MovieCategory,     private router: Router,
- private sanitizer: DomSanitizer, private homeservices:HomePageServices) {}
+constructor(
+  private movieService: MovieCategory, 
+  private router: Router,
+  private sanitizer: DomSanitizer, 
+  private homeservices: HomePageServices,
+  private popupService: PopupService
+) {}
 
 showTrailerNow(): void {
   this.showTrailer = true;
@@ -48,7 +56,8 @@ showTrailerNow(): void {
         console.error('Error fetching top 10:', err);
       }
     });
-    this.loadCategories();
+    this.loadPersonalizedCategories();
+    this.checkSubscriptionExpiration();
   }
 setTrailerUrl(url: string): void {
   if (!url) return;
@@ -79,24 +88,93 @@ scrollRight() {
   this.slider.nativeElement.scrollBy({ left: 300, behavior: 'smooth' });
 }
 
-
-
-  loadCategories() {
-    this.homeservices.getCategories().subscribe({
-      next:data=>{
-        this.data = data;
-        console.log('Categories loaded:', this.data);
+checkSubscriptionExpiration() {
+  const userData = localStorage.getItem('netflix_user');
+  if (userData) {
+    const user = JSON.parse(userData);
+    const userId = user.id;
+    
+    this.homeservices.getSubscriptionExpirationStatus(userId).subscribe({
+      next: (response: any) => {
+        if (response.showNotification) {
+          this.subscriptionNotification = response;
+          this.showSubscriptionPopup(response);
+        }
       },
-      error: err => {
-        console.error('Error loading categories:', err);
+      error: (err: any) => {
+        console.error('Error checking subscription expiration:', err);
       }
-    })
-
+    });
   }
+}
 
+private showSubscriptionPopup(notification: any) {
+  const title = notification.isExpired ? 'Subscription Expired' : 'Subscription Expiring Soon';
+  const message = notification.isExpired 
+    ? `Your ${notification.planName} subscription has expired. Your access has been suspended. Renew your subscription to continue watching.`
+    : `Your ${notification.planName} subscription expires in ${notification.daysUntilExpiration} day(s). Don't miss out on your favorite shows and movies! Renew now to continue enjoying unlimited streaming.`;
+  
+  this.popupService.showConfirm(
+    message,
+    () => {
+      this.renewSubscription();
+    },
+    () => {
+      // User dismissed the popup
+      console.log('Subscription popup dismissed');
+    },
+    title,
+    'Renew Now',
+    'Dismiss'
+  );
+}
 
+renewSubscription() {
+  this.router.navigate(['/signup'], {
+    queryParams: { step: 4, renewal: true }
+  });
+}
 
+loadPersonalizedCategories() {
+  const userData = localStorage.getItem('netflix_user');
+  if (userData) {
+    const user = JSON.parse(userData);
+    const userId = user.id;
+    
+    // First try to get personalized categories based on watch history
+    this.homeservices.getPersonalizedHomepage(userId).subscribe({
+      next: (personalizedData: any) => {
+        if (personalizedData && personalizedData.length > 0) {
+          this.personalizedData = personalizedData;
+          console.log('Personalized categories loaded:', this.personalizedData);
+        } else {
+          // Fall back to default categories if no watch history
+          this.loadDefaultCategories();
+        }
+      },
+      error: (err: any) => {
+        console.error('Error loading personalized categories:', err);
+        // Fall back to default categories on error
+        this.loadDefaultCategories();
+      }
+    });
+  } else {
+    // Fall back to default categories if no user data
+    this.loadDefaultCategories();
+  }
+}
 
+loadDefaultCategories() {
+  this.homeservices.getCategories().subscribe({
+    next: data => {
+      this.data = data;
+      console.log('Default categories loaded:', this.data);
+    },
+    error: err => {
+      console.error('Error loading default categories:', err);
+    }
+  });
+}
 
   rating = 9.3;
   isModalOpen:boolean = false;

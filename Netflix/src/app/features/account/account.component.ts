@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth.service';
+import { PopupService } from '../../shared/services/popup.service';
 
 interface UserData {
   id: string;
@@ -13,14 +14,14 @@ interface UserData {
   isEmailVerified: boolean;
 }
 
-interface SubscriptionData {
-  planName: string;
-  price: number;
-  maxProfiles: number;
-  currentProfiles: number;
-  nextBillingDate: string;
-  status: string;
-}
+// interface SubscriptionData {
+//   planName: string;
+//   price: number;
+//   maxProfiles: number;
+//   currentProfiles: number;
+//   nextBillingDate: string;
+//   status: string;
+// }
 
 @Component({
   selector: 'app-account',
@@ -59,12 +60,12 @@ interface SubscriptionData {
             (click)="setActiveTab('profile')">
             Profile & Security
           </button>
-          <button
+          <!-- <button
             class="tab-btn"
             [class.active]="activeTab === 'subscription'"
             (click)="setActiveTab('subscription')">
             Plan & Billing
-          </button>
+          </button> -->
         </div>
 
         <!-- Profile & Security Tab -->
@@ -138,7 +139,7 @@ interface SubscriptionData {
         </div>
 
         <!-- Plan & Billing Tab -->
-        <div class="tab-content" *ngIf="activeTab === 'subscription'">
+        <!-- <div class="tab-content" *ngIf="activeTab === 'subscription'">
           <div class="section">
             <h2>Current Plan</h2>
             <div class="section" *ngIf="!subscriptionData">
@@ -163,7 +164,7 @@ interface SubscriptionData {
             </div>
           </div>
 
-          <!-- Available Plans -->
+
           <div class="section" *ngIf="showChangePlan">
             <h2>Choose a Plan</h2>
             <div class="plans-grid">
@@ -198,7 +199,7 @@ interface SubscriptionData {
         </div>
       </div>
 
-      <!-- Cancel Subscription Modal -->
+
       <div class="modal-overlay" *ngIf="showCancelPlan" (click)="showCancelPlan = false">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -214,7 +215,7 @@ interface SubscriptionData {
             <button class="confirm-btn" (click)="cancelSubscription()">Cancel Subscription</button>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   `,
   styles: [`
@@ -728,8 +729,8 @@ interface SubscriptionData {
 export class AccountComponent implements OnInit {
   activeTab: string = 'profile';
   userData: UserData | null = null;
-  subscriptionData: SubscriptionData | null = null;
-  availablePlans: any[] = [];
+  // subscriptionData: SubscriptionData | null = null;
+  // availablePlans: any[] = [];
 
   // Editing states
   editingName: boolean = false;
@@ -753,7 +754,8 @@ export class AccountComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private popupService: PopupService
   ) {}
 
   ngOnInit(): void {
@@ -765,8 +767,8 @@ export class AccountComponent implements OnInit {
     });
 
     this.loadUserData();
-    this.loadSubscriptionData();
-    this.loadAvailablePlans();
+    // this.loadSubscriptionData();
+    // this.loadAvailablePlans();
   }
 
   loadUserData(): void {
@@ -777,49 +779,49 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  loadSubscriptionData(): void {
-    const userId = this.userData?.id;
-    if (!userId) return;
+  // loadSubscriptionData(): void {
+  //   const userId = this.userData?.id;
+  //   if (!userId) return;
 
-    this.http.get<any>(`${environment.apiUrl}/Subscription/user-subscription/${userId}`).subscribe({
-      next: (res) => {
-        if (res && res.planName) {
-          this.subscriptionData = {
-            planName: res.planName,
-            price: res.price,
-            maxProfiles: res.maxProfiles,
-            currentProfiles: res.currentProfiles || 0,
-            nextBillingDate: res.nextBillingDate,
-            status: res.status || 'Active'
-          };
-        } else {
-          this.subscriptionData = null;
-        }
-      },
-      error: () => {
-        this.subscriptionData = null;
-      }
-    });
-  }
+  //   this.http.get<any>(`${environment.apiUrl}/Subscription/user-subscription/${userId}`).subscribe({
+  //     next: (res) => {
+  //       if (res && res.planName) {
+  //         this.subscriptionData = {
+  //           planName: res.planName,
+  //           price: res.price,
+  //           maxProfiles: res.maxProfiles,
+  //           currentProfiles: res.currentProfiles || 0,
+  //           nextBillingDate: res.nextBillingDate,
+  //           status: res.status || 'Active'
+  //         };
+  //       } else {
+  //         this.subscriptionData = null;
+  //       }
+  //     },
+  //     error: () => {
+  //       this.subscriptionData = null;
+  //     }
+  //   });
+  // }
 
 
-  loadAvailablePlans(): void {
-    this.http.get<any[]>(`${environment.apiUrl}/Subscription/plans`).subscribe({
-      next: (plans) => {
-        this.availablePlans = plans.map(plan => ({
-          id: plan.id,
-          name: plan.name,
-          price: plan.price,
-          maxProfiles: plan.maxProfiles,
-          quality: this.getQualityText(plan.name),
-          resolution: this.getResolutionText(plan.name)
-        }));
-      },
-      error: (err) => {
-        console.error('Error loading plans:', err);
-      }
-    });
-  }
+  // loadAvailablePlans(): void {
+  //   this.http.get<any[]>(`${environment.apiUrl}/Subscription/plans`).subscribe({
+  //     next: (plans) => {
+  //       this.availablePlans = plans.map(plan => ({
+  //         id: plan.id,
+  //         name: plan.name,
+  //         price: plan.price,
+  //         maxProfiles: plan.maxProfiles,
+  //         quality: this.getQualityText(plan.name),
+  //         resolution: this.getResolutionText(plan.name)
+  //       }));
+  //     },
+  //     error: (err) => {
+  //       console.error('Error loading plans:', err);
+  //     }
+  //   });
+  // }
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
@@ -910,7 +912,7 @@ export class AccountComponent implements OnInit {
         this.newPassword = '';
         this.confirmPassword = '';
         this.isLoading = false;
-        alert('Password changed successfully');
+        this.popupService.showSuccess('Password changed successfully!', 'Success');
       },
       error: (err) => {
         this.passwordError = err.error?.message || 'Failed to change password';
@@ -932,36 +934,58 @@ export class AccountComponent implements OnInit {
     };
 
     this.http.post(`${environment.apiUrl}/Subscription/change-plan`, changeData).subscribe({
-      next: (response) => {
-        this.loadSubscriptionData();
-        this.showChangePlan = false;
-        this.selectedPlan = null;
+      next: (response: any) => {
+        if (response.requiresPayment) {
+          // Redirect to signup page for plan change payment
+          this.router.navigate(['/signup'], {
+            queryParams: {
+              step: 4,
+              planId: planId,
+              planChange: true,
+              userId: this.userData?.id
+            }
+          });
+        }
         this.isLoading = false;
-        alert('Plan changed successfully');
       },
       error: (err) => {
         this.isLoading = false;
-        alert(err.error?.message || 'Failed to change plan');
+
+        if (err.error?.requiresProfileDeletion) {
+          // Show specific error for profile count validation
+          const profileDeletionMessage = `${err.error.message}\n\nYou currently have ${err.error.currentProfiles} profiles but the new plan only allows ${err.error.maxAllowed}. Please delete ${err.error.currentProfiles - err.error.maxAllowed} profile(s) before changing your plan.`;
+
+          this.popupService.showConfirm(
+            profileDeletionMessage + '\n\nWould you like to go to profile management now?',
+            () => {
+              this.router.navigate(['/Profile']);
+            },
+            undefined,
+            'Profile Limit Exceeded'
+          );
+        } else {
+          this.popupService.showError(err.error?.message || 'Failed to change plan');
+        }
       }
     });
   }
 
-  cancelSubscription(): void {
-    this.isLoading = true;
+  // cancelSubscription(): void {
+  //   this.isLoading = true;
 
-    this.http.post(`${environment.apiUrl}/Subscription/cancel/${this.userData?.id}`, {}).subscribe({
-      next: (response) => {
-        this.loadSubscriptionData();
-        this.showCancelPlan = false;
-        this.isLoading = false;
-        alert('Subscription cancelled successfully');
-      },
-      error: (err) => {
-        this.isLoading = false;
-        alert(err.error?.message || 'Failed to cancel subscription');
-      }
-    });
-  }
+  //   this.http.post(`${environment.apiUrl}/Subscription/cancel/${this.userData?.id}`, {}).subscribe({
+  //     next: (response) => {
+  //       this.loadSubscriptionData();
+  //       this.showCancelPlan = false;
+  //       this.isLoading = false;
+  //       this.popupService.showSuccess('Subscription cancelled successfully', 'Success');
+  //     },
+  //     error: (err) => {
+  //       this.isLoading = false;
+  //       this.popupService.showError(err.error?.message || 'Failed to cancel subscription');
+  //     }
+  //   });
+  // }
 
   formatDate(dateString: string): string {
     if (!dateString) return '';

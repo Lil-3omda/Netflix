@@ -1,18 +1,18 @@
+<app-navbar></app-navbar>
 <div class="favorite-page">
-  <h2>❤️ My Favorite Videos</h2>
+  <h2 class="mt-4"> My favourite List </h2>
 
   <div *ngIf="favoriteVideos.length === 0" class="empty-msg">
-    No favorite videos yet.
+    No favourite videos yet.
   </div>
 
   <div class="favorites-container">
-    <div class="video-card" *ngFor="let video of favoriteVideos">
-      <img [src]="video.imageUrl" alt="{{ video.videoTitle }}" class="thumbnail">
-
+    <div class="video-card" *ngFor="let video of favoriteVideos" [routerLink]="'/moviedetails/'+video.videoId" >
+      <img [src]="'https://localhost:7140/' + video.coverUrl" alt="{{ video.videoTitle }}" class="thumbnail">
       <div class="video-info">
         <h3>{{ video.videoTitle }}</h3>
         <p>{{ video.videoDescription }}</p>
-        <a [href]="video.videoUrl" target="_blank" class="btn btn-watch">Watch</a>
+        <a [href]="video.videoUrl" target="_blank" class="btn btn-watch" [routerLink]="'/watchMovie/'+video.videoId" >Watch</a>
         <button (click)="removeFromFavorites(video.videoId)" class="btn btn-remove">Remove ❌</button>
       </div>
     </div>

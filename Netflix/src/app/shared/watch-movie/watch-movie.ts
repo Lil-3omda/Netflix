@@ -3,6 +3,8 @@ import { Moviedetails } from '../../core/services/moviedetails';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { WatchHistory } from 'src/app/pages/watch-history/watch-history';
+import { HistoryService } from 'src/app/pages/watch-history/services/history-service';
 
 @Component({
   selector: 'app-watch-movie',
@@ -17,12 +19,16 @@ export class WatchMovie implements OnInit {
   movieId: number = 0;
   movie: any;
 
-
-  constructor(private sanitizer: DomSanitizer) {}
+  history:any;
+  videoId;
+  constructor(private sanitizer: DomSanitizer, private historyServices: HistoryService) {}
 
 ngOnInit(): void {
+
+
   this.route.paramMap.subscribe(params => {
     const id = params.get('id');
+    this.videoId= id;
     if (id) {
       this.movieId = +id;
       this.movieService.getmovieDetatils(this.movieId).subscribe({
@@ -37,10 +43,37 @@ ngOnInit(): void {
       });
     }
   });
+
+   this.onWatch(this.videoId);
 }
 
+onWatch(video_id){
+  const profileId = Number(localStorage.getItem('profileId'))
+  const watchedAt = new Date().toISOString();
 
+  const historyEntry = {
+    profileId: profileId,
+    videoId: video_id,
+    watchedAt: watchedAt
+  };
 
+  this.historyServices.addToHistory(historyEntry).subscribe({
+    next: res =>{
+      console.log(res)
+      console.log(historyEntry)
+    },
+    error: err=>{
+      console.log(err)
+    }
+  })
+}
+
+isHovered: boolean = false;
+
+goBack() {
+  window.history.back();
+
+}
 
 
 }

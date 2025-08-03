@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.Data;
@@ -154,6 +154,7 @@ namespace Netflix.API.Controllers
             var subscriptions = await _context.UserSubscriptions
                 .Include(us => us.User)
                 .Include(us => us.Plan)
+                .OrderByDescending(us => us.StartDate)
                 .Select(us => new UserSubscriptionRow
                 {
                     Id = us.Id,
@@ -166,17 +167,36 @@ namespace Netflix.API.Controllers
                     EndDate = us.EndDate,
                     IsActive = !us.IsDeleted && us.EndDate > DateTime.UtcNow,
                     DaysRemaining = us.IsDeleted ? 0 : (us.EndDate - DateTime.UtcNow).Days,
-                    IsDeleted = us.IsDeleted
+                    IsDeleted = us.IsDeleted,
+                    Status = us.IsDeleted ? "Expired/Cancelled" : 
+                            (us.EndDate > DateTime.UtcNow ? "Active" : "Expired")
                 })
                 .ToListAsync();
 
-            var response = new UserSubscriptionsResponse
+            // Group by user to show subscription history
+            var groupedSubscriptions = subscriptions
+                .GroupBy(s => s.UserId)
+                .Select(g => new
+                {
+                    UserId = g.Key,
+                    UserName = g.First().UserName,
+                    UserEmail = g.First().UserEmail,
+                    CurrentSubscription = g.FirstOrDefault(s => s.IsActive),
+                    SubscriptionHistory = g.OrderByDescending(s => s.StartDate).ToList(),
+                    TotalSubscriptions = g.Count(),
+                    HasMultipleSubscriptions = g.Count() > 1
+                })
+                .ToList();
+
+            var response = new
             {
-                Subscriptions = subscriptions,
-                TotalCount = subscriptions.Count,
-                CurrentPage = 1,
-                PageSize = subscriptions.Count,
-                TotalPages = 1
+                UserSubscriptions = groupedSubscriptions,
+                AllSubscriptions = subscriptions,
+                TotalUsers = groupedSubscriptions.Count,
+                TotalSubscriptions = subscriptions.Count,
+                ActiveSubscriptions = subscriptions.Count(s => s.IsActive),
+                ExpiredSubscriptions = subscriptions.Count(s => !s.IsActive),
+                UsersWithPlanChanges = groupedSubscriptions.Count(u => u.HasMultipleSubscriptions)
             };
 
             return Ok(response);

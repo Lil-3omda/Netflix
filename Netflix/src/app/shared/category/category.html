@@ -6,22 +6,30 @@
   <h2 class="mb-4">{{ categoryName }}</h2>
 
   <div class="row">
-    <div class="col-6 col-md-3 mb-4" *ngFor="let movie of movies">
+    <div class="col-6 col-md-3 mb-4" *ngFor="let movie of movies | paginate: { itemsPerPage: 12, currentPage: page }" >
          <div class="movie-card">
-  <div class="movie-image">
-    <img [src]="'https://localhost:7140/' + movie.imageUrl" alt="{{ movie.title }}" />
-    
-   
+    <div class="movie-image">
+    <img [src]="'https://localhost:7140/' + movie.imageUrl" alt="{{ movie.title }}" [routerLink]="['/moviedetails', movie.id]" />
+    <h3 *ngIf="watchedStatusMap[movie.id]" class="watched">Watched</h3>
     <div class="movie-overlay">
       <div class="movie-title">{{ movie.title }}</div>
       <div class="extra-info">
         <div class="d-flex justify-content-center gap-3 mt-2">
-          <a class="play-now-btn" [routerLink]="['/moviedetails', movie.id]">
-            <i class="fas fa-play-circle me-2"></i>
+          <a class="play-now-btn" [routerLink]="['/moviedetails', movie.id]" >
+            <i class="fas fs-3 fa-play-circle me-2"></i>
             <span class="play-text">Play Now</span>
           </a>
 
-          <i class="fas fa-heart fs-3 d-none"></i>
+          <div class="heart-container"
+              [class.disabled]="movie.isLoading"
+              [title]="movie.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+              [style.color]="movie.isLoading ? 'gray' : (movie.isFavorite ? 'red' : 'white')"
+              (click)="!movie.isLoading && toggleFavorite(movie, $event)">
+                                
+                    <i class="fas fs-3 fa-heart"
+                      >
+                    </i>
+                  </div>
         </div>
       </div>
     </div>
@@ -31,6 +39,15 @@
 
     </div>
   </div>
+
+
+  <div class="pagination-wrapper text-center mt-4">
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  </div>
+
+
+
+
 </div>
 
 

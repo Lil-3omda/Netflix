@@ -5,8 +5,6 @@ import { Subject, takeUntil, filter } from 'rxjs';
 
 import { AdminService } from './services/admin.service';
 import { AdminPageType } from './models/admin.interfaces';
-import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
-import { AdminHeaderComponent } from './components/admin-header/admin-header.component';
 import { NavBar } from "../features/admin/shared/nav-bar/nav-bar";
 
 @Component({

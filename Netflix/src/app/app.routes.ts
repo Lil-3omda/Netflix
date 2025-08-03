@@ -73,12 +73,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard, SubscriptionGuard]
   },
 
-  // Payment route
-  {
-    path: 'payment',
-    loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
-    canActivate: [AuthGuard]
-  },
+
 
   // Public information pages
   {
@@ -167,28 +162,31 @@ export const routes: Routes = [
     ]
   },
 
-  // Admin chat route
   {
     path: 'admin/chat',
     loadComponent: () => import('./features/communication/components/admin-chat/admin-chat.component').then(m => m.AdminChatComponent),
     canActivate: [AdminGuard]
   },
 
-  // 404 Not Found - must be last
   {
     path: '404',
     loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent)
+  },
+    {
+  path: 'favorite',
+    loadComponent: () => import('./pages/favorite/favorite').then(m => m.FavoriteComponent),
+    // canActivate: [AuthGuard, SubscriptionGuard]
+  },
+  {
+    path:'watchHistory',
+    loadComponent:()=> import('./pages/watch-history/watch-history').then(m => m.WatchHistory)
   },
   {
     path: '**',
     redirectTo: '/404'
 
   },
-  {
-  path: 'favorite',
-  loadComponent: () => import('./pages/favorite/favorite').then(m => m.FavoriteComponent),
-  canActivate: [AuthGuard, SubscriptionGuard]
-}
+
 
 ];
 

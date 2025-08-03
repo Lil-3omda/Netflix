@@ -29,6 +29,7 @@ interface UserSubscription {
   endDate: string;
   isActive: boolean;
   daysRemaining: number;
+  status?: string; // Added for grouped view
 }
 
 @Component({
@@ -42,6 +43,25 @@ interface UserSubscription {
         <h1 class="display-4 fw-bold">Subscription Management</h1>
         <p class="lead">Manage subscription plans and user subscriptions</p>
       </div>
+
+      <!-- Enhanced Stats Row
+      <div class="row mb-4 g-4">
+        <div class="col-md-2" *ngFor="let stat of [
+          { label: 'Total Users', value: subscriptionStats?.totalUsers || 0, class: 'primary' },
+          { label: 'Plan Changes', value: subscriptionStats?.usersWithPlanChanges || 0, class: 'warning' },
+          { label: 'Total Subscriptions', value: subscriptionStats?.totalSubscriptions || 0, class: 'danger' },
+          { label: 'Active', value: subscriptionStats?.activeSubscriptions || 0, class: 'success' },
+          { label: 'Expired', value: subscriptionStats?.expiredSubscriptions || 0, class: 'secondary' },
+          { label: 'Monthly Revenue', value: 'EGP ' + (analyticsData?.monthlyRevenue | number:'1.2-2'), class: 'info' }
+        ]">
+          <div class="card border-{{ stat.class }} text-bg-dark h-100">
+            <div class="card-body text-center">
+              <small class="text-secondary">{{ stat.label }}</small>
+              <h5 class="card-title">{{ stat.value }}</h5>
+            </div>
+          </div>
+        </div>
+      </div> -->
 
       <!-- First Row of Stats -->
       <div class="row mb-5 g-4">
@@ -121,11 +141,20 @@ interface UserSubscription {
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="showGroupedView" id="viewToggle">
+            <label class="form-check-label text-white" for="viewToggle">
+              Group by User (Show Plan History)
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Subscriptions Table -->
-      <div class="card text-bg-dark border-secondary">
+      <!-- Individual Subscriptions Table -->
+      <div class="card text-bg-dark border-secondary" *ngIf="!showGroupedView">
+        <div class="card-header">
+          <h5>All Subscriptions (Individual View)</h5>
+        </div>
         <div class="card-body table-responsive">
           <table class="table table-dark table-hover table-bordered align-middle">
             <thead class="table-secondary text-dark">
@@ -158,8 +187,8 @@ interface UserSubscription {
                 <td><small>{{ formatDate(sub.startDate) }}</small></td>
                 <td><small>{{ formatDate(sub.endDate) }}</small></td>
                 <td>
-                  <span class="badge" [ngClass]="sub.isActive ? 'bg-success' : 'bg-danger'">
-                    {{ sub.isActive ? 'Active' : 'Inactive' }}
+                  <span class="badge" [ngClass]="sub.isActive ? 'bg-success' : (sub.status === 'Expired/Cancelled' ? 'bg-danger' : 'bg-warning')">
+                    {{ sub.status || (sub.isActive ? 'Active' : 'Inactive') }}
                   </span>
                 </td>
                 <td>
@@ -173,9 +202,9 @@ interface UserSubscription {
                 </td>
                 <td>
                   <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit Subscription">
+                    <!-- <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit Subscription">
                       <i class="bi bi-pencil"></i>
-                    </button>
+                    </button> -->
                     <button class="btn btn-outline-danger" (click)="confirmDelete(sub)" title="Delete Subscription">
                       <i class="bi bi-trash"></i>
                     </button>
@@ -190,6 +219,78 @@ interface UserSubscription {
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Grouped Users with Subscription History -->
+      <div class="card text-bg-dark border-secondary" *ngIf="showGroupedView">
+        <div class="card-header">
+          <h5>Users with Subscription History</h5>
+        </div>
+        <div class="card-body">
+          <div class="accordion accordion-dark" id="subscriptionAccordion">
+            <div class="accordion-item bg-dark border-secondary" *ngFor="let user of groupedUserSubscriptions; let i = index">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-dark text-white border-secondary"
+                        type="button"
+                        [attr.data-bs-toggle]="'collapse'"
+                        [attr.data-bs-target]="'#collapse' + i">
+                  <div class="d-flex justify-content-between w-100 me-3">
+                    <div>
+                      <strong>{{ user.userName }}</strong>
+                      <small class="text-muted ms-2">{{ user.userEmail }}</small>
+                    </div>
+                    <div class="d-flex gap-3">
+                      <span class="badge bg-info">{{ user.totalSubscriptions }} Subscriptions</span>
+                      <span class="badge bg-warning" *ngIf="user.hasMultipleSubscriptions">Plan Changes</span>
+                      <span class="badge" [ngClass]="user.currentSubscription ? 'bg-success' : 'bg-danger'">
+                        {{ user.currentSubscription ? 'Active' : 'No Active Plan' }}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              </h2>
+              <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.data-bs-parent]="'#subscriptionAccordion'">
+                <div class="accordion-body">
+                  <div class="table-responsive">
+                    <table class="table table-dark table-sm">
+                      <thead>
+                        <tr>
+                          <th>Plan</th>
+                          <th>Price</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Status</th>
+                          <th>Duration</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let subscription of user.subscriptionHistory"
+                            [ngClass]="subscription.isActive ? 'table-success' : 'table-secondary'">
+                          <td>
+                            <span class="badge" [ngClass]="subscription.isActive ? 'bg-success' : 'bg-secondary'">
+                              {{ subscription.planName }}
+                            </span>
+                          </td>
+                          <td>EGP {{ subscription.planPrice }}</td>
+                          <td>{{ formatDate(subscription.startDate) }}</td>
+                          <td>{{ formatDate(subscription.endDate) }}</td>
+                          <td>
+                            <span class="badge" [ngClass]="subscription.isActive ? 'bg-success' : (subscription.status === 'Expired/Cancelled' ? 'bg-danger' : 'bg-warning')">
+                              {{ subscription.status || (subscription.isActive ? 'Active' : 'Inactive') }}
+                            </span>
+                          </td>
+                          <td>
+                            {{ getDurationInDays(subscription.startDate, subscription.endDate) }} days
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -246,6 +347,10 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
   subscriptionPlans: SubscriptionPlan[] = [];
   userSubscriptions: UserSubscription[] = [];
   filteredUserSubscriptions: UserSubscription[] = [];
+  groupedUserSubscriptions: any[] = [];
+  allSubscriptions: any[] = [];
+  subscriptionStats: any = {};
+  showGroupedView: boolean = false;
   editingSubscription!: UserSubscription;
 
   statistics = {
@@ -348,8 +453,16 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     this.adminService.getUserSubscriptions()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (subs) => {
-          this.userSubscriptions = subs || [];
+        next: (response) => {
+          this.userSubscriptions = response.allSubscriptions || [];
+          this.groupedUserSubscriptions = response.userSubscriptions || [];
+          this.subscriptionStats = {
+            totalUsers: response.totalUsers,
+            totalSubscriptions: response.totalSubscriptions,
+            activeSubscriptions: response.activeSubscriptions,
+            expiredSubscriptions: response.expiredSubscriptions,
+            usersWithPlanChanges: response.usersWithPlanChanges
+          };
           this.filterSubscriptions();
         },
         error: (e) => console.error('Error loading subscriptions', e)
@@ -434,5 +547,13 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric', month: 'short', day: 'numeric'
     });
+  }
+
+  getDurationInDays(startDate: string, endDate: string): number {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
   }
 }

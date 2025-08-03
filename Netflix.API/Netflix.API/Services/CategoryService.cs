@@ -72,7 +72,7 @@ namespace Netflix.API.Services
         public async Task<CategoryDto?> GetByNameAsync(string name)
         {
             var category = await context.Categories
-                .Include(c => c.Videos)
+                .Include(c => c.Videos.Where(v => !v.IsDeleted))
                 .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
 
             if (category == null)

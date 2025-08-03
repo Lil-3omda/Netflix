@@ -16,4 +16,11 @@
     cursor: pointer;
     text-decoration: none;
 }
+.text-gradient {
+  background: linear-gradient(90deg, #694706, #34a853, #520909, #ea4335);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
 

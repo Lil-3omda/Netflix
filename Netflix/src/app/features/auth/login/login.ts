@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth.service';
+import { PopupService } from '../../../shared/services/popup.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -73,7 +76,7 @@ import { AuthService } from '../../../core/services/auth.service';
                 <input type="checkbox" id="remember" [(ngModel)]="rememberMe" name="remember">
                 <label for="remember">Remember me</label>
               </div>
-              <a href="#" class="need-help" (click)="showForgotPasswordForm()">Need help?</a>
+                <a href="#" class="need-help" (click)="showForgotPasswordForm(); $event.preventDefault()">Need help?</a>
             </div>
 
             <div class="form-footer">
@@ -100,12 +103,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <a href="#">Cookie Preferences</a>
             <a href="#">Corporate Information</a>
           </div>
-          <div class="language-selector">
-            <select class="language-select">
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
-            </select>
-          </div>
+
         </div>
       </footer>
 
@@ -116,7 +114,7 @@ import { AuthService } from '../../../core/services/auth.service';
             <h2>Reset Password</h2>
             <button class="close-btn" (click)="closeForgotPassword()">×</button>
           </div>
-          
+
           <div class="modal-body" *ngIf="!showResetPassword">
             <p>Enter your email address and we'll send you a verification code to reset your password.</p>
             <form (ngSubmit)="onForgotPasswordSubmit()">
@@ -151,7 +149,7 @@ import { AuthService } from '../../../core/services/auth.service';
                   placeholder="Verification code">
                 <div class="error-message" *ngIf="resetOtpError">{{ resetOtpError }}</div>
               </div>
-              
+
               <div class="input-group">
                 <input
                   type="password"
@@ -161,7 +159,7 @@ import { AuthService } from '../../../core/services/auth.service';
                   class="modal-input"
                   placeholder="New password">
               </div>
-              
+
               <div class="input-group">
                 <input
                   type="password"
@@ -172,12 +170,12 @@ import { AuthService } from '../../../core/services/auth.service';
                   placeholder="Confirm new password">
                 <div class="error-message" *ngIf="resetPasswordError">{{ resetPasswordError }}</div>
               </div>
-              
+
               <button type="submit" class="modal-button" [disabled]="isLoading">
                 <span *ngIf="!isLoading">Reset Password</span>
                 <div *ngIf="isLoading" class="loading-spinner"></div>
               </button>
-              
+
               <button type="button" class="modal-button-secondary" (click)="backToEmailStep()">
                 Back
               </button>
@@ -657,7 +655,13 @@ export class Login {
   resetOtpError: string = '';
   resetPasswordError: string = '';
 
-  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private popupService: PopupService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     // Get email from query params if coming from landing page
@@ -697,13 +701,8 @@ export class Login {
           if (response.user.isAdmin) {
             this.router.navigate(['/admin/dashboard']);
           } else {
-            // Check if user has a profile selected
-            const profileId = localStorage.getItem('profileId');
-            if (profileId) {
-              this.router.navigate(['/Home']);
-            } else {
-              this.router.navigate(['/Profile']);
-            }
+            // Check subscription status first
+            this.checkSubscriptionStatus(response.user.id);
           }
         } else {
           this.emailError = 'Sorry, we can\'t find an account with this email address. Please try again or create a new account.';
@@ -723,7 +722,43 @@ export class Login {
         console.error(err);
       }
     });
+  }
 
+  private checkSubscriptionStatus(userId: string) {
+    // Check subscription status
+    this.http.get<any>(`${environment.apiUrl}/Subscription/user-subscription/${userId}`).subscribe({
+      next: (subscriptionResponse) => {
+        if (subscriptionResponse && subscriptionResponse.planName) {
+          // User has active subscription, proceed normally
+          const profileId = localStorage.getItem('profileId');
+          if (profileId) {
+            this.router.navigate(['/Home']);
+          } else {
+            this.router.navigate(['/Profile']);
+          }
+        } else {
+          // No active subscription, redirect to step 4
+          this.router.navigate(['/signup'], {
+            queryParams: {
+              step: 4,
+              message: 'Your subscription has expired. Please choose a new plan to continue.',
+              expired: true
+            }
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Error checking subscription status:', err);
+        // On error, redirect to step 4 as a precaution
+        this.router.navigate(['/signup'], {
+          queryParams: {
+            step: 4,
+            message: 'Please choose a plan to continue.',
+            expired: true
+          }
+        });
+      }
+    });
   }
 
   goToSignup() {
@@ -754,7 +789,7 @@ export class Login {
 
   onForgotPasswordSubmit() {
     this.forgotPasswordError = '';
-    
+
     if (!this.forgotPasswordEmail) {
       this.forgotPasswordError = 'Please enter your email address.';
       return;
@@ -799,13 +834,13 @@ export class Login {
     this.authService.verifyResetOtp(this.forgotPasswordEmail, this.resetOtpCode).subscribe({
       next: (response) => {
         this.resetToken = response.resetToken;
-        
+
         // Then reset the password
         this.authService.resetPassword(this.forgotPasswordEmail, this.resetToken, this.newPassword).subscribe({
           next: (resetResponse) => {
             this.isLoading = false;
             this.closeForgotPassword();
-            alert('Password reset successfully! You can now login with your new password.');
+            this.popupService.showSuccess('Password reset successfully! You can now login with your new password.', 'Password Reset Complete');
           },
           error: (error) => {
             this.isLoading = false;

@@ -38,10 +38,7 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/admin/users/${id}`);
   }
 
-  updateUserStatus(id: string, status: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/admin/users/${id}/status`, status);
-  }
-
+    // In AdminService
   deleteUser(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/admin/users/${id}`);
   }
@@ -110,25 +107,20 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/statistics`);
   }
 
-  getUserSubscriptions(): Observable<any[]> {
+  getUserSubscriptions(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/admin/Subscriptions/users`)
       .pipe(
         map((response: any) => {
-          if (response.subscriptions) {
-            return response.subscriptions.map((sub: any) => ({
-              ...sub,
-              status: sub.IsDeleted ? 'Inactive' :
-                    (sub.IsActive ? 'Active' : 'Expired')
-            }));
-          } else if (Array.isArray(response)) {
-            return response.map((sub: any) => ({
-              ...sub,
-              status: sub.IsDeleted ? 'Inactive' :
-                    (sub.IsActive ? 'Active' : 'Expired')
-            }));
-          } else {
-            return [];
-          }
+          // Return the full response to access both grouped data and all subscriptions
+          return {
+            userSubscriptions: response.userSubscriptions || [],
+            allSubscriptions: response.allSubscriptions || [],
+            totalUsers: response.totalUsers || 0,
+            totalSubscriptions: response.totalSubscriptions || 0,
+            activeSubscriptions: response.activeSubscriptions || 0,
+            expiredSubscriptions: response.expiredSubscriptions || 0,
+            usersWithPlanChanges: response.usersWithPlanChanges || 0
+          };
         })
       );
   }
@@ -151,12 +143,35 @@ export class AdminService {
     return this.http.delete(`${this.apiUrl}/admin/Subscriptions/${id}`);
   }
 
-  // User management methods
+updateUserStatus(id: string, status: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/admin/users/${id}/status`, { status });
+}
+
+  // In your AdminService
   makeUserAdmin(userId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/make-admin`, { userId });
+    return this.http.post(`${this.apiUrl}/Auth/make-admin`, {
+        UserId: userId
+      });
   }
 
   removeAdminRole(userId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/remove-admin`, { userId });
+    return this.http.post(`${this.apiUrl}/Auth/remove-admin`, {
+      UserId: userId
+    });
   }
+
+
+  updateUser(id: number, user: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/admin/users/${id}`, user);
+  }
+
+  createUser(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/admin/users`, user);
+  }
+
+
+
+
+
+
 }

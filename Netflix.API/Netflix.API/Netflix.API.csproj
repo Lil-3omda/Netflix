@@ -44,6 +44,12 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+<<<<<<< HEAD
+=======
+    <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\videos\" />
+>>>>>>> daf3af99be5b463a91d786ddb3ed54ac0b2e29c4
   </ItemGroup>
 
 </Project>

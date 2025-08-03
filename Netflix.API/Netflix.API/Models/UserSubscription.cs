@@ -5,6 +5,7 @@ namespace Netflix.API.Models
     {
         public int Id { get; set; }
         public string UserId { get; set; }
+        [ForeignKey("Plan")]
         public int PlanId { get; set; }
 
         public DateTime StartDate { get; set; }
