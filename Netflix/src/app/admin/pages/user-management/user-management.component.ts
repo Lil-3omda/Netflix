@@ -21,10 +21,6 @@ import { PasswordConfirmService } from '../../../shared/services/password-confir
             <h1 class="display-4 fw-bold mb-3">User Management</h1>
             <p class="fs-5 text-light">Manage Netflix subscribers and user accounts</p>
           </div>
-          <button class="btn btn-outline-light d-flex align-items-center gap-2 px-4 py-2" (click)="openAddUserModal()">
-            <i class="bi bi-plus-lg"></i>
-            <span>Add User</span>
-          </button>
         </div>
       </div>
 
@@ -112,81 +108,109 @@ import { PasswordConfirmService } from '../../../shared/services/password-confir
         </div>
       </div>
 
-      <!-- User Cards Grid -->
-      <div class="row g-4 mb-5">
-        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let user of filteredUsers; trackBy: trackByUserId">
-          <div class="card bg-dark text-white border border-light h-100">
-            <div class="card-body d-flex flex-column align-items-center text-center">
-              <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                <span class="fs-4 fw-bold">{{ getUserInitials(user.name) }}</span>
-              </div>
-              <h5 class="card-title">{{ user.name }}</h5>
-              <p class="text-muted small">{{ user.email }}</p>
-              <span class="badge bg-success" *ngIf="user.status === 'Active'">{{ user.status }}</span>
-              <span class="badge bg-secondary" *ngIf="user.status === 'Inactive'">{{ user.status }}</span>
-              <span class="badge bg-danger" *ngIf="user.status === 'Suspended'">{{ user.status }}</span>
-              <div class="mt-3 w-100">
-                <div class="d-flex justify-content-between">
-                  <small class="text-muted">Plan:</small>
-                  <small class="text-white">{{ user.subscription }}</small>
+      <!-- Users Table -->
+      <div class="card bg-secondary bg-gradient border border-light mb-5">
+        <div class="table-responsive">
+          <table class="table table-dark table-hover mb-0">
+            <thead>
+              <tr>
+                <th class="bg-dark">User</th>
+                <th class="bg-dark">Email</th>
+                <!-- <th class="bg-dark">Status</th> -->
+                <th class="bg-dark">Subscription</th>
+                <!-- <th class="bg-dark">Region</th> -->
+                <th class="bg-dark">Joined</th>
+                <th class="bg-dark text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId">
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      <span class="fw-bold">{{ getUserInitials(user.name) }}</span>
+                    </div>
+                    <div>
+                      <div class="fw-bold">{{ user.name }}</div>
+                      <small class="text-muted">{{ user.role || 'User' }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ user.email }}</td>
+                <!-- <td> -->
+                  <!-- <span class="badge bg-success" *ngIf="user.status === 'Active'">{{ user.status }}</span>
+                  <span class="badge bg-secondary" *ngIf="user.status === 'Inactive'">{{ user.status }}</span>
+                  <span class="badge bg-danger" *ngIf="user.status === 'Suspended'">{{ user.status }}</span>
+                </td> -->
+                <td>{{ user.subscription }}</td>
+                <!-- <td>{{ user.region }}</td> -->
+                <td>{{ formatDate(user.joinDate) }}</td>
+                <td class="text-end">
+                  <div class="d-flex justify-content-end gap-2">
+
+                    <button class="btn btn-sm btn-warning" (click)="makeUserAdmin(user)" *ngIf="user.role !== 'Admin'" title="Make Admin">
+                      <i class="bi bi-shield-check"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-secondary" (click)="removeAdminRole(user)" *ngIf="user.role === 'Admin'" title="Remove Admin">
+                      <i class="bi bi-shield-x"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user)" title="Delete User">
+                      <i class="bi bi-trash"></i>
+                    </button>
+
+                    <!-- <button class="btn btn-sm"
+                            [ngClass]="{'btn-danger': user.status === 'Active', 'btn-success': user.status !== 'Active'}"
+                            (click)="toggleUserStatus(user)"
+                            [title]="user.status === 'Active' ? 'Suspend User' : 'Activate User'">
+                      <i class="bi" [ngClass]="{'bi-x-lg': user.status === 'Active', 'bi-check-lg': user.status !== 'Active'}"></i>
+                    </button> -->
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="text-muted">
+          Showing {{ filteredUsers.length }} of {{ totalUsers }} users
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-light" [disabled]="currentPage === 1" (click)="prevPage()">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button class="btn btn-outline-light" [disabled]="filteredUsers.length < pageSize" (click)="nextPage()">
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Add User Modal -->
+      <div class="modal fade" [class.show]="showAddModal" [style.display]="showAddModal ? 'block' : 'none'" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content bg-dark text-white">
+            <!-- <div class="modal-header border-0">
+              <h5 class="modal-title">Add New User</h5>
+              <button type="button" class="btn-close btn-close-white" (click)="closeAddModal()"></button>
+            </div> -->
+            <div class="modal-body">
+              <form [formGroup]="userForm" (ngSubmit)="submitUser()">
+                <div class="mb-3 text-center text-muted">
+                  <p>User creation form will be implemented here</p>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <small class="text-muted">Region:</small>
-                  <small class="text-white">{{ user.region }}</small>
+                <div class="d-flex gap-3">
+                  <button type="button" class="btn btn-secondary w-50" (click)="closeAddModal()">Cancel</button>
+                  <button type="submit" class="btn btn-danger w-50">Add User</button>
                 </div>
-                <div class="d-flex justify-content-between">
-                  <small class="text-muted">Joined:</small>
-                  <small class="text-white">{{ formatDate(user.joinDate) }}</small>
-                </div>
-              </div>
-              <div class="mt-3 d-flex w-100 gap-2">
-                <button class="btn btn-sm btn-outline-light w-100" (click)="editUser(user)"><i class="bi bi-pencil"></i> Edit</button>
-                <div class="btn-group w-100">
-                  <button class="btn btn-sm btn-warning" (click)="makeUserAdmin(user)" *ngIf="user.role !== 'Admin'">
-                    <i class="bi bi-shield-check"></i>
-                  </button>
-                  <button class="btn btn-sm btn-secondary" (click)="removeAdminRole(user)" *ngIf="user.role === 'Admin'">
-                    <i class="bi bi-shield-x"></i>
-                  </button>
-                  <button class="btn btn-sm" [ngClass]="{'btn-danger': user.status === 'Active', 'btn-success': user.status !== 'Active'}" (click)="toggleUserStatus(user)">
-                    <i class="bi" [ngClass]="{'bi-x-lg': user.status === 'Active', 'bi-check-lg': user.status !== 'Active'}"></i>
-                  </button>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Load More -->
-      <div class="text-center mb-5">
-        <button class="btn btn-danger px-5 py-2">Load More Users</button>
-      </div>
     </div>
-
-    <!-- Add User Modal -->
-    <div class="modal fade" [class.show]="showAddModal" [style.display]="showAddModal ? 'block' : 'none'" tabindex="-1" aria-modal="true" role="dialog">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-dark text-white">
-          <div class="modal-header border-0">
-            <h5 class="modal-title">Add New User</h5>
-            <button type="button" class="btn-close btn-close-white" (click)="closeAddModal()"></button>
-          </div>
-          <div class="modal-body">
-            <form [formGroup]="userForm" (ngSubmit)="submitUser()">
-              <div class="mb-3 text-center text-muted">
-                <p>User creation form will be implemented here</p>
-              </div>
-              <div class="d-flex gap-3">
-                <button type="button" class="btn btn-secondary w-50" (click)="closeAddModal()">Cancel</button>
-                <button type="submit" class="btn btn-danger w-50">Add User</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
   `,
   styles: [`
     .bg-netflix-black {
@@ -234,6 +258,24 @@ import { PasswordConfirmService } from '../../../shared/services/password-confir
     ::-webkit-scrollbar-thumb:hover {
       background: #b81d24;
     }
+
+    /* Table styles */
+    .table-dark {
+      --bs-table-bg: #1a1a1a;
+      --bs-table-striped-bg: #2c2c2c;
+      --bs-table-hover-bg: #333333;
+      color: #fff;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
   `]
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
@@ -242,10 +284,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   subscriptionFilter = '';
   showAddModal = false;
   userForm: FormGroup;
+  currentPage = 1;
+  pageSize = 10;
 
-  // Sample data
+  // User data
   users: User[] = [];
-
   filteredUsers: User[] = [];
 
   // Stats
@@ -281,7 +324,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers(): void {
-    this.adminService.getUsers(1, 50, this.searchTerm)
+    this.adminService.getUsers(this.currentPage, this.pageSize, this.searchTerm)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -291,22 +334,25 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             email: user.email,
             status: user.isEmailVerified ? 'Active' : 'Inactive',
             subscription: user.subscriptionStatus === 'Active' ? 'Premium' : 'Basic',
-            region: 'Unknown', // You can add region to your user model
-            joinDate: new Date().toISOString(), // You can add proper join date
-            lastActive: new Date().toISOString()
+            region: user.region || 'Unknown',
+            joinDate: user.createdAt || new Date().toISOString(),
+            lastActive: user.lastLogin || new Date().toISOString(),
+            role: user.role || 'User'
           }));
           this.filteredUsers = [...this.users];
+          this.totalUsers = response.totalCount || this.users.length;
           this.calculateStats();
         },
         error: (error) => {
           console.error('Error loading users:', error);
-          // Keep existing mock data as fallback
+          this.filteredUsers = [...this.users];
+          this.totalUsers = this.users.length;
+          this.calculateStats();
         }
       });
   }
 
   private calculateStats(): void {
-    this.totalUsers = this.users.length;
     this.activeUsers = this.users.filter(u => u.status === 'Active').length;
     this.premiumUsers = this.users.filter(u => u.subscription === 'Premium').length;
 
@@ -319,18 +365,20 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   filterUsers(): void {
-    this.loadUsers(); // Reload with search term
-    this.filteredUsers = this.users.filter(user => {
-      const matchesSearch = !this.searchTerm ||
-        user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.region.toLowerCase().includes(this.searchTerm.toLowerCase());
+    this.currentPage = 1; // Reset to first page when filtering
+    this.loadUsers();
+  }
 
-      const matchesStatus = !this.statusFilter || user.status === this.statusFilter;
-      const matchesSubscription = !this.subscriptionFilter || user.subscription === this.subscriptionFilter;
+  nextPage(): void {
+    this.currentPage++;
+    this.loadUsers();
+  }
 
-      return matchesSearch && matchesStatus && matchesSubscription;
-    });
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadUsers();
+    }
   }
 
   trackByUserId(index: number, user: User): string {
@@ -360,31 +408,87 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   submitUser(): void {
     if (this.userForm.valid) {
-      // Handle form submission
-      console.log('User form submitted:', this.userForm.value);
-      this.closeAddModal();
+      const newUser = {
+        ...this.userForm.value,
+        role: 'User',
+        joinDate: new Date().toISOString()
+      };
+
+      this.adminService.createUser(newUser).subscribe({
+        next: (response) => {
+          this.popupService.showSuccess('User created successfully', 'Success');
+          this.closeAddModal();
+          this.loadUsers();
+        },
+        error: (error) => {
+          console.error('Error creating user:', error);
+          this.popupService.showError(error.error?.message || 'Failed to create user');
+        }
+      });
     }
   }
 
   editUser(user: User): void {
-    console.log('Editing user:', user.name);
+    this.popupService.showConfirm(
+      `Edit user ${user.name}?`,
+      () => {
+        // In a real app, you would open an edit modal with the user data
+        console.log('Editing user:', user);
+        this.popupService.showSuccess(`User ${user.name} will be edited`, 'Edit User');
+      },
+      undefined,
+      'Edit User'
+    );
   }
 
   toggleUserStatus(user: User): void {
-    if (user.status === 'Active') {
-      user.status = 'Suspended';
-    } else {
-      user.status = 'Active';
-    }
-    this.calculateStats();
-    console.log(`User ${user.name} status changed to ${user.status}`);
-  }
+    const newStatus = user.status === 'Active' ? 'Suspended' : 'Active';
+    const action = newStatus === 'Suspended' ? 'suspend' : 'activate';
 
+    this.popupService.showConfirm(
+      `Are you sure you want to ${action} ${user.name}?`,
+      () => {
+        this.adminService.updateUserStatus(user.id, newStatus).subscribe({
+          next: (response) => {
+            user.status = newStatus;
+            this.calculateStats();
+            this.popupService.showSuccess(`User ${user.name} has been ${newStatus.toLowerCase()}`, 'Status Updated');
+          },
+          error: (error) => {
+            console.error('Error updating user status:', error);
+            this.popupService.showError(error.error?.message || `Failed to ${action} user`);
+          }
+        });
+      },
+      undefined,
+      `${newStatus} User`
+    );
+  }
+  deleteUser(user: User): void {
+    this.popupService.showConfirm(
+      `Are you sure you want to permanently delete ${user.name}? This action cannot be undone.`,
+      () => {
+        this.adminService.deleteUser(user.id).subscribe({
+          next: (response) => {
+            this.popupService.showSuccess(`User ${user.name} has been deleted`, 'User Deleted');
+            this.loadUsers(); // Reload the user list
+          },
+          error: (error) => {
+            console.error('Error deleting user:', error);
+            this.popupService.showError(error.error?.message || 'Failed to delete user');
+          }
+        });
+      },
+      undefined,
+      'Delete User'
+    );
+  }
+  // In your UserManagementComponent
   makeUserAdmin(user: User): void {
-    this.passwordConfirmService.show({
-      title: 'Admin Confirmation Required',
-      message: `You are about to grant admin privileges to ${user.name}. This action will give them full administrative access to the Netflix platform.\n\nPlease enter your admin password to confirm this action.`,
-      onConfirm: (password: string) => {
+    // this.passwordConfirmService.show({
+    //   title: 'Admin Confirmation Required',
+    //   message: `You are about to grant admin privileges to ${user.name}. This action will give them full administrative access to the Netflix platform.\n\nPlease enter your admin password to confirm this action.`,
+    //   onConfirm: (password: string) => {
         this.adminService.makeUserAdmin(user.id).subscribe({
           next: (response) => {
             this.popupService.showSuccess(`${user.name} has been successfully promoted to admin.`, 'Admin Promotion Successful');
@@ -395,12 +499,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             this.popupService.showError(error.error?.message || 'Failed to make user admin');
           }
         });
-      },
-      onCancel: () => {
-        // User cancelled the action
-        console.log('Admin promotion cancelled');
-      }
-    });
+    //   },
+    //   onCancel: () => {
+    //     console.log('Admin promotion cancelled');
+    //   }
+    // });
   }
 
   removeAdminRole(user: User): void {

@@ -1,7 +1,7 @@
 export type AdminPageType = 'dashboard' | 'content' | 'users' | 'analytics' | 'chatbot' | 'communications' | 'settings';
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   subscription: 'Basic' | 'Standard' | 'Premium';
@@ -11,6 +11,7 @@ export interface User {
   lastActive: string;
   region: string;
   avatar?: string;
+  isAdmin?: boolean;
 }
 // export interface AnalyticsData {
 
