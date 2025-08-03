@@ -383,6 +383,7 @@ namespace Netflix.API.Controllers
         }
 
         [HttpPost("remove-admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveAdminRole([FromBody] MakeAdminDTO dto)
         {
             var user = await userManager.FindByIdAsync(dto.UserId);
@@ -414,6 +415,25 @@ namespace Netflix.API.Controllers
                     isAdmin = user.IsAdmin
                 }
             });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            var result = await userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { message = "Failed to delete user", errors = result.Errors });
+            }
+
+            return Ok(new { message = "User deleted successfully" });
         }
     }
 }

@@ -76,7 +76,7 @@ import { environment } from '../../../../environments/environment';
                 <input type="checkbox" id="remember" [(ngModel)]="rememberMe" name="remember">
                 <label for="remember">Remember me</label>
               </div>
-              <a href="#" class="need-help" (click)="showForgotPasswordForm()">Need help?</a>
+                <a href="#" class="need-help" (click)="showForgotPasswordForm(); $event.preventDefault()">Need help?</a>
             </div>
 
             <div class="form-footer">
@@ -103,7 +103,7 @@ import { environment } from '../../../../environments/environment';
             <a href="#">Cookie Preferences</a>
             <a href="#">Corporate Information</a>
           </div>
-          
+
         </div>
       </footer>
 

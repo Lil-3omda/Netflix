@@ -38,6 +38,7 @@ export class AdminService {
     return this.http.get<any>(`${this.apiUrl}/admin/users/${id}`);
   }
 
+    // In AdminService
   deleteUser(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/admin/users/${id}`);
   }
@@ -142,18 +143,23 @@ export class AdminService {
     return this.http.delete(`${this.apiUrl}/admin/Subscriptions/${id}`);
   }
 
-  // User management methods
-  updateUserStatus(id: number, status: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/users/${id}/status`, { status });
+updateUserStatus(id: string, status: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/admin/users/${id}/status`, { status });
+}
+
+  // In your AdminService
+  makeUserAdmin(userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Auth/make-admin`, {
+        UserId: userId
+      });
   }
 
-  makeUserAdmin(id: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/users/${id}/make-admin`, {});
+  removeAdminRole(userId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Auth/remove-admin`, {
+      UserId: userId
+    });
   }
 
-  removeAdminRole(id: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/users/${id}/remove-admin`, {});
-  }
 
   updateUser(id: number, user: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/admin/users/${id}`, user);

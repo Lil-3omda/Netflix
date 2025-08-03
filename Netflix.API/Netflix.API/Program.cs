@@ -21,6 +21,9 @@ using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Features;
 using Netflix.API.Services.BackgroundServices;
+using Netflix.API.Repositories.MoviesRepository;
+using Netflix.API.Repositories.Categories;
+
 
 
 namespace Netflix.API
@@ -50,6 +53,9 @@ namespace Netflix.API
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
             builder.Services.AddScoped<ICommunicationService, CommunicationService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
 
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IAiService, AiService>();

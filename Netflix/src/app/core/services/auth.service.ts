@@ -133,6 +133,11 @@ export class AuthService {
     }
   }
 
+  // In auth.service.ts
+  getCurrentUserId(): string | null {
+    const user = this.getCurrentUser();
+    return user?.id || null;
+  }
   getUserRole(): string | null {
     const token = localStorage.getItem('netflix_token');
     if (!token) return null;

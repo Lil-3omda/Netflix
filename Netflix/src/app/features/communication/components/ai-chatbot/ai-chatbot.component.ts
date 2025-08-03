@@ -14,18 +14,18 @@ import { Subject, takeUntil } from 'rxjs';
     <div class="ai-chatbot-container" [class.open]="isOpen">
       <button class="chatbot-toggle" (click)="toggleChatbot()" [class.pulsing]="hasNewRecommendations">
         <div class="toggle-icon">
-          <svg *ngIf="!isOpen" width="28" height="28" viewBox="0 0 512 512" fill="white" xmlns="http://www.w3.org/2000/svg">
-            <path d="M105.22 512H0V0h105.22l301.56 512H512V0H406.78L105.22 512Z"/>
-          </svg>
+          <!-- Netflix N Logo -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#E50914">
+          <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.359-.004-14.849-.004-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z"/>
+        </svg>
 
-          <svg *ngIf="isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <!-- <svg *ngIf="isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none">
             <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
             <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-          </svg>
+          </svg> -->
         </div>
         <span class="ai-badge">AI</span>
       </button>
-
 
       <!-- Chatbot Window -->
       <div class="chatbot-window" *ngIf="isOpen">
@@ -33,8 +33,9 @@ import { Subject, takeUntil } from 'rxjs';
         <div class="chatbot-header">
           <div class="header-info">
             <div class="ai-avatar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L10.91 8.26L12 2Z" fill="currentColor"/>
+              <!-- Netflix N Logo -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#E50914">
+                <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.359-.004-14.849-.004-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z"/>
               </svg>
             </div>
             <div class="header-text">
@@ -45,8 +46,8 @@ import { Subject, takeUntil } from 'rxjs';
 
           <div class="header-actions">
             <button class="conversation-btn" (click)="showConversations = !showConversations" [class.active]="showConversations">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M8 6H21M8 12H21M8 18H21M3 6H3.01M3 12H3.01M3 18H3.01" stroke="currentColor" stroke-width="2"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#E50914">
+                <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.359-.004-14.849-.004-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z"/>
               </svg>
             </button>
             <button class="close-btn" (click)="toggleChatbot()">
@@ -63,8 +64,8 @@ import { Subject, takeUntil } from 'rxjs';
           <div class="conversations-header">
             <h5>Recent Conversations</h5>
             <button class="new-chat-btn" (click)="startNewConversation()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M12 6V18M6 12H18" stroke="currentColor" stroke-width="2"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#E50914">
+                <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.359-.004-14.849-.004-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z"/>
               </svg>
               New Chat
             </button>
@@ -86,8 +87,9 @@ import { Subject, takeUntil } from 'rxjs';
           <!-- Welcome Message -->
           <div class="welcome-message" *ngIf="messages.length === 0">
             <div class="ai-avatar-large">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L10.91 8.26L12 2Z" fill="currentColor"/>
+              <!-- Netflix N Logo -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#E50914">
+                <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.359-.004-14.849-.004-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z"/>
               </svg>
             </div>
             <div class="welcome-content">
@@ -130,8 +132,9 @@ import { Subject, takeUntil } from 'rxjs';
                [class.assistant-message]="message.role === 'Assistant'">
 
             <div class="message-avatar" *ngIf="message.role === 'Assistant'">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L10.91 8.26L12 2Z" fill="currentColor"/>
+              <!-- Netflix N Logo -->
+              <svg width="20" height="20" viewBox="0 0 54 54" fill="#E50914" xmlns="http://www.w3.org/2000/svg">
+                <path d="M42 0H12V54H16.5V5.14286L42 54H47.5V0H42Z"/>
               </svg>
             </div>
 
@@ -159,7 +162,6 @@ import { Subject, takeUntil } from 'rxjs';
                 <div class="movie-info">
                   <h6>{{ rec.title }}</h6>
                   <div class="movie-meta">
-                    <span class="rating">⭐ {{ rec.rating.toFixed(1) }}</span>
                     <span class="category">{{ rec.category }}</span>
                   </div>
                   <p class="recommendation-reason">{{ rec.reason }}</p>
@@ -171,8 +173,9 @@ import { Subject, takeUntil } from 'rxjs';
           <!-- Typing Indicator -->
           <div class="typing-indicator" *ngIf="isTyping">
             <div class="ai-avatar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L10.91 8.26L12 2Z" fill="currentColor"/>
+              <!-- Netflix N Logo -->
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#E50914">
+                <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.359-.004-14.849-.004-22.95zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398v-9.22z"/>
               </svg>
             </div>
             <div class="typing-dots">
@@ -227,11 +230,11 @@ import { Subject, takeUntil } from 'rxjs';
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #e50914, #f40612);
-      border: none;
+      background: #141414;
+      border: 2px solid #E50914;
       color: white;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
       transition: all 0.3s ease;
       position: relative;
       display: flex;
@@ -242,7 +245,12 @@ import { Subject, takeUntil } from 'rxjs';
 
     .chatbot-toggle:hover {
       transform: scale(1.1);
-      box-shadow: 0 6px 25px rgba(229, 9, 20, 0.5);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+      background: #E50914;
+    }
+
+    .chatbot-toggle:hover svg {
+      fill: white;
     }
 
     .chatbot-toggle.pulsing {
@@ -258,13 +266,14 @@ import { Subject, takeUntil } from 'rxjs';
       position: absolute;
       top: -5px;
       right: -5px;
-      background: linear-gradient(135deg, #ffd700, #ffed4e);
-      color: #000;
+      background: #E50914;
+      color: white;
       border-radius: 10px;
       padding: 2px 6px;
       font-size: 10px;
       font-weight: bold;
       z-index: 3;
+      border: 1px solid white;
     }
 
     .chatbot-window {
@@ -273,8 +282,8 @@ import { Subject, takeUntil } from 'rxjs';
       right: 0;
       width: 380px;
       height: 600px;
-      background: linear-gradient(135deg, #141414, #1a1a1a);
-      border-radius: 16px;
+      background: #141414;
+      border-radius: 8px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
@@ -283,12 +292,13 @@ import { Subject, takeUntil } from 'rxjs';
     }
 
     .chatbot-header {
-      background: linear-gradient(135deg, #e50914, #f40612);
+      background: #141414;
       padding: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: white;
+      border-bottom: 1px solid #333;
     }
 
     .header-info {
@@ -300,23 +310,25 @@ import { Subject, takeUntil } from 'rxjs';
     .ai-avatar {
       width: 36px;
       height: 36px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(10px);
+      border: 1px solid #E50914;
     }
 
     .header-text h4 {
       margin: 0;
       font-size: 16px;
       font-weight: 600;
+      color: #E50914;
     }
 
     .status {
       font-size: 12px;
       opacity: 0.9;
+      color: #999;
     }
 
     .header-actions {
@@ -326,22 +338,22 @@ import { Subject, takeUntil } from 'rxjs';
 
     .conversation-btn,
     .close-btn {
-      background: rgba(255, 255, 255, 0.1);
+      background: #333;
       border: none;
       color: white;
       cursor: pointer;
       padding: 8px;
-      border-radius: 6px;
+      border-radius: 4px;
       transition: background 0.2s;
     }
 
     .conversation-btn:hover,
     .close-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: #E50914;
     }
 
     .conversation-btn.active {
-      background: rgba(255, 255, 255, 0.3);
+      background: #E50914;
     }
 
     .conversations-panel {
@@ -362,11 +374,11 @@ import { Subject, takeUntil } from 'rxjs';
     .conversations-header h5 {
       margin: 0;
       font-size: 14px;
-      color: white;
+      color: #E50914;
     }
 
     .new-chat-btn {
-      background: #e50914;
+      background: #E50914;
       border: none;
       color: white;
       padding: 4px 8px;
@@ -376,6 +388,11 @@ import { Subject, takeUntil } from 'rxjs';
       display: flex;
       align-items: center;
       gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .new-chat-btn:hover {
+      background: #f40612;
     }
 
     .conversations-list {
@@ -396,6 +413,7 @@ import { Subject, takeUntil } from 'rxjs';
 
     .conversation-item.active {
       background: #333;
+      border-left: 3px solid #E50914;
     }
 
     .conversation-item h6 {
@@ -424,12 +442,6 @@ import { Subject, takeUntil } from 'rxjs';
       max-height: calc(100% - 300px);
     }
 
-    }
-
-    .chatbot-messages.with-conversations {
-      max-height: 300px;
-    }
-
     .welcome-message {
       text-align: center;
       padding: 20px;
@@ -438,18 +450,19 @@ import { Subject, takeUntil } from 'rxjs';
     .ai-avatar-large {
       width: 60px;
       height: 60px;
-      background: linear-gradient(135deg, #e50914, #f40612);
-      border-radius: 50%;
+      background: #141414;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 16px;
       color: white;
+      border: 2px solid #E50914;
     }
 
     .welcome-content h4 {
       margin: 0 0 8px 0;
-      color: white;
+      color: #E50914;
       font-size: 18px;
     }
 
@@ -468,8 +481,8 @@ import { Subject, takeUntil } from 'rxjs';
 
     .quick-action {
       background: rgba(229, 9, 20, 0.1);
-      border: 1px solid #e50914;
-      color: #e50914;
+      border: 1px solid #E50914;
+      color: #E50914;
       padding: 10px 16px;
       border-radius: 8px;
       font-size: 13px;
@@ -482,18 +495,18 @@ import { Subject, takeUntil } from 'rxjs';
     }
 
     .quick-action:hover {
-      background: #e50914;
+      background: #E50914;
       color: white;
     }
 
     .recommendation-btn {
-      background: linear-gradient(135deg, #ffd700, #ffed4e);
-      color: #000;
+      background: #E50914;
+      color: white;
       border: none;
     }
 
     .recommendation-btn:hover {
-      background: linear-gradient(135deg, #ffed4e, #ffd700);
+      background: #f40612;
     }
 
     .message {
@@ -508,7 +521,7 @@ import { Subject, takeUntil } from 'rxjs';
     }
 
     .user-message .message-content {
-      background: #e50914;
+      background: #E50914;
       color: white;
       margin-left: 40px;
     }
@@ -517,12 +530,13 @@ import { Subject, takeUntil } from 'rxjs';
       background: #333;
       color: white;
       margin-right: 40px;
+      border-left: 2px solid #E50914;
     }
 
     .message-content {
       max-width: 75%;
       padding: 12px 16px;
-      border-radius: 16px;
+      border-radius: 8px;
       position: relative;
     }
 
@@ -543,13 +557,13 @@ import { Subject, takeUntil } from 'rxjs';
       margin: 16px 0;
       padding: 16px;
       background: rgba(229, 9, 20, 0.05);
-      border-radius: 12px;
+      border-radius: 8px;
       border: 1px solid rgba(229, 9, 20, 0.2);
     }
 
     .recommendations-section h5 {
       margin: 0 0 12px 0;
-      color: #e50914;
+      color: #E50914;
       font-size: 16px;
     }
 
@@ -566,17 +580,19 @@ import { Subject, takeUntil } from 'rxjs';
       border-radius: 8px;
       padding: 12px;
       transition: transform 0.2s;
+      border: 1px solid #333;
     }
 
     .recommendation-card:hover {
       transform: translateY(-2px);
+      border-color: #E50914;
     }
 
     .movie-poster {
       position: relative;
       width: 60px;
       height: 90px;
-      border-radius: 6px;
+      border-radius: 4px;
       overflow: hidden;
       flex-shrink: 0;
     }
@@ -603,7 +619,7 @@ import { Subject, takeUntil } from 'rxjs';
     }
 
     .play-btn {
-      background: #e50914;
+      background: #E50914;
       border: none;
       color: white;
       border-radius: 50%;
@@ -669,12 +685,13 @@ import { Subject, takeUntil } from 'rxjs';
       padding: 12px 16px;
       background: #333;
       border-radius: 16px;
+      border-left: 2px solid #E50914;
     }
 
     .typing-dots span {
       width: 6px;
       height: 6px;
-      background: #999;
+      background: #E50914;
       border-radius: 50%;
       animation: typing 1.4s infinite ease-in-out;
     }
@@ -708,6 +725,11 @@ import { Subject, takeUntil } from 'rxjs';
       color: white;
       font-size: 14px;
       outline: none;
+      border: 1px solid #444;
+    }
+
+    .message-input:focus {
+      border-color: #E50914;
     }
 
     .message-input::placeholder {
@@ -729,17 +751,19 @@ import { Subject, takeUntil } from 'rxjs';
     }
 
     .recommend-btn {
-      background: linear-gradient(135deg, #ffd700, #ffed4e);
-      color: #000;
+      background: #333;
+      color: #E50914;
+      border: 1px solid #444;
     }
 
     .recommend-btn:hover:not(:disabled) {
-      background: linear-gradient(135deg, #ffed4e, #ffd700);
+      background: #E50914;
+      color: white;
       transform: scale(1.05);
     }
 
     .send-btn {
-      background: #e50914;
+      background: #E50914;
     }
 
     .send-btn:hover:not(:disabled) {
@@ -767,14 +791,15 @@ import { Subject, takeUntil } from 'rxjs';
 
     .chatbot-messages::-webkit-scrollbar-thumb,
     .conversations-list::-webkit-scrollbar-thumb {
-      background: #555;
+      background: #E50914;
       border-radius: 2px;
     }
 
     /* Animations */
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); }
       50% { transform: scale(1.05); }
+      70% { box-shadow: 0 0 0 10px rgba(229, 9, 20, 0); }
     }
 
     @keyframes typing {
@@ -810,6 +835,7 @@ import { Subject, takeUntil } from 'rxjs';
   `]
 })
 export class AiChatbotComponent implements OnInit, OnDestroy {
+  // ... (rest of the component code remains exactly the same)
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   private isUserScrolledUp = false;
   isOpen = false;
@@ -850,10 +876,6 @@ export class AiChatbotComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ngAfterViewChecked() {
-  //   this.scrollToBottom();
-  //   this.cdRef.detectChanges();
-  // }
   ngAfterViewInit() {
     if (this.messagesContainer) {
       this.messagesContainer.nativeElement.addEventListener('scroll', () => {
@@ -935,7 +957,6 @@ export class AiChatbotComponent implements OnInit, OnDestroy {
     } finally {
       this.isLoading = false;
       this.isTyping = false;
-      // this.scrollToBottom(true);
     }
   }
 
@@ -979,7 +1000,6 @@ export class AiChatbotComponent implements OnInit, OnDestroy {
     } finally {
       this.isLoading = false;
       this.isTyping = false;
-      // this.scrollToBottom(true);
     }
   }
 
@@ -1010,7 +1030,6 @@ export class AiChatbotComponent implements OnInit, OnDestroy {
         this.currentConversationId = conversation.id;
         this.messages = conversation.messages;
         this.showConversations = false;
-        // this.scrollToBottom(true);
       }
     } catch (error) {
       console.error('Error loading conversation:', error);

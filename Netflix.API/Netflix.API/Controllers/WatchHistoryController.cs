@@ -81,47 +81,10 @@ namespace Netflix.API.Controllers
             return Ok(watchedCategories);
         }
 
-        [HttpGet("PersonalizedHomepage/{userId}")]
-        public async Task<IActionResult> GetPersonalizedHomepage(string userId)
-        {
-            var watchedCategories = await unitOfWork.WatchHistories.GetWatchedCategoriesByUserIdAsync(userId);
-
-            var personalizedSections = new List<object>();
-
-            foreach (var category in watchedCategories)
-            {
-                var movies = await unitOfWork.WatchHistories.GetMoviesByCategoryOrderedByViewsAsync(category, 10);
-
-                if (movies.Any())
-                {
-                    personalizedSections.Add(new
-                    {
-                        name = category,
-                        videos = movies.Select(m => new
-                        {
-                            id = m.Id,
-                            title = m.Title,
-                            description = m.Description,
-                            imageUrl = m.ImageUrl,
-                            coverUrl = m.CoverUrl,
-                            duration = m.Duration,
-                            totalView = m.TotalView,
-                            trailerUrl = m.TrailerUrl,
-                            categoryName = m.Category?.Name
-                        })
-                    });
-                }
-            }
-
-            return Ok(personalizedSections);
-        }
-
         //[HttpGet("PersonalizedHomepage/{userId}")]
         //public async Task<IActionResult> GetPersonalizedHomepage(string userId)
         //{
         //    var watchedCategories = await unitOfWork.WatchHistories.GetWatchedCategoriesByUserIdAsync(userId);
-
-        //    var allCategories = await unitOfWork.Categories.GetAllAsync();
 
         //    var personalizedSections = new List<object>();
 
@@ -134,38 +97,6 @@ namespace Netflix.API.Controllers
         //            personalizedSections.Add(new
         //            {
         //                name = category,
-        //                isPersonalized = true,
-        //                videos = movies.Select(m => new
-        //                {
-        //                    id = m.Id,
-        //                    title = m.Title,
-        //                    description = m.Description,
-        //                    imageUrl = m.ImageUrl,
-        //                    coverUrl = m.CoverUrl,
-        //                    duration = m.Duration,
-        //                    totalView = m.TotalView,
-        //                    trailerUrl = m.TrailerUrl,
-        //                    categoryName = m.Category?.Name
-        //                })
-        //            });
-        //        }
-        //    }
-
-        //    var remainingCategories = allCategories
-        //        .Select(c => c.Name)
-        //        .Except(watchedCategories, StringComparer.OrdinalIgnoreCase)
-        //        .ToList();
-
-        //    foreach (var category in remainingCategories)
-        //    {
-        //        var movies = await unitOfWork.Movies.GetMoviesByCategoryAsync(category, 10);
-
-        //        if (movies.Any())
-        //        {
-        //            personalizedSections.Add(new
-        //            {
-        //                name = category,
-        //                isPersonalized = false, 
         //                videos = movies.Select(m => new
         //                {
         //                    id = m.Id,
@@ -184,5 +115,74 @@ namespace Netflix.API.Controllers
 
         //    return Ok(personalizedSections);
         //}
+
+        [HttpGet("PersonalizedHomepage/{userId}")]
+        public async Task<IActionResult> GetPersonalizedHomepage(string userId)
+        {
+            var watchedCategories = await unitOfWork.WatchHistories.GetWatchedCategoriesByUserIdAsync(userId);
+
+            var allCategories = await unitOfWork.Categories.GetAllAsync();
+
+            var personalizedSections = new List<object>();
+
+            foreach (var category in watchedCategories)
+            {
+                var movies = await unitOfWork.WatchHistories.GetMoviesByCategoryOrderedByViewsAsync(category, 10);
+
+                if (movies.Any())
+                {
+                    personalizedSections.Add(new
+                    {
+                        name = category,
+                        isPersonalized = true,
+                        videos = movies.Select(m => new
+                        {
+                            id = m.Id,
+                            title = m.Title,
+                            description = m.Description,
+                            imageUrl = m.ImageUrl,
+                            coverUrl = m.CoverUrl,
+                            duration = m.Duration,
+                            totalView = m.TotalView,
+                            trailerUrl = m.TrailerUrl,
+                            categoryName = m.Category?.Name
+                        })
+                    });
+                }
+            }
+
+            var remainingCategories = allCategories
+                .Select(c => c.Name)
+                .Except(watchedCategories, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            foreach (var category in remainingCategories)
+            {
+                var movies = await unitOfWork.Movies.GetMoviesByCategoryAsync(category, 10);
+
+                if (movies.Any())
+                {
+                    personalizedSections.Add(new
+                    {
+                        name = category,
+                        isPersonalized = false,
+                        videos = movies.Select(m => new
+                        {
+                            id = m.Id,
+                            title = m.Title,
+                            description = m.Description,
+                            imageUrl = m.ImageUrl,
+                            coverUrl = m.CoverUrl,
+                            duration = m.Duration,
+                            totalView = m.TotalView,
+                            trailerUrl = m.TrailerUrl,
+                            categoryName = m.Category?.Name
+                        })
+                    });
+                }
+            }
+
+            return Ok(personalizedSections);
+        }
     }
 }
