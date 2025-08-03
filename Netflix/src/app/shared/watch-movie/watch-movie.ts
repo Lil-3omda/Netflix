@@ -68,7 +68,12 @@ onWatch(video_id){
   })
 }
 
+isHovered: boolean = false;
 
+goBack() {
+  window.history.back();
+
+}
 
 
 }

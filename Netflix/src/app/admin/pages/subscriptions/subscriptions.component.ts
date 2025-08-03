@@ -44,7 +44,7 @@ interface UserSubscription {
         <p class="lead">Manage subscription plans and user subscriptions</p>
       </div>
 
-      <!-- Enhanced Stats Row -->
+      <!-- Enhanced Stats Row
       <div class="row mb-4 g-4">
         <div class="col-md-2" *ngFor="let stat of [
           { label: 'Total Users', value: subscriptionStats?.totalUsers || 0, class: 'primary' },
@@ -61,7 +61,7 @@ interface UserSubscription {
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- First Row of Stats -->
       <div class="row mb-5 g-4">
@@ -202,9 +202,9 @@ interface UserSubscription {
                 </td>
                 <td>
                   <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit Subscription">
+                    <!-- <button class="btn btn-outline-info" (click)="openEditModal(sub)" title="Edit Subscription">
                       <i class="bi bi-pencil"></i>
-                    </button>
+                    </button> -->
                     <button class="btn btn-outline-danger" (click)="confirmDelete(sub)" title="Delete Subscription">
                       <i class="bi bi-trash"></i>
                     </button>
@@ -231,9 +231,9 @@ interface UserSubscription {
           <div class="accordion accordion-dark" id="subscriptionAccordion">
             <div class="accordion-item bg-dark border-secondary" *ngFor="let user of groupedUserSubscriptions; let i = index">
               <h2 class="accordion-header">
-                <button class="accordion-button collapsed bg-dark text-white border-secondary" 
-                        type="button" 
-                        [attr.data-bs-toggle]="'collapse'" 
+                <button class="accordion-button collapsed bg-dark text-white border-secondary"
+                        type="button"
+                        [attr.data-bs-toggle]="'collapse'"
                         [attr.data-bs-target]="'#collapse' + i">
                   <div class="d-flex justify-content-between w-100 me-3">
                     <div>
@@ -265,7 +265,7 @@ interface UserSubscription {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let subscription of user.subscriptionHistory" 
+                        <tr *ngFor="let subscription of user.subscriptionHistory"
                             [ngClass]="subscription.isActive ? 'table-success' : 'table-secondary'">
                           <td>
                             <span class="badge" [ngClass]="subscription.isActive ? 'bg-success' : 'bg-secondary'">
