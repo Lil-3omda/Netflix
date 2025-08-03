@@ -8,9 +8,17 @@
 
   <ItemGroup>
     <Compile Remove="Repositories\Interfaces\NewFolder\**" />
+    <Compile Remove="wwwroot\images\**" />
+    <Compile Remove="wwwroot\videos\**" />
     <Content Remove="Repositories\Interfaces\NewFolder\**" />
+    <Content Remove="wwwroot\images\**" />
+    <Content Remove="wwwroot\videos\**" />
     <EmbeddedResource Remove="Repositories\Interfaces\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\images\**" />
+    <EmbeddedResource Remove="wwwroot\videos\**" />
     <None Remove="Repositories\Interfaces\NewFolder\**" />
+    <None Remove="wwwroot\images\**" />
+    <None Remove="wwwroot\videos\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,8 +44,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\videos\" />
   </ItemGroup>
 
 </Project>

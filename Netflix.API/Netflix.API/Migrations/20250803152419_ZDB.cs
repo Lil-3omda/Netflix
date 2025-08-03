@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Netflix.API.Migrations
 {
     /// <inheritdoc />
-    public partial class ziad : Migration
+    public partial class ZDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -311,6 +311,7 @@ namespace Netflix.API.Migrations
                     PlanId = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     SubscriptionPlanId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
