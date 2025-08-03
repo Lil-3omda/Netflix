@@ -63,7 +63,7 @@
         <img [src]="'https://localhost:7140/' + movie.imageUrl" alt="{{ movie.title }}" class="movie-thumbnail" />
         <div>
           <h6 class="mb-1 fw-bold">{{ movie.title }}</h6>
-          <p class="mb-0 text-muted small">{{ movie.categoryName }} • Views: {{ movie.viewCount }}</p>
+          <p class="mb-0 text-muted small">{{ movie.categoryName }} • Views: {{ movie.totalView }}</p>
         </div>
       </div>
     </li>
@@ -93,7 +93,7 @@
           <li *ngFor="let profile of userProfiles">
             <a class="dropdown-item text-white d-flex align-items-center" (click)="selectProfile(profile)">
               <img [src]="getProfileImage(profile.name)" width="24" height="24" class="rounded" alt="avatar" />
-              {{  profile.name }}
+              {{ profile.name }}
               <i class="bi bi-check-lg ms-auto text-success" *ngIf="currentProfile?.id === profile.id"></i>
             </a>
           </li>

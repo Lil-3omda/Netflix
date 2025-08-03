@@ -7,11 +7,12 @@ import { Navbar } from '../../layout/navbar/navbar';
 import { FavoriteService } from 'src/app/pages/favorite/favoriteservice';
 import { ProfileService } from 'src/app/core/services/profile.service';
 import { Video } from 'lucide-angular';
+import { HistoryService } from 'src/app/pages/watch-history/services/history-service';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule,Navbar , RouterLink ],
+  imports: [CommonModule, Navbar, RouterLink ],
   templateUrl: './category.html',
   styleUrls: ['./category.css']
 })
@@ -22,15 +23,18 @@ export class Category implements OnInit {
   profileId: number | null =Number(localStorage.getItem('profileId'));
   moviesInFavList:any
   isLoadingProfile: boolean = false;
+  watchedStatusMap: { [videoId: number]: boolean } = {};
 
   constructor(
     private route: ActivatedRoute,
     private service: MovieCategory,
     private favoriteService: FavoriteService,
+    private historyService: HistoryService
   ) {}
 
 ngOnInit(): void {
   this.loadData();
+
   
 
 }
@@ -53,6 +57,7 @@ loadData() {
 
           // ✅ Now load favorites AFTER movies are fetched
           this.loadFavorites();
+          this.loadWatchedStatuses();
         } else {
           this.categoryName = 'No results found';
           this.movies = [];
@@ -145,5 +150,24 @@ async toggleFavorite(movie: any, event: MouseEvent): Promise<void> {
       movie.isLoading = false;
     }
   }
+ 
   
+    checkWatched(videoId: number): void {
+    const profileId = Number(localStorage.getItem('profileId'));
+
+    this.historyService.isMovieWatched(profileId, videoId).subscribe({
+      next: (watched: boolean) => {
+        this.watchedStatusMap[videoId] = watched;
+      },
+      error: err => {
+        console.error('Error checking watch status:', err);
+        this.watchedStatusMap[videoId] = false;
+      }
+    });
+  }
+
+  loadWatchedStatuses() {
+  this.movies.forEach(movie => this.checkWatched(movie.id));
+  }
+
 }

@@ -10,8 +10,7 @@
          <div class="movie-card">
     <div class="movie-image">
     <img [src]="'https://localhost:7140/' + movie.imageUrl" alt="{{ movie.title }}" [routerLink]="['/moviedetails', movie.id]" />
-    
-   
+    <h3 *ngIf="watchedStatusMap[movie.id]" class="watched">Watched</h3>
     <div class="movie-overlay">
       <div class="movie-title">{{ movie.title }}</div>
       <div class="extra-info">

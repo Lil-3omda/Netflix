@@ -108,5 +108,14 @@
   opacity: 1;
   transform: translatey(0);
 }
-
+.watched{
+  position: absolute;
+  top: 5px;
+  right: 0;
+  z-index: 10;
+  padding: 3px;
+  background-color: rgb(38, 194, 38);
+  font-size: small;
+  border-radius: 5px 0 0 5px;
+}
 
