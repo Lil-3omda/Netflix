@@ -162,7 +162,6 @@ import { Subject, takeUntil } from 'rxjs';
                 <div class="movie-info">
                   <h6>{{ rec.title }}</h6>
                   <div class="movie-meta">
-                    <span class="rating">⭐ {{ rec.rating.toFixed(1) }}</span>
                     <span class="category">{{ rec.category }}</span>
                   </div>
                   <p class="recommendation-reason">{{ rec.reason }}</p>

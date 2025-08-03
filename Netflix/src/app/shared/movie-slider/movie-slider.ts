@@ -6,6 +6,8 @@ import { RouterLink } from '@angular/router';
 import { FavoriteService } from 'src/app/pages/favorite/favoriteservice';
 import { ProfileService } from 'src/app/core/services/profile.service';
 import { PopupService } from '../services/popup.service';
+import { HistoryService } from 'src/app/pages/watch-history/services/history-service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-movie-slider',
@@ -25,13 +27,15 @@ export class MovieSliderSectionComponent implements OnInit {
   movies: any[] = [];
   profileId: number | null = null;
   isLoadingProfile: boolean = false;
+  isWatched:Boolean = false
+  watchedStatusMap: { [videoId: number]: boolean } = {};
 
   constructor(
     private movieService: MovieCategory,
     private http: HttpClient,
     private favoriteService: FavoriteService,
     private profileService: ProfileService,
-
+    private historyService: HistoryService,
     private popupService: PopupService
   ) {}
 
@@ -48,6 +52,8 @@ export class MovieSliderSectionComponent implements OnInit {
     } else if (this.categoryName) {
       this.loadMoviesByCategory();
     }
+
+    this.loadWatchedStatuses();
   }
 
   loadProfileId(): void {
@@ -80,6 +86,7 @@ export class MovieSliderSectionComponent implements OnInit {
         next: (data) => {
           this.movies = data;
           this.loadFavorites();
+           this.loadWatchedStatuses();
         },
         error: (err) => console.error('Error loading top 10 movies:', err)
       });
@@ -91,6 +98,7 @@ export class MovieSliderSectionComponent implements OnInit {
         next: (data) => {
           this.movies = data.videos;
           this.loadFavorites();
+         
         },
         error: (err) => console.error('Error loading movies by category:', err)
       });
@@ -104,7 +112,7 @@ export class MovieSliderSectionComponent implements OnInit {
         const favIds = favs.map(f => f.videoId);
         this.movies.forEach(movie => {
           movie.isFavorite = favIds.includes(movie.id);
-          console.log(favIds)
+
         });
       },
       error: (err) => console.error('Error loading favorites:', err)
@@ -165,5 +173,23 @@ export class MovieSliderSectionComponent implements OnInit {
     } finally {
       movie.isLoading = false;
     }
+  }
+
+  checkWatched(videoId: number): void {
+    const profileId = Number(localStorage.getItem('profileId'));
+
+    this.historyService.isMovieWatched(profileId, videoId).subscribe({
+      next: (watched: boolean) => {
+        this.watchedStatusMap[videoId] = watched;
+      },
+      error: err => {
+        console.error('Error checking watch status:', err);
+        this.watchedStatusMap[videoId] = false;
+      }
+    });
+  }
+
+  loadWatchedStatuses() {
+  this.movies.forEach(movie => this.checkWatched(movie.id));
   }
 }

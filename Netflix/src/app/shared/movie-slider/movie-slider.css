@@ -159,12 +159,12 @@
 .ten-number{
   position: absolute;
   color:black;
-  font-size:180px;
+  font-size:162px;
   font-weight: 900;
   -webkit-text-stroke: 5px #555;
   z-index: 0;
   letter-spacing: -20px;
-  right: 208px;
+  right: 203px;
   line-height: 1.7;
   pointer-events: none;
   user-select: none;
@@ -200,4 +200,14 @@
 .fa-heart {
   pointer-events: auto !important;
   cursor: pointer;
+}
+.watched{
+  position: absolute;
+  top: 5px;
+  right: 0;
+  z-index: 10;
+  padding: 3px;
+  background-color: rgb(38, 194, 38);
+  font-size: small;
+  border-radius: 5px 0 0 5px;
 }

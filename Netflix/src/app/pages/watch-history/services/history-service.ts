@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +17,12 @@ export class HistoryService {
   addToHistory(reqBody):Observable<any>{
     return this.http.post<any>(`${this.baseUrl}`,reqBody);
   }
+
+isMovieWatched(profileId: number, videoId: number): Observable<boolean> {
+  const params = new HttpParams()
+    .set('profileId', profileId)
+    .set('videoId', videoId);
+  return this.http.get<boolean>(`${this.baseUrl}/isWatched`, { params });
+}
   
 }
