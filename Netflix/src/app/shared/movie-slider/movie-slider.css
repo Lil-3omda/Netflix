@@ -159,12 +159,12 @@
 .ten-number{
   position: absolute;
   color:black;
-  font-size:180px;
+  font-size:162px;
   font-weight: 900;
   -webkit-text-stroke: 5px #555;
   z-index: 0;
   letter-spacing: -20px;
-  right: 208px;
+  right: 203px;
   line-height: 1.7;
   pointer-events: none;
   user-select: none;

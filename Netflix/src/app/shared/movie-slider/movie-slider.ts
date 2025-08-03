@@ -112,7 +112,7 @@ export class MovieSliderSectionComponent implements OnInit {
         const favIds = favs.map(f => f.videoId);
         this.movies.forEach(movie => {
           movie.isFavorite = favIds.includes(movie.id);
-          console.log(favIds)
+
         });
       },
       error: (err) => console.error('Error loading favorites:', err)

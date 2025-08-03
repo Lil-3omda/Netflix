@@ -8,11 +8,13 @@ import { FavoriteService } from 'src/app/pages/favorite/favoriteservice';
 import { ProfileService } from 'src/app/core/services/profile.service';
 import { Video } from 'lucide-angular';
 import { HistoryService } from 'src/app/pages/watch-history/services/history-service';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, Navbar, RouterLink ],
+  imports: [CommonModule, Navbar, RouterLink, NgxPaginationModule ],
   templateUrl: './category.html',
   styleUrls: ['./category.css']
 })
@@ -24,6 +26,7 @@ export class Category implements OnInit {
   moviesInFavList:any
   isLoadingProfile: boolean = false;
   watchedStatusMap: { [videoId: number]: boolean } = {};
+  page: number = 1;
 
   constructor(
     private route: ActivatedRoute,

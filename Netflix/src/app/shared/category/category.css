@@ -119,3 +119,50 @@
   border-radius: 5px 0 0 5px;
 }
 
+::ng-deep .ngx-pagination {
+  background-color: transparent !important;
+  border-radius: 12px;
+  padding: 10px 15px;
+  display: inline-block;
+}
+
+::ng-deep .ngx-pagination li {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+::ng-deep .ngx-pagination li a,
+::ng-deep .ngx-pagination li span {
+  background-color: #111 !important; /* dark background */
+  color: white !important;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s;
+  border: none;
+}
+
+::ng-deep .ngx-pagination li a:hover {
+  background-color: #e50914 !important; /* Netflix red on hover */
+  color: white !important;
+}
+
+::ng-deep .ngx-pagination li.current a,
+::ng-deep .ngx-pagination li.current span {
+  background-color: #e50914 !important; /* Netflix red */
+  font-weight: bold;
+  color: white !important;
+}
+
+::ng-deep .ngx-pagination li.disabled a {
+  background-color: #333 !important;
+  color: #777 !important;
+  pointer-events: none;
+}
+.ngx-pagination .current{
+  background-color: transparent !important;
+  background: #e50914 !important;
+}
+::ng-deep .ngx-pagination .current{
+  background: transparent !important;
+}

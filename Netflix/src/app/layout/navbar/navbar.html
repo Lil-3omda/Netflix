@@ -92,7 +92,7 @@
           <li *ngIf="userProfiles.length > 1" class="dropdown-header text-white-50">Switch Profile</li>
           <li *ngFor="let profile of userProfiles">
             <a class="dropdown-item text-white d-flex align-items-center" (click)="selectProfile(profile)">
-              <img [src]="getProfileImage(profile.name)" width="24" height="24" class="rounded" alt="avatar" />
+              <img [src]="getProfileImage(profile.name)" width="24" height="24" class="rounded me-2" alt="avatar" />
               {{ profile.name }}
               <i class="bi bi-check-lg ms-auto text-success" *ngIf="currentProfile?.id === profile.id"></i>
             </a>
@@ -100,11 +100,11 @@
           <li *ngIf="userProfiles.length > 1"><hr class="dropdown-divider border-secondary"></li>
 
           <!-- Profile Management -->
-          <li><a class="dropdown-item text-white" (click)="switchProfile()"><i class="bi bi-person-plus me-2"></i> Manage Profiles</a></li>
-          <li><a class="dropdown-item text-white" routerLink="/watchHistory"><i class="bi bi-clock-history"></i> Watch History</a></li>
-          <li><a class="dropdown-item text-white" routerLink="/account"><i class="bi bi-gear me-2"></i> Account</a></li>
+          <li><a class="dropdown-item text-white" (click)="switchProfile()"><i class="bi bi-person-plus me-2"></i>Manage Profiles</a></li>
+          <li><a class="dropdown-item text-white" routerLink="/watchHistory"><i class="bi bi-clock-history me-2"></i>Watch History</a></li>
+          <li><a class="dropdown-item text-white" routerLink="/account"><i class="bi bi-gear me-2"></i>Account</a></li>
           <li><hr class="dropdown-divider border-secondary"></li>
-          <li><a class="dropdown-item text-white" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a></li>
+          <li><a class="dropdown-item text-white" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
         </ul>
       </div>
 
