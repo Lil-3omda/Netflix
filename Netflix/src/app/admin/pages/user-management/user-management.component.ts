@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Subject, takeUntil } from 'rxjs';
 import { AdminService } from '../../services/admin.service';
 import { User } from '../../models/admin.interfaces';
+import { PopupService } from '../../../shared/services/popup.service';
+import { PasswordConfirmService } from '../../../shared/services/password-confirm.service';
 
 @Component({
   selector: 'app-user-management',
@@ -256,7 +258,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminService: AdminService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private popupService: PopupService,
+    private passwordConfirmService: PasswordConfirmService
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -377,33 +381,46 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   makeUserAdmin(user: User): void {
-    if (confirm(`Are you sure you want to make ${user.name} an admin?`)) {
-      this.adminService.makeUserAdmin(user.id.toString()).subscribe({
-        next: (response) => {
-          alert('User successfully converted to admin');
-          this.loadUsers(); // Reload users list
-        },
-        error: (error) => {
-          console.error('Error making user admin:', error);
-          alert(error.error?.message || 'Failed to make user admin');
-        }
-      });
-    }
+    this.passwordConfirmService.show({
+      title: 'Admin Confirmation Required',
+      message: `You are about to grant admin privileges to ${user.name}. This action will give them full administrative access to the Netflix platform.\n\nPlease enter your admin password to confirm this action.`,
+      onConfirm: (password: string) => {
+        this.adminService.makeUserAdmin(user.id).subscribe({
+          next: (response) => {
+            this.popupService.showSuccess(`${user.name} has been successfully promoted to admin.`, 'Admin Promotion Successful');
+            this.loadUsers(); // Reload users list
+          },
+          error: (error) => {
+            console.error('Error making user admin:', error);
+            this.popupService.showError(error.error?.message || 'Failed to make user admin');
+          }
+        });
+      },
+      onCancel: () => {
+        // User cancelled the action
+        console.log('Admin promotion cancelled');
+      }
+    });
   }
 
   removeAdminRole(user: User): void {
-    if (confirm(`Are you sure you want to remove admin role from ${user.name}?`)) {
-      this.adminService.removeAdminRole(user.id.toString()).subscribe({
-        next: (response) => {
-          alert('Admin role removed successfully');
-          this.loadUsers(); // Reload users list
-        },
-        error: (error) => {
-          console.error('Error removing admin role:', error);
-          alert(error.error?.message || 'Failed to remove admin role');
-        }
-      });
-    }
+    this.popupService.showConfirm(
+      `Are you sure you want to remove admin role from ${user.name}? This will revoke all administrative privileges.`,
+      () => {
+        this.adminService.removeAdminRole(user.id).subscribe({
+          next: (response) => {
+            this.popupService.showSuccess(`Admin role removed from ${user.name} successfully`, 'Admin Role Removed');
+            this.loadUsers(); // Reload users list
+          },
+          error: (error) => {
+            console.error('Error removing admin role:', error);
+            this.popupService.showError(error.error?.message || 'Failed to remove admin role');
+          }
+        });
+      },
+      undefined,
+      'Remove Admin Role'
+    );
   }
 }
 

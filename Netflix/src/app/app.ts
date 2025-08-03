@@ -9,6 +9,9 @@ import { NetflixUser } from './admin/pages/netflix-user/netflix-user';
 import { UserManagement } from './admin/pages/settings/user-management/user-management';
 import { MainNetflixAdmainSettings } from './admin/pages/settings/main-netflix-admain-settings/main-netflix-admain-settings';
 
+import { PopupComponent } from './shared/components/popup/popup.component';
+import { PasswordConfirmComponent } from './shared/components/password-confirm/password-confirm.component';
+import { PasswordConfirmService } from './shared/services/password-confirm.service';
 import { AuthService } from './core/services/auth.service';
 import { ProfileService } from './core/services/profile.service';
 
@@ -20,7 +23,9 @@ import { ProfileService } from './core/services/profile.service';
     RouterOutlet,
     RouterModule,
     CommonModule,
-    AiChatbotComponent,UserManagement
+    AiChatbotComponent,UserManagement,
+    PopupComponent,
+    PasswordConfirmComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
@@ -32,6 +37,7 @@ export class App {
   private router = inject(Router);
   private authService = inject(AuthService);
   private profileService = inject(ProfileService);
+  private passwordConfirmService = inject(PasswordConfirmService);
 
   constructor() {
     this.handleInitialNavigation();

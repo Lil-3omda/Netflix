@@ -73,12 +73,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard, SubscriptionGuard]
   },
 
-  // Payment route
-  {
-    path: 'payment',
-    loadComponent: () => import('./features/payment/payment.component').then(m => m.PaymentComponent),
-    canActivate: [AuthGuard]
-  },
+
 
   // Public information pages
   {
@@ -181,6 +176,10 @@ export const routes: Routes = [
   path: 'favorite',
     loadComponent: () => import('./pages/favorite/favorite').then(m => m.FavoriteComponent),
     // canActivate: [AuthGuard, SubscriptionGuard]
+  },
+  {
+    path:'watchHistory',
+    loadComponent:()=> import('./pages/watch-history/watch-history').then(m => m.WatchHistory)
   },
   {
     path: '**',

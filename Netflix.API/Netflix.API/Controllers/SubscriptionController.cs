@@ -110,14 +110,42 @@ namespace Netflix.API.Controllers
             });
         }
 
-        [HttpPost("change-plan")]
-        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanDTO dto)
+        [HttpGet("expiration-status/{userId}")]
+        public async Task<IActionResult> GetExpirationStatus(string userId)
         {
             var subscription = await context.UserSubscriptions
-                .FirstOrDefaultAsync(us => us.UserId == dto.UserId);
+                .Include(us => us.Plan)
+                .FirstOrDefaultAsync(us => us.UserId == userId && !us.IsDeleted);
 
             if (subscription == null)
                 return NotFound(new { message = "No subscription found for user" });
+
+            var now = DateTime.UtcNow;
+            var daysUntilExpiration = (subscription.EndDate - now).Days;
+            
+            var isExpiring = daysUntilExpiration <= 3 && daysUntilExpiration >= 0;
+            var isExpired = subscription.EndDate <= now;
+
+            return Ok(new
+            {
+                isExpiring = isExpiring,
+                isExpired = isExpired,
+                daysUntilExpiration = daysUntilExpiration,
+                expirationDate = subscription.EndDate,
+                planName = subscription.Plan.Name,
+                showNotification = isExpiring || isExpired
+            });
+        }
+
+        [HttpPost("change-plan")]
+        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanDTO dto)
+        {
+            var currentSubscription = await context.UserSubscriptions
+                .Include(us => us.Plan)
+                .FirstOrDefaultAsync(us => us.UserId == dto.UserId && !us.IsDeleted);
+
+            if (currentSubscription == null)
+                return NotFound(new { message = "No active subscription found for user" });
 
             var newPlan = await context.SubscriptionPlans
                 .FirstOrDefaultAsync(p => p.Id == dto.NewPlanId);
@@ -130,18 +158,36 @@ namespace Netflix.API.Controllers
             if (profileCount > newPlan.MaxProfiles)
             {
                 return BadRequest(new { 
-                    message = $"Cannot downgrade to {newPlan.Name} plan. You have {profileCount} profiles but this plan only allows {newPlan.MaxProfiles}. Please delete some profiles first." 
+                    message = $"Cannot downgrade to {newPlan.Name} plan. You have {profileCount} profiles but this plan only allows {newPlan.MaxProfiles}. Please delete some profiles first.",
+                    requiresProfileDeletion = true,
+                    currentProfiles = profileCount,
+                    maxAllowed = newPlan.MaxProfiles
                 });
             }
 
-            // Update subscription
-            subscription.PlanId = dto.NewPlanId;
-            // Set subscription to one month from now
-            subscription.EndDate = DateTime.UtcNow.AddMonths(1);
+            // Mark current subscription as expired and inactive
+            currentSubscription.IsDeleted = true;
+            currentSubscription.EndDate = DateTime.UtcNow; // Expire immediately
+            
+            // Create new subscription
+            var newSubscription = new UserSubscription
+            {
+                UserId = dto.UserId,
+                PlanId = dto.NewPlanId,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddMonths(1),
+                IsDeleted = false
+            };
 
+            await context.UserSubscriptions.AddAsync(newSubscription);
             await context.SaveChangesAsync();
 
-            return Ok(new { message = "Plan changed successfully" });
+            return Ok(new { 
+                message = "Plan changed successfully. Please complete payment to activate your new plan.",
+                requiresPayment = true,
+                newPlanName = newPlan.Name,
+                newSubscriptionId = newSubscription.Id
+            });
         }
 
         [HttpPost("cancel/{userId}")]
