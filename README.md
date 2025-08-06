@@ -182,5 +182,5 @@ Revenue + churn metrics
 - ℹ️ Register an admin account via the API and manually assign the "Admin" role to access the admin dashboard.
 ---
 ---
-##📄 License
+## 📄 License
 - This project is licensed under the MIT License. See the LICENSE file for more information.
