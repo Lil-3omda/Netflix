@@ -29,10 +29,7 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
             <div class="header-actions">
               <div class="language-selector">
-                <select class="language-select">
-                  <option value="en">🌐 English</option>
-                  <option value="ar">🌐 العربية</option>
-                </select>
+          
               </div>
               <button class="signin-btn" (click)="goToLogin()">Sign In</button>
             </div>
@@ -196,10 +193,10 @@ import { AuthService } from '../../core/services/auth.service';
           <p class="footer-contact">Questions? Call 1-844-505-2993</p>
           <div class="footer-links">
             <div class="footer-column">
-              <a href="#">FAQ</a>
-              <a href="#">Investor Relations</a>
-              <a href="#">Privacy</a>
-              <a href="#">Speed Test</a>
+              <a [routerLink]="['/frequently-asked-questions']">FAQ</a>
+              <a [routerLink]="['/investor-relations']">Investor Relations</a>
+              <a [routerLink]="['/privacy']">Privacy</a>
+              <a [routerLink]="['/speed-test']">Speed Test</a>
             </div>
             <div class="footer-column">
               <a href="#">Help Center</a>
@@ -208,22 +205,19 @@ import { AuthService } from '../../core/services/auth.service';
               <a href="#">Legal Notices</a>
             </div>
             <div class="footer-column">
-              <a [routerLink]="['/account']">Account</a>
+              <a [routerLink]="['/faccount']">Account</a>
               <a [routerLink]="['/ways-to-watch']">Ways to Watch</a>
               <a [routerLink]="['/corporate-information']">Corporate Information</a>
               <a [routerLink]="['/only-on-netflix']">Only on Netflix</a>
             </div>
             <div class="footer-column">
-              <a href="#">Media Center</a>
-              <a href="#">Terms of Use</a>
-              <a href="#">Contact Us</a>
+              <a [routerLink]="['/terms-of-use']">Media Center</a>
+              <a [routerLink]="['/terms-of-use/netflix-terms']">Terms of Use</a>
+              <a [routerLink]="['/support']">Contact Us</a>
             </div>
           </div>
           <div class="footer-language">
-            <select class="language-select">
-              <option value="en">🌐 English</option>
-              <option value="ar">🌐 العربية</option>
-            </select>
+         
           </div>
           <p class="footer-country">Netflix Egypt</p>
         </div>
@@ -816,6 +810,26 @@ export class LandingComponent {
   ];
 
   constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit() {
+    // Check if user is already authenticated and redirect accordingly
+    const isAuthenticated = this.authService.isAuthenticated();
+    if (isAuthenticated) {
+      const user = this.authService.getCurrentUser();
+      if (user?.isAdmin) {
+        this.router.navigate(['/admin/dashboard']);
+        return;
+      } else {
+        const profileId = localStorage.getItem('profileId');
+        if (profileId) {
+          this.router.navigate(['/Home']);
+        } else {
+          this.router.navigate(['/Profile']);
+        }
+        return;
+      }
+    }
+  }
 
   goToLogin() {
     this.router.navigate(['/login']);

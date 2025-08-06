@@ -1,77 +1,74 @@
 <app-navbar></app-navbar>
-<!-- <section class="hero-section position-relative text-white" style="background-image: url('https://image.tmdb.org/t/p/original/your-banner.jpg'); background-size: cover; background-position: center; height: 100vh;">
-  <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);"></div>
 
-  <div class="container h-100 position-relative d-flex align-items-center">
-    <div class="hero-content">
-      <h1 class="display-3 fw-bold mb-3">Stranger Things</h1>
-      <p class="lead mb-4">New Season streaming now</p>
-      <button class="btn btn-light btn-lg fw-bold px-4">
-        <i class="bi bi-play-fill me-2"></i>Play
-      </button>
+<!-- Subscription alerts are now handled by popup service -->
+
+<div class="relative ">
+
+<section
+  *ngIf="!showTrailer"
+
+  class="hero-section text-white vh-100 d-flex align-items-center"
+  [ngStyle]="{
+    'background-image':
+      'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(' +
+      'https://localhost:7140/' +
+      top10Movies[0].coverUrl +
+      ')'
+  }"
+>  <div class=" ms-5">
+    <div class="badge bg-danger mb-2 px-3 py-1">Top 1</div>
+    <div class="d-flex align-items-center gap-3 mb-2">
+      <span class="text-warning fw-bold">⭐ {{rating}}</span>
+      <span>{{top10Movies[0].duration}}</span>
+      <span>{{top10Movies[0].categoryName}}</span>
     </div>
-  </div> -->
-<!-- </section> -->
-<video
-  #videoPlayer
-  [src]="videoUrl"
-  [poster]="posterUrl"
-  muted
-  playsinline
-  (mouseenter)="playVideo(videoPlayer)"
-  (mouseleave)="resetVideo(videoPlayer)"
-  class="video-preview"
-></video>
-
-
-<!-- <app-movie-slider (movieClicked)="openMovieModal($event)"></app-movie-slider> -->
-
-
-
-
-
-
-
-<!-- <app-movie-slider (openModal)="openMovieModal()"></app-movie-slider> -->
-  <app-netflix-model
-    *ngIf="isModalOpen && selectedMovie"
-
-    (closeModal)="closeMovieModal()">
-  </app-netflix-model>
-   <!-- [isVisible]="isModalOpen" -->
-     <!-- [isVisible]="selectedMovie !==null" -->
-<!-- <p>model open {{isModalOpen}}</p> -->
-
-<!-- <p>model open {{isModalOpen}}</p>
-<p>model open {{isModalOpen}}</p>
-
-
-<!-- ++++++++++++++++++++++++++++++++++++++++++ -->
-
-
-<!-- <app-movie-category categoryName="top10"></app-movie-category>
-<app-movie-category categoryName="action"></app-movie-category>
-<app-movie-category categoryName="drama"></app-movie-category>
-<app-movie-category categoryName="comedy"></app-movie-category> -->
-
-
-
-
-
-
-<app-movie-slider [title]="'Top 10 in Egypt Today'" [isTop10]="true"></app-movie-slider>
-
-
-<div *ngFor="let category of data">
-  <div *ngIf="category.videos.length > 0">
-    <app-movie-slider
-      [title]="'Top '+category.name+' Movies'"
-      [categoryName]="category.name"
-    ></app-movie-slider>
-
+    <h1 class="fw-bold display-4">{{top10Movies[0].title}}</h1>
+    <p class="lead">{{top10Movies[0].description}}</p>
+    <div class="mt-3 d-flex gap-3">
+      <button class="btn btn-danger px-4 py-2 fw-bold" (click)="goToMovie(top10Movies[0].id)">▶ Play Now</button>
+      <button class="btn btn-secondary px-4 py-2 fw-bold" (click)="showTrailerNow()">▶ Show
+        Trailer Now</button>
+    </div>
   </div>
+</section>
+
+
+<!-- TRAILER FULLSCREEN SECTION -->
+<div *ngIf="showTrailer" class="trailer-fullscreen">
+    <button class="btn btn-light back-btn" (click)="backToHero()">
+    ⬅ Back
+  </button>
+<iframe
+  [src]="sanitizedTrailerUrl"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
+</div>
 
 </div>
 
+<app-netflix-model *ngIf="isModalOpen && selectedMovie" (closeModal)="closeMovieModal()">
+</app-netflix-model>
 
+<!-- Top 10 Movies Section -->
+<app-movie-slider [title]="'Top 10'" [categoryName]="'Top 10'" [showRank]="true">
+</app-movie-slider>
 
+<!-- Personalized Categories Based on Watch History -->
+<div *ngFor="let personalizedCategory of personalizedData">
+  <div *ngIf="personalizedCategory.videos.length > 0">
+    <app-movie-slider
+      [title]="'Top '+personalizedCategory.name+' Movies'"
+      [categoryName]="personalizedCategory.name"
+      [customMovies]="personalizedCategory.videos">
+    </app-movie-slider>
+  </div>
+</div>
+
+<!-- Default Categories (shown when no personalized data) -->
+<div *ngFor="let category of data">
+  <div *ngIf="category.videos.length > 0">
+    <app-movie-slider [title]="'Top '+category.name+' Movies'" [categoryName]="category.name"></app-movie-slider>
+  </div>
+</div>

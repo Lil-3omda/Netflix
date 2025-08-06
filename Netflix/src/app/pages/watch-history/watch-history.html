@@ -1,0 +1,20 @@
+<app-navbar></app-navbar>
+
+<div class="history-page p-5 mt-5">
+  <h2 class="section-title">My History List</h2>
+
+  <div *ngIf="historyVideos.length === 0" class="empty-msg">
+    No videos yet.
+  </div>
+
+  <div class="his-container">
+    <div class="video-card" *ngFor="let video of historyVideos" [routerLink]="'/moviedetails/'+video.videoId">
+      <img [src]="'https://localhost:7140/' + video.coverUrl" alt="{{ video.videoTitle }}" class="thumbnail" />
+      <div class="video-info">
+        <h3 class="video-title">{{ video.videoTitle }}</h3>
+        <p class="watch-time">Watched on: {{ video.watchedAt | date:'mediumDate' }}</p>
+        <a class="btn-watch" [routerLink]="'/watchMovie/' + video.videoId">▶ Watch Again</a>
+      </div>
+    </div>
+  </div>
+</div>

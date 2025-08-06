@@ -34,7 +34,10 @@ namespace Netflix.API.Controllers
             }
 
             var totalUsers = await query.CountAsync();
+
             var users = await query
+                .Include(u => u.Profiles)
+                .Include(u => u.Subscriptions)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(u => new
@@ -45,8 +48,10 @@ namespace Netflix.API.Controllers
                     u.IsEmailVerified,
                     u.IsAdmin,
                     ProfileCount = u.Profiles.Count(),
-                    SubscriptionStatus = u.Subscriptions.Any(s => s.IsActive) ? "Active" : "Inactive",
-                    JoinDate = u.Profiles.Any() ? u.Profiles.Min(p => p.Id) : 0 // Simplified join date
+                    SubscriptionStatus = u.Subscriptions.Any(s =>
+                        s.StartDate <= DateTime.UtcNow && s.EndDate >= DateTime.UtcNow
+                    ) ? "Active" : "Inactive",
+                    JoinDate = u.Profiles.Any() ? u.Profiles.Min(p => p.Id) : 0 // You may want to use CreatedAt if available
                 })
                 .ToListAsync();
 
@@ -59,6 +64,7 @@ namespace Netflix.API.Controllers
                 totalPages = (int)Math.Ceiling((double)totalUsers / pageSize)
             });
         }
+
 
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetUserById(string id)

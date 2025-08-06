@@ -4,278 +4,216 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Subject, takeUntil } from 'rxjs';
 import { AdminService } from '../../services/admin.service';
 import { User } from '../../models/admin.interfaces';
+import { PopupService } from '../../../shared/services/popup.service';
+import { PasswordConfirmService } from '../../../shared/services/password-confirm.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
-    <div class="min-h-screen bg-netflix-black text-white">
+    <div class="container-fluid min-vh-100 bg-dark text-white py-4">
       <!-- Hero Header -->
-      <div class="relative overflow-hidden bg-gradient-to-r from-netflix-red via-red-700 to-netflix-red-dark rounded-3xl mb-8 p-8">
-        <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div class="relative z-10 flex items-center justify-between">
+      <div class="position-relative bg-danger rounded-4 mb-5 p-5 text-white">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-black opacity-25 rounded-4"></div>
+        <div class="position-relative d-flex flex-column flex-md-row justify-content-between align-items-center z-1">
           <div>
-            <h1 class="text-5xl font-bold mb-4 text-white drop-shadow-lg">
-              User Management
-            </h1>
-            <p class="text-xl text-red-100">
-              Manage Netflix subscribers and user accounts
-            </p>
+            <h1 class="display-4 fw-bold mb-3">User Management</h1>
+            <p class="fs-5 text-light">Manage Netflix subscribers and user accounts</p>
           </div>
-          <button
-            (click)="openAddUserModal()"
-            class="px-8 py-4 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl text-white font-semibold hover:bg-opacity-30 transition-all duration-300 border border-white border-opacity-30 flex items-center space-x-3">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            <span>Add User</span>
-          </button>
         </div>
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white bg-opacity-10 rounded-full -translate-y-32 translate-x-32"></div>
       </div>
 
       <!-- Stats Overview -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-netflix-red transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Total Users</p>
-              <p class="text-3xl font-bold text-white">{{ totalUsers }}</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-netflix-red to-red-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Active Users</p>
-              <p class="text-3xl font-bold text-white">{{ activeUsers }}</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
+      <div class="row g-4 mb-5">
+        <div class="col-md-3">
+          <div class="card bg-secondary bg-gradient text-white border border-light">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <small>Total Users</small>
+                <h3>{{ totalUsers }}</h3>
+              </div>
+              <div class="bg-danger p-3 rounded">
+                <i class="bi bi-people-fill fs-4"></i>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">Premium Users</p>
-              <p class="text-3xl font-bold text-white">{{ premiumUsers }}</p>
-            </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-              </svg>
+        <div class="col-md-3">
+          <div class="card bg-success bg-gradient text-white border border-light">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <small>Active Users</small>
+                <h3>{{ activeUsers }}</h3>
+              </div>
+              <div class="bg-success p-3 rounded">
+                <i class="bi bi-check-circle fs-4"></i>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-gray-400 text-sm font-medium">New This Month</p>
-              <p class="text-3xl font-bold text-white">{{ newUsers }}</p>
+        <div class="col-md-3">
+          <div class="card bg-primary bg-gradient text-white border border-light">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <small>Premium Users</small>
+                <h3>{{ premiumUsers }}</h3>
+              </div>
+              <div class="bg-primary p-3 rounded">
+                <i class="bi bi-star-fill fs-4"></i>
+              </div>
             </div>
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-              </svg>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-info bg-gradient text-white border border-light">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <small>New This Month</small>
+                <h3>{{ newUsers }}</h3>
+              </div>
+              <div class="bg-info p-3 rounded">
+                <i class="bi bi-calendar-event fs-4"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Search and Filter Section -->
-      <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 mb-8">
-        <div class="flex flex-col lg:flex-row gap-4">
-          <div class="flex-1 relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
+      <!-- Search and Filters -->
+      <div class="card bg-secondary bg-gradient border border-light mb-5 p-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-light text-white"><i class="bi bi-search"></i></span>
+              <input type="text" [(ngModel)]="searchTerm" (input)="filterUsers()" class="form-control bg-dark border-light text-white" placeholder="Search users by name, email, or region...">
             </div>
-            <input
-              type="text"
-              [(ngModel)]="searchTerm"
-              (input)="filterUsers()"
-              placeholder="Search users by name, email, or region..."
-              class="w-full pl-10 pr-4 py-3 bg-gray-800 bg-opacity-50 text-white rounded-xl border border-gray-600 focus:border-netflix-red focus:ring-2 focus:ring-netflix-red focus:ring-opacity-20 transition-all duration-300 placeholder-gray-400">
           </div>
-
-          <div class="flex gap-4">
-            <select
-              [(ngModel)]="statusFilter"
-              (change)="filterUsers()"
-              class="px-4 py-3 bg-gray-800 bg-opacity-50 text-white rounded-xl border border-gray-600 focus:border-netflix-red focus:ring-2 focus:ring-netflix-red focus:ring-opacity-20 transition-all duration-300 min-w-[120px]">
+          <div class="col-md-3">
+            <select [(ngModel)]="statusFilter" (change)="filterUsers()" class="form-select bg-dark border-light text-white">
               <option value="">All Status</option>
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
               <option value="Suspended">Suspended</option>
             </select>
-
-            <select
-              [(ngModel)]="subscriptionFilter"
-              (change)="filterUsers()"
-              class="px-4 py-3 bg-gray-800 bg-opacity-50 text-white rounded-xl border border-gray-600 focus:border-netflix-red focus:ring-2 focus:ring-netflix-red focus:ring-opacity-20 transition-all duration-300 min-w-[120px]">
+          </div>
+          <div class="col-md-3">
+            <select [(ngModel)]="subscriptionFilter" (change)="filterUsers()" class="form-select bg-dark border-light text-white">
               <option value="">All Plans</option>
               <option value="Basic">Basic</option>
               <option value="Standard">Standard</option>
               <option value="Premium">Premium</option>
             </select>
-
-            <button class="px-6 py-3 bg-netflix-red hover:bg-red-700 rounded-xl text-white font-medium transition-all duration-300 flex items-center space-x-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
-              </svg>
-              <span>Filter</span>
-            </button>
           </div>
         </div>
       </div>
 
-      <!-- Users Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        <div
-          *ngFor="let user of filteredUsers; trackBy: trackByUserId"
-          class="group relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl border border-gray-700 hover:border-netflix-red transition-all duration-500 hover:scale-105 cursor-pointer p-6">
+      <!-- Users Table -->
+      <div class="card bg-secondary bg-gradient border border-light mb-5">
+        <div class="table-responsive">
+          <table class="table table-dark table-hover mb-0">
+            <thead>
+              <tr>
+                <th class="bg-dark">User</th>
+                <th class="bg-dark">Email</th>
+                <!-- <th class="bg-dark">Status</th> -->
+                <th class="bg-dark">Subscription</th>
+                <!-- <th class="bg-dark">Region</th> -->
+                <th class="bg-dark">Joined</th>
+                <th class="bg-dark text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId">
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      <span class="fw-bold">{{ getUserInitials(user.name) }}</span>
+                    </div>
+                    <div>
+                      <div class="fw-bold">{{ user.name }}</div>
+                      <small class="text-muted">{{ user.role || 'User' }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ user.email }}</td>
+                <!-- <td> -->
+                  <!-- <span class="badge bg-success" *ngIf="user.status === 'Active'">{{ user.status }}</span>
+                  <span class="badge bg-secondary" *ngIf="user.status === 'Inactive'">{{ user.status }}</span>
+                  <span class="badge bg-danger" *ngIf="user.status === 'Suspended'">{{ user.status }}</span>
+                </td> -->
+                <td>{{ user.subscription }}</td>
+                <!-- <td>{{ user.region }}</td> -->
+                <td>{{ formatDate(user.joinDate) }}</td>
+                <td class="text-end">
+                  <div class="d-flex justify-content-end gap-2">
+                    <!-- Show "Make Admin" only for non-admin users -->
+                    <button class="btn btn-sm btn-warning"
+                            (click)="makeUserAdmin(user)"
+                            *ngIf="user.role !== 'Admin' && !user.isAdmin"
+                            title="Make Admin">
+                      <i class="bi bi-shield-check"></i>
+                    </button>
 
-          <!-- User Avatar -->
-          <div class="flex items-center justify-center mb-4">
-            <div class="w-20 h-20 bg-gradient-to-br from-netflix-red to-red-700 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-              <span class="text-2xl font-bold text-white">{{ getUserInitials(user.name) }}</span>
-            </div>
-          </div>
+                    <!-- Show "Remove Admin" only for admin users -->
+                    <button class="btn btn-sm btn-secondary"
+                            (click)="removeAdminRole(user)"
+                            *ngIf="user.role !== 'Admin' || user.isAdmin"
+                            title="Remove Admin">
+                      <i class="bi bi-shield-x"></i>
+                    </button>
 
-          <!-- User Info -->
-          <div class="text-center mb-4">
-            <h3 class="font-bold text-white text-lg mb-1 group-hover:text-netflix-red transition-colors duration-300">
-              {{ user.name }}
-            </h3>
-            <p class="text-gray-400 text-sm mb-2">{{ user.email }}</p>
-
-            <!-- Status Badge -->
-            <span
-              class="px-3 py-1 rounded-full text-xs font-bold"
-              [ngClass]="{
-                'bg-green-500 text-white': user.status === 'Active',
-                'bg-gray-500 text-white': user.status === 'Inactive',
-                'bg-red-500 text-white': user.status === 'Suspended'
-              }">
-              {{ user.status }}
-            </span>
-          </div>
-
-          <!-- Subscription Info -->
-          <div class="mb-4">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-gray-400 text-sm">Plan:</span>
-              <span
-                class="px-2 py-1 rounded-lg text-xs font-medium"
-                [ngClass]="{
-                  'bg-yellow-100 text-yellow-800': user.subscription === 'Basic',
-                  'bg-blue-100 text-blue-800': user.subscription === 'Standard',
-                  'bg-purple-100 text-purple-800': user.subscription === 'Premium'
-                }">
-                {{ user.subscription }}
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-gray-400 text-sm">Region:</span>
-              <span class="text-white text-sm">{{ user.region }}</span>
-            </div>
-
-            <div class="flex items-center justify-between">
-              <span class="text-gray-400 text-sm">Joined:</span>
-              <span class="text-white text-sm">{{ formatDate(user.joinDate) }}</span>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex space-x-2">
-            <button
-              (click)="editUser(user)"
-              class="flex-1 px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white text-sm font-medium transition-all duration-300 flex items-center justify-center space-x-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-              </svg>
-              <span>Edit</span>
-            </button>
-
-            <button
-              (click)="toggleUserStatus(user)"
-              class="px-3 py-2 rounded-lg text-white text-sm font-medium transition-all duration-300 flex items-center justify-center"
-              [ngClass]="{
-                'bg-red-600 hover:bg-red-700': user.status === 'Active',
-                'bg-green-600 hover:bg-green-700': user.status !== 'Active'
-              }">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  *ngIf="user.status === 'Active'"
-                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
-                <path
-                  *ngIf="user.status !== 'Active'"
-                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7"></path>
-              </svg>
-            </button>
-          </div>
+                    <!-- Delete button (show for all except current user) -->
+                    <button class="btn btn-sm btn-outline-danger"
+                          (click)="deleteUser(user)"
+                          *ngIf="!isCurrentUser(user.id)"
+                          title="Delete User">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Load More Button -->
-      <div class="text-center">
-        <button class="px-8 py-4 bg-gradient-to-r from-netflix-red to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl text-white font-semibold transition-all duration-300 shadow-lg">
-          Load More Users
-        </button>
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="text-muted">
+          Showing {{ filteredUsers.length }} of {{ totalUsers }} users
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-light" [disabled]="currentPage === 1" (click)="prevPage()">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button class="btn btn-outline-light" [disabled]="filteredUsers.length < pageSize" (click)="nextPage()">
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Add User Modal -->
-      <div
-        *ngIf="showAddModal"
-        class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-white">Add New User</h2>
-            <button
-              (click)="closeAddModal()"
-              class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors duration-300">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
+      <div class="modal fade" [class.show]="showAddModal" [style.display]="showAddModal ? 'block' : 'none'" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content bg-dark text-white">
+            <!-- <div class="modal-header border-0">
+              <h5 class="modal-title">Add New User</h5>
+              <button type="button" class="btn-close btn-close-white" (click)="closeAddModal()"></button>
+            </div> -->
+            <div class="modal-body">
+              <form [formGroup]="userForm" (ngSubmit)="submitUser()">
+                <div class="mb-3 text-center text-muted">
+                  <p>User creation form will be implemented here</p>
+                </div>
+                <div class="d-flex gap-3">
+                  <button type="button" class="btn btn-secondary w-50" (click)="closeAddModal()">Cancel</button>
+                  <button type="submit" class="btn btn-danger w-50">Add User</button>
+                </div>
+              </form>
+            </div>
           </div>
-
-          <form [formGroup]="userForm" (ngSubmit)="submitUser()" class="space-y-6">
-            <!-- Form fields would go here -->
-            <div class="text-center text-gray-400">
-              <p>User creation form will be implemented here</p>
-            </div>
-
-            <div class="flex space-x-4 pt-4">
-              <button
-                type="button"
-                (click)="closeAddModal()"
-                class="flex-1 px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl text-white font-medium transition-all duration-300">
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="flex-1 px-6 py-3 bg-netflix-red hover:bg-red-700 rounded-xl text-white font-medium transition-all duration-300">
-                Add User
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
@@ -326,6 +264,24 @@ import { User } from '../../models/admin.interfaces';
     ::-webkit-scrollbar-thumb:hover {
       background: #b81d24;
     }
+
+    /* Table styles */
+    .table-dark {
+      --bs-table-bg: #1a1a1a;
+      --bs-table-striped-bg: #2c2c2c;
+      --bs-table-hover-bg: #333333;
+      color: #fff;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
   `]
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
@@ -334,71 +290,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   subscriptionFilter = '';
   showAddModal = false;
   userForm: FormGroup;
+  currentPage = 1;
+  pageSize = 10;
 
-  // Sample data
-  users: User[] = [
-    {
-      id: 1,
-      name: 'John Smith',
-      email: 'john.smith@email.com',
-      status: 'Active',
-      subscription: 'Premium',
-      region: 'United States',
-      joinDate: '2023-01-15',
-      lastActive: '2024-01-10'
-    },
-    {
-      id: 2,
-      name: 'Emma Johnson',
-      email: 'emma.johnson@email.com',
-      status: 'Active',
-      subscription: 'Standard',
-      region: 'Canada',
-      joinDate: '2023-03-22',
-      lastActive: '2024-01-09'
-    },
-    {
-      id: 3,
-      name: 'Michael Brown',
-      email: 'michael.brown@email.com',
-      status: 'Active',
-      subscription: 'Basic',
-      region: 'United Kingdom',
-      joinDate: '2023-05-10',
-      lastActive: '2024-01-08'
-    },
-    {
-      id: 4,
-      name: 'Sarah Davis',
-      email: 'sarah.davis@email.com',
-      status: 'Inactive',
-      subscription: 'Premium',
-      region: 'Australia',
-      joinDate: '2023-02-28',
-      lastActive: '2023-12-15'
-    },
-    {
-      id: 5,
-      name: 'David Wilson',
-      email: 'david.wilson@email.com',
-      status: 'Suspended',
-      subscription: 'Standard',
-      region: 'Germany',
-      joinDate: '2023-04-05',
-      lastActive: '2023-11-20'
-    },
-    {
-      id: 6,
-      name: 'Lisa Anderson',
-      email: 'lisa.anderson@email.com',
-      status: 'Active',
-      subscription: 'Premium',
-      region: 'France',
-      joinDate: '2023-06-18',
-      lastActive: '2024-01-11'
-    }
-  ];
-
+  // User data
+  users: User[] = [];
   filteredUsers: User[] = [];
 
   // Stats
@@ -411,7 +307,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminService: AdminService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private popupService: PopupService,
+    private passwordConfirmService: PasswordConfirmService,
+    private authService: AuthService
   ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
@@ -432,7 +331,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers(): void {
-    this.adminService.getUsers(1, 50, this.searchTerm)
+    this.adminService.getUsers(this.currentPage, this.pageSize, this.searchTerm)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -442,22 +341,25 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             email: user.email,
             status: user.isEmailVerified ? 'Active' : 'Inactive',
             subscription: user.subscriptionStatus === 'Active' ? 'Premium' : 'Basic',
-            region: 'Unknown', // You can add region to your user model
-            joinDate: new Date().toISOString(), // You can add proper join date
-            lastActive: new Date().toISOString()
+            region: user.region || 'Unknown',
+            joinDate: user.createdAt || new Date().toISOString(),
+            lastActive: user.lastLogin || new Date().toISOString(),
+            role: user.role || 'User'
           }));
           this.filteredUsers = [...this.users];
+          this.totalUsers = response.totalCount || this.users.length;
           this.calculateStats();
         },
         error: (error) => {
           console.error('Error loading users:', error);
-          // Keep existing mock data as fallback
+          this.filteredUsers = [...this.users];
+          this.totalUsers = this.users.length;
+          this.calculateStats();
         }
       });
   }
 
   private calculateStats(): void {
-    this.totalUsers = this.users.length;
     this.activeUsers = this.users.filter(u => u.status === 'Active').length;
     this.premiumUsers = this.users.filter(u => u.subscription === 'Premium').length;
 
@@ -470,18 +372,25 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   filterUsers(): void {
-    this.loadUsers(); // Reload with search term
-    this.filteredUsers = this.users.filter(user => {
-      const matchesSearch = !this.searchTerm ||
-        user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.region.toLowerCase().includes(this.searchTerm.toLowerCase());
+    this.currentPage = 1; // Reset to first page when filtering
+    this.loadUsers();
+  }
 
-      const matchesStatus = !this.statusFilter || user.status === this.statusFilter;
-      const matchesSubscription = !this.subscriptionFilter || user.subscription === this.subscriptionFilter;
+  isCurrentUser(userId: string): boolean {
+    const currentUserId = this.authService.getCurrentUserId();
+    return currentUserId ? userId === currentUserId : false;
+  }
 
-      return matchesSearch && matchesStatus && matchesSubscription;
-    });
+  nextPage(): void {
+    this.currentPage++;
+    this.loadUsers();
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadUsers();
+    }
   }
 
   trackByUserId(index: number, user: User): string {
@@ -511,23 +420,121 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   submitUser(): void {
     if (this.userForm.valid) {
-      // Handle form submission
-      console.log('User form submitted:', this.userForm.value);
-      this.closeAddModal();
+      const newUser = {
+        ...this.userForm.value,
+        role: 'User',
+        joinDate: new Date().toISOString()
+      };
+
+      this.adminService.createUser(newUser).subscribe({
+        next: (response) => {
+          this.popupService.showSuccess('User created successfully', 'Success');
+          this.closeAddModal();
+          this.loadUsers();
+        },
+        error: (error) => {
+          console.error('Error creating user:', error);
+          this.popupService.showError(error.error?.message || 'Failed to create user');
+        }
+      });
     }
   }
 
   editUser(user: User): void {
-    console.log('Editing user:', user.name);
+    this.popupService.showConfirm(
+      `Edit user ${user.name}?`,
+      () => {
+        // In a real app, you would open an edit modal with the user data
+        console.log('Editing user:', user);
+        this.popupService.showSuccess(`User ${user.name} will be edited`, 'Edit User');
+      },
+      undefined,
+      'Edit User'
+    );
   }
 
   toggleUserStatus(user: User): void {
-    if (user.status === 'Active') {
-      user.status = 'Suspended';
-    } else {
-      user.status = 'Active';
-    }
-    this.calculateStats();
-    console.log(`User ${user.name} status changed to ${user.status}`);
+    const newStatus = user.status === 'Active' ? 'Suspended' : 'Active';
+    const action = newStatus === 'Suspended' ? 'suspend' : 'activate';
+
+    this.popupService.showConfirm(
+      `Are you sure you want to ${action} ${user.name}?`,
+      () => {
+        this.adminService.updateUserStatus(user.id, newStatus).subscribe({
+          next: (response) => {
+            user.status = newStatus;
+            this.calculateStats();
+            this.popupService.showSuccess(`User ${user.name} has been ${newStatus.toLowerCase()}`, 'Status Updated');
+          },
+          error: (error) => {
+            console.error('Error updating user status:', error);
+            this.popupService.showError(error.error?.message || `Failed to ${action} user`);
+          }
+        });
+      },
+      undefined,
+      `${newStatus} User`
+    );
+  }
+  deleteUser(user: User): void {
+    this.popupService.showConfirm(
+      `Are you sure you want to permanently delete ${user.name}? This action cannot be undone.`,
+      () => {
+        this.adminService.deleteUser(user.id).subscribe({
+          next: (response) => {
+            this.popupService.showSuccess(`User ${user.name} has been deleted`, 'User Deleted');
+            this.loadUsers(); // Reload the user list
+          },
+          error: (error) => {
+            console.error('Error deleting user:', error);
+            this.popupService.showError(error.error?.message || 'Failed to delete user');
+          }
+        });
+      },
+      undefined,
+      'Delete User'
+    );
+  }
+  // In your UserManagementComponent
+  makeUserAdmin(user: User): void {
+    // this.passwordConfirmService.show({
+    //   title: 'Admin Confirmation Required',
+    //   message: `You are about to grant admin privileges to ${user.name}. This action will give them full administrative access to the Netflix platform.\n\nPlease enter your admin password to confirm this action.`,
+    //   onConfirm: (password: string) => {
+        this.adminService.makeUserAdmin(user.id).subscribe({
+          next: (response) => {
+            this.popupService.showSuccess(`${user.name} has been successfully promoted to admin.`, 'Admin Promotion Successful');
+            this.loadUsers(); // Reload users list
+          },
+          error: (error) => {
+            console.error('Error making user admin:', error);
+            this.popupService.showError(error.error?.message || 'Failed to make user admin');
+          }
+        });
+    //   },
+    //   onCancel: () => {
+    //     console.log('Admin promotion cancelled');
+    //   }
+    // });
+  }
+
+  removeAdminRole(user: User): void {
+    this.popupService.showConfirm(
+      `Are you sure you want to remove admin role from ${user.name}? This will revoke all administrative privileges.`,
+      () => {
+        this.adminService.removeAdminRole(user.id).subscribe({
+          next: (response) => {
+            this.popupService.showSuccess(`Admin role removed from ${user.name} successfully`, 'Admin Role Removed');
+            this.loadUsers(); // Reload users list
+          },
+          error: (error) => {
+            console.error('Error removing admin role:', error);
+            this.popupService.showError(error.error?.message || 'Failed to remove admin role');
+          }
+        });
+      },
+      undefined,
+      'Remove Admin Role'
+    );
   }
 }

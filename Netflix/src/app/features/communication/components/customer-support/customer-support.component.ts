@@ -29,11 +29,6 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
           <!-- Support Options -->
           <section class="support-options" *ngIf="!showConversations && !showNewTicket">
             <h2>How can we help you?</h2>
-<<<<<<< HEAD
-
-=======
-
->>>>>>> newadminpages
             <div class="options-grid">
               <div class="option-card" (click)="showNewTicket = true">
                 <div class="option-icon">
@@ -60,7 +55,7 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
                 <p>View your support history</p>
               </div>
 
-              <div class="option-card">
+              <div class="option-card" (click)="goToFAQ()">
                 <div class="option-icon">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="#e50914" stroke-width="2"/>
@@ -597,5 +592,8 @@ export class CustomerSupportComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+  goToFAQ() {
+    this.router.navigate(['/frequently-asked-questions']);
   }
 }

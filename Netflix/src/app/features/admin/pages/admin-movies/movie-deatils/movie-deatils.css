@@ -4,6 +4,17 @@
   min-height: 100vh;
   padding-bottom: 40px;
 }
+.movie-header h1 {
+  font-size: 2.2rem;
+  color: #e50914; /* Netflix red if preferred */
+}
+
+@media (max-width: 576px) {
+  .movie-header h1 {
+    font-size: 1.5rem;
+  }
+}
+
 
 .glass-card {
   background: rgba(255, 255, 255, 0.05);
@@ -38,7 +49,7 @@ h1, h3 {
 .uploading-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.9); 
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;

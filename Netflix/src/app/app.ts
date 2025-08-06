@@ -1,19 +1,25 @@
-import { Component } from '@angular/core';
-import { Navbar } from './layout/navbar/navbar';
-import { HttpClient } from '@angular/common/http';
-
-import { Router, NavigationEnd, RouterOutlet,RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
-
 import { AiChatbotComponent } from './features/communication/components/ai-chatbot/ai-chatbot.component';
+import { PopupComponent } from './shared/components/popup/popup.component';
+import { PasswordConfirmComponent } from './shared/components/password-confirm/password-confirm.component';
+import { PasswordConfirmService } from './shared/services/password-confirm.service';
+import { AuthService } from './core/services/auth.service';
+import { ProfileService } from './core/services/profile.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-
   imports: [
-    RouterOutlet,Navbar,RouterModule,CommonModule,AiChatbotComponent
+    RouterOutlet,
+    RouterModule,
+    CommonModule,
+    AiChatbotComponent,
+    PopupComponent,
+    PasswordConfirmComponent
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
@@ -22,12 +28,40 @@ export class App {
   title = 'Netflix';
   hideChatbot = false;
 
-  constructor(private router: Router) {
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private passwordConfirmService = inject(PasswordConfirmService);
+
+  constructor() {
+    this.handleInitialNavigation();
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       const url = event.urlAfterRedirects;
       this.hideChatbot = ['/admin', '/login', '/signup'].some(path => url.startsWith(path));
     });
+  }
+
+  private handleInitialNavigation(): void {
+    const isAuthenticated = this.authService.isAuthenticated();
+    const user = this.authService.getCurrentUser();
+    const currentUrl = this.router.url;
+
+    // if (currentUrl === '/' || currentUrl === '/dashboard') {
+    //   if (isAuthenticated && user) {
+    //     if (user.isAdmin) {
+    //       this.router.navigate(['/admin/dashboard']);
+    //     } else {
+    //       const profileId = localStorage.getItem('profileId');
+    //       if (profileId) {
+    //         this.router.navigate(['/Home']);
+    //       } else {
+    //         this.router.navigate(['/Profile']);
+    //       }
+    //     }
+    //   }
+    // }
   }
 }

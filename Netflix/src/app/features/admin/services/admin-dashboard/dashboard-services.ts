@@ -24,13 +24,15 @@ export class DashboardServices {
     return this.http.get<any>(`https://localhost:7140/api/Category/names`);
   }
 
+  getAllMovies() {
+    return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
+  }
+
+
   getCategories() {
     return this.http.get<any>(`https://localhost:7140/api/Category`);
   }
 
-  getAllMovies() {
-    return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/videos`);
-  }
 
   getPublishedMovies() {
     return this.http.get<any>(`https://localhost:7140/api/Videos`);
@@ -45,14 +47,19 @@ export class DashboardServices {
   }
 
   getMovieById(id: number): Observable<any> {
-    return this.http.get<any>(`https://localhost:7140/api/videos/${id}`);
+    return this.http.get<any>(`https://localhost:7140/api/AdminDashboard/video/${id}`);
   }
 
+
   updateVideo(id: number, dto: any): Observable<any> {
-    return this.http.put<any>(`https://localhost:7140/api/videos/${id}`, dto);
+    return this.http.put<any>(`https://localhost:7140/api/AdminDashboard/video/${id}`, dto);
   }
 
   softDeleteVideo(id: number): Observable<any> {
-    return this.http.delete<any>(`https://localhost:7140/api/videos/${id}`);
+    return this.http.delete<any>(`https://localhost:7140/api/AdminDashboard/video/${id}`);
+  }
+
+  restoreVideo(id: number): Observable<any> {
+    return this.http.post<any>(`https://localhost:7140/api/AdminDashboard/video/${id}/restore`, {});
   }
 }

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +20,17 @@ using Netflix.API.Repositories.MessageRepository;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Features;
+using Netflix.API.Services.BackgroundServices;
+using Netflix.API.Repositories.MoviesRepository;
+using Netflix.API.Repositories.Categories;
+
+
 
 namespace Netflix.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -49,10 +53,18 @@ namespace Netflix.API
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
             builder.Services.AddScoped<ICommunicationService, CommunicationService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
 
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IAiService, AiService>();
             builder.Services.AddHttpClient<AiService>();
+            builder.Services.AddScoped<IPaymobService, PaymobService>();
+
+            // Add subscription notification services
+            builder.Services.AddScoped<ISubscriptionNotificationService, SubscriptionNotificationService>();
+            builder.Services.AddHostedService<SubscriptionExpirationService>();
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -136,7 +148,15 @@ namespace Netflix.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
+                await ApplicationDbContextSeed.SeedAsync(context, userManager, roleManager);
+            }
             app.UseHttpsRedirection();
             app.UseCors("AllowAngularApp");
             app.UseAuthentication();

@@ -1,69 +1,50 @@
 <app-navbar></app-navbar>
+<div class="relative ">
 
-<div class="movie-details-container" *ngIf="movie; else loading">
+<section *ngIf="!showTrailer"
 
-  <!-- Poster -->
-  <div class="poster-wrapper">
-    <img [src]="'/assets/images/' + movie.imageUrl" alt="{{ movie.title }}" />
+
+  class="hero-section text-white vh-100 d-flex align-items-center"
+  [ngStyle]="{
+    'background-image':
+      'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(' +
+      'https://localhost:7140/' +
+      movie.coverUrl +
+      ')'
+  }"
+>  <div class=" ms-5">
+     
+   
+    <h1 class="fw-bold display-4">{{movie.title}}</h1>
+     <span>{{movie.categoryName}}</span>
+    <p class="lead mt-1 mb-5">{{movie.description}}</p>
+    <div class="mt-5 d-flex gap-3">
+      <button class="btn btn-danger px-4 py-2 fw-bold" [routerLink]="'/watchMovie/'+movie.id" >▶ Play Now</button>
+      <button class="btn btn-secondary px-4 py-2 fw-bold" (click)="onShowTrailer()" >▶ Show 
+        Trailer Now</button>
+    </div>
   </div>
-
-  <!-- Info -->
-  <div class="info-wrapper">
-    <h1 class="movie-title">{{ movie.title }}</h1>
-    <p class="category">{{ movie.categoryName }} | {{ movie.duration }} mins</p>
-    <p class="description">{{ movie.description }}</p>
-    <p class="views">👁️ {{ movie.totalView || 0 }} views</p>
-
-    <!-- Rating -->
-    <div class="rating">
-      <span *ngFor="let star of [1,2,3,4,5]">⭐</span>
-    </div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <button [class.active]="activeTab === 'details'" (click)="switchTab('details')">📄 Details</button>
-      <button [class.active]="activeTab === 'trailer'" (click)="switchTab('trailer')">🎬 Trailer</button>
-      <button [class.active]="activeTab === 'movie'" (click)="switchTab('movie')">▶️ Watch Movie</button>
-    </div>
-
-    <!-- Tab Content -->
-
-    <!-- 1. Details -->
-    <div *ngIf="activeTab === 'details'">
-      <p><strong>Status:</strong> {{ movie.status }}</p>
-      <p><strong>Type:</strong> {{ movie.type === '0' ? 'Movie' : 'Series' }}</p>
-      <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
-    </div>
-
-    <!-- 2. Trailer -->
-    <div *ngIf="activeTab === 'trailer' && showTrailer">
-      <iframe
-        class="trailer-frame"
-        [src]="safeTrailerUrl"
-        frameborder="0"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <!-- 3. Movie -->
-    <div *ngIf="activeTab === 'movie' && !showTrailer">
-      <video
-        class="video-player"
-        src="https://vgfdprgqzkwvoxsnfdlr.supabase.co/storage/v1/object/public/pickup/instructor/42/video/.mp4/311792bc-49d0-48d1-a2bc-23cf3b3b3127.mp4"
-        controls
-        
-        ></video>
-    </div>
+</section>
 
 
-  </div>
+
+<div *ngIf="showTrailer" class="trailer-fullscreen">
+    <button class="btn btn-light back-btn" (click)="onShowTrailer()" >
+    ⬅ Back
+  </button>
+<iframe
+  [src]=safeTrailerUrl
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
 </div>
 
-<!-- Loading -->
-<ng-template #loading>
-  <div class="text-center py-5 loading-spinner">
-    <div class="spinner-border text-danger" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
-</ng-template>
+
+</div>
+
+
+
+
+
+

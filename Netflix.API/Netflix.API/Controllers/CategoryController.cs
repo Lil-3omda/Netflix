@@ -84,7 +84,7 @@ namespace Netflix.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await categoryService.DeleteAsync(id);
+            var deleted = await categoryService.SoftDeleteCategoryAsync(id);
             if (!deleted)
                 return BadRequest(new { message = "Cannot delete category that contains videos or category not found." });
             return Ok(new { message = "Category deleted successfully." });

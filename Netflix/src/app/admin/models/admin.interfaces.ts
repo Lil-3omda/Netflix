@@ -1,17 +1,39 @@
 export type AdminPageType = 'dashboard' | 'content' | 'users' | 'analytics' | 'chatbot' | 'communications' | 'settings';
 
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   subscription: 'Basic' | 'Standard' | 'Premium';
   status: 'Active' | 'Inactive' | 'Suspended';
+  role: 'User' | 'Admin';
   joinDate: string;
   lastActive: string;
   region: string;
   avatar?: string;
+  isAdmin?: boolean;
+}
+// export interface AnalyticsData {
+
+// }
+
+export interface AnalyticsData {
+  totalSubscriptions: number;
+  activeSubscriptions: number;
+  monthlyRevenue: number;
+  renewalRate: number;
+  customerLifetimeValue: number;
+  retentionRate: number;
+  growthRate: number;
+  ARPU: number;
+  planDistribution: PlanDistribution[];
 }
 
+export interface PlanDistribution {
+  planName: string;
+  count: number;
+  revenue: number;
+}
 export interface Content {
   id: number;
   title: string;
@@ -80,9 +102,24 @@ export interface ChartData {
   }[];
 }
 
-export interface AnalyticsData {
-  revenue: ChartData;
-  users: ChartData;
-  content: ChartData;
-  engagement: ChartData;
+
+export type Stars = 1 | 2 | 3 | 4 | 5;
+
+
+export interface Review {
+  id: number;
+  profileName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  videoId: number;
+  videoTitle?: string;
 }
+
+
+export interface ReviewStatistics {
+  totalReviews: number;
+  averageRating: number;
+  ratingDistribution: Partial<Record<Stars, number>>;
+}
+

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Netflix.API.Data;
 using Netflix.API.DTOs.ProfileDTOs;
+using Netflix.API.Services;
 
 namespace Netflix.API.Controllers
 {
@@ -17,7 +18,6 @@ namespace Netflix.API.Controllers
             _context = context;
         }
 
-        // GET: api/profile
 
 
         [HttpGet]
@@ -27,7 +27,6 @@ namespace Netflix.API.Controllers
             return Ok(profiles);
         }
 
-        //Get : api/profile/{id}
         [HttpGet("id")]
         public IActionResult GetProfileById([FromQuery] int id)
         {
@@ -39,7 +38,6 @@ namespace Netflix.API.Controllers
             return Ok(profile);
         }
 
-        // GET: api/profile/{id}
         [HttpGet("profile/{userId}")]
         public IActionResult GetProfilesToUser([FromRoute] string userId)
         {
@@ -80,7 +78,6 @@ namespace Netflix.API.Controllers
                 return BadRequest(new { message = $"Profile limit reached. Max allowed: {activeSubscription.Plan.MaxProfiles}" });
             }
 
-            // Create and save the new profile
             var newProfile = new Models.Profile
             {
                 UserId = ProDTO.UserId,
@@ -93,44 +90,66 @@ namespace Netflix.API.Controllers
             return CreatedAtAction(nameof(GetProfilesToUser), new { userId = ProDTO.UserId }, newProfile);
         }
 
-        [HttpPost("create-default-profiles")]
-        public IActionResult CreateDefaultProfiles([FromBody] CreateDefaultProfilesDTO dto)
+        [HttpPost("create-default/{userId}")]
+        public IActionResult CreateDefaultProfile([FromRoute] string userId)
         {
-            if (dto == null || string.IsNullOrEmpty(dto.UserId))
+            if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest(new { message = "User ID is required." });
 
-            // Check if user already has profiles
-            if (_context.Profiles.Any(p => p.UserId == dto.UserId))
+            if (_context.Profiles.Any(p => p.UserId == userId))
             {
                 return BadRequest(new { message = "User already has profiles." });
             }
 
-            // Get active subscription
-            var activeSubscription = _context.UserSubscriptions
+            var subscription = _context.UserSubscriptions
                 .Include(us => us.Plan)
-                .FirstOrDefault(us => us.UserId == dto.UserId);
+                .FirstOrDefault(us => us.UserId == userId);
 
-            if (activeSubscription == null)
+            if (subscription == null)
             {
                 return BadRequest(new { message = "No active subscription found for this user." });
             }
 
-            // Create default profiles
-            var defaultProfiles = new List<Models.Profile>
+            var kidsProfile = new Models.Profile
             {
-                new Models.Profile { UserId = dto.UserId, Name = "Main Profile" },
-                new Models.Profile { UserId = dto.UserId, Name = "Kids" }
+                UserId = userId,
+                Name = "Kids",
             };
 
-            // Only add profiles up to the subscription limit
-            var profilesToAdd = defaultProfiles.Take(activeSubscription.Plan.MaxProfiles).ToList();
-
-            _context.Profiles.AddRange(profilesToAdd);
+            _context.Profiles.Add(kidsProfile);
             _context.SaveChanges();
 
-            return Ok(new { message = "Default profiles created successfully.", profiles = profilesToAdd });
+            return Ok(new { message = "Default Kids profile created successfully." });
         }
 
+        [HttpGet("resolve/{hash}")]
+        public IActionResult ResolveProfileByHash(string hash)
+        {
+            var decodedHash = Uri.UnescapeDataString(hash); 
+            var profiles = _context.Profiles.ToList();
+
+            var matchedProfile = profiles.FirstOrDefault(p =>
+                ProfileHashingService.HashProfileId(p.Id) == decodedHash);
+
+            if (matchedProfile == null)
+                return NotFound(new { message = "Profile not found for given hash." });
+
+            return Ok(matchedProfile.Id);
+        }
+
+
+        [HttpGet("hash/{id}")]
+        public IActionResult GetHashedProfileId(int id)
+        {
+            var profile = _context.Profiles.FirstOrDefault(p => p.Id == id);
+            if (profile == null)
+            {
+                return NotFound(new { message = "Profile not found." });
+            }
+
+            var hashedId = ProfileHashingService.HashProfileId(profile.Id);
+            return Ok(new { hashedId });
+        }
 
     }
 }
