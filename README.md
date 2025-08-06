@@ -122,16 +122,14 @@ Real-time search & filtering
 
 Video count + status indicators
 
+
+### ✅ Movies
+Full CRUD operations
+
+Real-time search & filtering
+
 Statistics endpoint
 
-### ✅ Reviews
-Paginated review table
-
-Video titles + user details
-
-Star ratings
-
-Content moderation + flagged detection
 
 ### ✅ Subscriptions
 Complete user subscription table
