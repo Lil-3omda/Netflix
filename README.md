@@ -1,74 +1,68 @@
-🎬 Netflix-like Streaming Platform
-A full-stack streaming platform inspired by Netflix, built with ASP.NET Core Web API and Angular, supporting video streaming, user subscriptions, and a comprehensive admin panel.
+# 🎬 Netflix-like Streaming Platform
 
-🌟 Key Features
-👤 User Features
-Secure Authentication & Authorization using JWT
+A **full-stack streaming platform** inspired by Netflix, built with **ASP.NET Core Web API** and **Angular**, supporting video streaming, user subscriptions, and a powerful admin panel.
 
-Video Streaming with category-based filtering
+---
 
-Subscription Plans: Basic, Standard, Premium
+## 🌟 Key Features
 
-Watchlists, Profiles, and Personalized Experience
+### 👤 User Features
+- 🔐 Secure Authentication & Authorization (JWT)
+- 🎞️ Video Streaming with category-based filtering
+- 💳 Subscription Plans: Basic, Standard, Premium
+- 📺 Watchlists, Profiles, and Personalized Experience
+- ⭐ Reviews & Ratings system for videos
+- 🤖 AI-powered Chat Support
 
-Reviews & Ratings system for videos
+### 🛠️ Admin Features
+- 📂 Category Management (CRUD, search, filter, statistics)
+- 🚫 Review Moderation (view, delete, flag content)
+- 🧾 Subscription Management (actions + metrics)
+- 📊 Analytics Dashboard (users, revenue, churn)
+- 👥 User Management
 
-AI-powered Chat Support
+---
 
-🛠️ Admin Features
-Category Management: Full CRUD, search, filter, and statistics
+## 🧱 Tech Stack
 
-Review Moderation: View, delete, and flag inappropriate content
+### 🔧 Backend (ASP.NET Core 8.0)
+- ASP.NET Core Web API
+- Entity Framework Core + SQL Server
+- ASP.NET Identity + JWT Auth
+- AutoMapper
+- Repository Pattern + Unit of Work
+- Swagger / OpenAPI
 
-Subscription Management: Admin actions + metrics
+### 💻 Frontend (Angular 20.0)
+- Angular with TypeScript
+- Bootstrap 5.3 + TailwindCSS
+- RxJS for reactive programming
+- Chart.js for analytics visualization
+- Bootstrap Icons
 
-Analytics Dashboard: User statistics and revenue tracking
+---
 
-User Management: View and manage all registered users
+## ⚙️ Prerequisites
 
-🧱 Tech Stack
-Backend (ASP.NET Core 8.0)
-ASP.NET Core Web API
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Node.js 18+](https://nodejs.org/)
+- [SQL Server (LocalDB or Full)](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) or [VS Code](https://code.visualstudio.com/)
 
-Entity Framework Core + SQL Server
+---
 
-ASP.NET Identity + JWT Auth
+## 🚀 Getting Started
 
-AutoMapper
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Lil-3omda/Netflix
+cd Netflix
 
-Repository Pattern + Unit of Work
-
-Swagger / OpenAPI
-
-Frontend (Angular 20.0)
-Angular with TypeScript
-
-Bootstrap 5.3
-
-RxJS (reactive programming)
-
-Chart.js for charts and analytics
-
-
-⚙️ Prerequisites
-.NET 8 SDK
-
-Node.js 18+
-
-SQL Server (LocalDB or Full)
-
-Visual Studio 2022 or VS Code
-
-🚀 Getting Started
-1. Clone the Repository
-
-git clone (https://github.com/Lil-3omda/Netflix)
-
+```
 
 2. Setup Backend (API)
-bash
-Copy
-Edit
+```bash
+
 cd Netflix.API/Netflix.API
 dotnet restore
 
@@ -76,26 +70,30 @@ dotnet restore
 # "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=NetflixDB;Trusted_Connection=true"
 
 dotnet ef database update
-dotnet run  # Runs on https://localhost:7140
+dotnet run
+```
+Runs on: https://localhost:7140
+
 3. Setup Frontend (Angular)
-bash
-Copy
-Edit
+```bash
 cd Netflix
 npm install
-npm start  # Runs on http://localhost:4200
-4. Access the Application
-🔗 Frontend: http://localhost:4200
+npm start
+```
+Runs on: http://localhost:4200
 
-🔗 API: https://localhost:7140
 
-🔗 Swagger UI: https://localhost:7140/swagger
+🔗 Access the App
+🖥️ Frontend: http://localhost:4200
+
+🔌 API: https://localhost:7140
+
+📃 Swagger UI: https://localhost:7140/swagger
+
 
 ⚙️ Configuration
 Backend (appsettings.json)
-json
-Copy
-Edit
+```bash
 "ConnectionStrings": {
   "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=NetflixDB;Trusted_Connection=true"
 },
@@ -105,42 +103,45 @@ Edit
   "Audience": "NetflixApp",
   "ExpirationInDays": 7
 }
+```
+
 Frontend (src/environments/environment.ts)
-ts
-Copy
-Edit
+```bash
 export const environment = {
   production: false,
   apiUrl: 'https://localhost:7140/api'
 };
+```
 📊 Admin Dashboard Highlights
 ✅ Categories
-Full CRUD + search/filter
+Full CRUD operations
 
-Video count & status badges
+Real-time search & filtering
+
+Video count + status indicators
 
 Statistics endpoint
 
 ✅ Reviews
-Paginated table with full review info
+Paginated review table
 
-Includes video titles, user data, star ratings
+Video titles + user details
 
-Content moderation + flagged content detection
+Star ratings
+
+Content moderation + flagged detection
 
 ✅ Subscriptions
-Full user subscription table
+Complete user subscription table
 
-Plan details, status, and expiration dates
+Plan details, expiration status
 
-Admin actions: extend, cancel
+Admin actions: Extend, Cancel
 
-Revenue and churn analytics
+Revenue + churn metrics
 
-🗂️ Project Structure Overview
-bash
-Copy
-Edit
+🗂️ Project Structure
+```bash
 ├── Netflix.API/                 # ASP.NET Core Web API
 │   ├── Controllers/
 │   ├── Data/
@@ -163,54 +164,4 @@ Edit
 │   └── src/environments/
 │
 └── TECHNICAL_DOCUMENTATION.md
-🔐 Authentication & Roles
-JWT Authentication
-
-Admin Role: Full access to admin panel
-
-User Role: Access to video streaming, subscriptions
-
-Role-based access with token validation and expiration
-
-🔐 You can register a new admin account and manually assign the "Admin" role to get started.
-
-📡 API Endpoints Overview
-Categories
-GET /api/admin/Categories
-
-POST /api/admin/Categories
-
-PUT /api/admin/Categories/{id}
-
-DELETE /api/admin/Categories/{id}
-
-GET /api/admin/Categories/statistics
-
-Reviews
-GET /api/admin/Reviews
-
-DELETE /api/admin/Reviews/{id}
-
-GET /api/admin/Reviews/statistics
-
-GET /api/admin/Reviews/flagged
-
-Subscriptions
-GET /api/admin/Subscriptions/users
-
-GET /api/admin/Subscriptions/statistics
-
-POST /api/admin/Subscriptions/users/{userId}/extend
-
-POST /api/admin/Subscriptions/users/{userId}/cancel
-
-
-
-📄 License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-
-
-Contact the dev team directly
-
-✨ Built with passion using ASP.NET Core and Angular
+```
