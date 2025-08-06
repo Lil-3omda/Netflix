@@ -60,7 +60,7 @@ cd Netflix
 
 ```
 
-2. Setup Backend (API)
+### 2. Setup Backend (API)
 ```bash
 
 cd Netflix.API/Netflix.API
@@ -72,18 +72,18 @@ dotnet restore
 dotnet ef database update
 dotnet run
 ```
-Runs on: https://localhost:7140
+- Runs on: https://localhost:7140
 
-3. Setup Frontend (Angular)
+### 3. Setup Frontend (Angular)
 ```bash
 cd Netflix
 npm install
 npm start
 ```
-Runs on: http://localhost:4200
+- Runs on: http://localhost:4200
 
 ---
-🔗 Access the App
+## 🔗 Access the App
 - 🖥️ Frontend: http://localhost:4200
 
 - 🔌 API: https://localhost:7140
@@ -91,7 +91,7 @@ Runs on: http://localhost:4200
 - 📃 Swagger UI: https://localhost:7140/swagger
 
 ---
-⚙️ Configuration
+## ⚙️ Configuration
 Backend (appsettings.json)
 ```bash
 "ConnectionStrings": {
@@ -105,7 +105,7 @@ Backend (appsettings.json)
 }
 ```
 
-Frontend (src/environments/environment.ts)
+## Frontend (src/environments/environment.ts)
 ```bash
 export const environment = {
   production: false,
@@ -114,8 +114,8 @@ export const environment = {
 ```
 ---
 
-📊 Admin Dashboard Highlights
-- ✅ Categories
+##📊 Admin Dashboard Highlights
+### ✅ Categories
 Full CRUD operations
 
 Real-time search & filtering
@@ -124,7 +124,7 @@ Video count + status indicators
 
 Statistics endpoint
 
-- ✅ Reviews
+### ✅ Reviews
 Paginated review table
 
 Video titles + user details
@@ -133,7 +133,7 @@ Star ratings
 
 Content moderation + flagged detection
 
-- ✅ Subscriptions
+### ✅ Subscriptions
 Complete user subscription table
 
 Plan details, expiration status
@@ -141,8 +141,10 @@ Plan details, expiration status
 Admin actions: Extend, Cancel
 
 Revenue + churn metrics
+
 ---
-🗂️ Project Structure
+
+## 🗂️ Project Structure
 ```bash
 ├── Netflix.API/                 # ASP.NET Core Web API
 │   ├── Controllers/
@@ -168,46 +170,46 @@ Revenue + churn metrics
 └── TECHNICAL_DOCUMENTATION.md
 ```
 ---
-🔐 Authentication & Roles
-JWT-based authentication
+## 🔐 Authentication & Roles
+- JWT-based authentication
 
-Admin Role: Full access to all features
+- Admin Role: Full access to all features
 
-User Role: Access to streaming & subscriptions
+- User Role: Access to streaming & subscriptions
 
-Role-based token validation and expiration handling
+- Role-based token validation and expiration handling
 
-ℹ️ Register an admin account via the API and manually assign the "Admin" role to access the admin dashboard.
+-ℹ️ Register an admin account via the API and manually assign the "Admin" role to access the admin dashboard.
 ---
-📡 API Endpoints Overview
-- 📁 Categories
-GET /api/admin/Categories
+##📡 API Endpoints Overview
+### 📁 Categories
+- GET /api/admin/Categories
 
-POST /api/admin/Categories
+- POST /api/admin/Categories
 
-PUT /api/admin/Categories/{id}
+- PUT /api/admin/Categories/{id}
 
-DELETE /api/admin/Categories/{id}
+- DELETE /api/admin/Categories/{id}
 
-GET /api/admin/Categories/statistics
+- GET /api/admin/Categories/statistics
 
-- 📝 Reviews
-GET /api/admin/Reviews
+### 📝 Reviews
+- GET /api/admin/Reviews
 
-DELETE /api/admin/Reviews/{id}
+- DELETE /api/admin/Reviews/{id}
 
-GET /api/admin/Reviews/statistics
+- GET /api/admin/Reviews/statistics
 
-GET /api/admin/Reviews/flagged
+- GET /api/admin/Reviews/flagged
 
-- 💳 Subscriptions
-GET /api/admin/Subscriptions/users
+### 💳 Subscriptions
+- GET /api/admin/Subscriptions/users
 
-GET /api/admin/Subscriptions/statistics
+- GET /api/admin/Subscriptions/statistics
 
-POST /api/admin/Subscriptions/users/{userId}/extend
+- POST /api/admin/Subscriptions/users/{userId}/extend
 
-POST /api/admin/Subscriptions/users/{userId}/cancel
+- POST /api/admin/Subscriptions/users/{userId}/cancel
 ---
-📄 License
-This project is licensed under the MIT License. See the LICENSE file for more information.
+##📄 License
+- This project is licensed under the MIT License. See the LICENSE file for more information.
