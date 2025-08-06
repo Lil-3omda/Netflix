@@ -4,6 +4,9 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Subject, takeUntil } from 'rxjs';
 import { AdminService } from '../../services/admin.service';
 import { Content } from '../../models/admin.interfaces';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { PopupService } from '../../../shared/services/popup.service';
 
 @Component({
   selector: 'app-content-management',
@@ -430,7 +433,9 @@ export class ContentManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminService: AdminService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private popupService: PopupService
   ) {
     this.contentForm = this.fb.group({
       title: ['', Validators.required],
@@ -519,10 +524,16 @@ export class ContentManagementComponent implements OnInit, OnDestroy {
   }
 
   deleteContent(content: Content): void {
-    if (confirm(`Are you sure you want to delete "${content.title}"?`)) {
-      this.content = this.content.filter(c => c.id !== content.id);
-      this.filterContent();
-      this.calculateStats();
-    }
+    this.popupService.showConfirm(
+      `Are you sure you want to delete "${content.title}"?`,
+      () => {
+        this.content = this.content.filter(c => c.id !== content.id);
+        this.filterContent();
+        this.calculateStats();
+        this.popupService.showSuccess('Content deleted successfully');
+      },
+      undefined,
+      'Delete Content'
+    );
   }
 }

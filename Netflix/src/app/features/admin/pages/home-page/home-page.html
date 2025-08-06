@@ -1,0 +1,85 @@
+
+<div class="container my-4">
+  <div class="row g-4">
+
+    <!-- Total Users -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm border-start border-primary border-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-users me-2 text-primary"></i> Total Users</h5>
+          <p class="card-text fs-4 fw-bold">{{statistics.users}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Profiles -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm border-start border-success border-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-user-circle me-2 text-success"></i> Total Profiles</h5>
+          <p class="card-text fs-4 fw-bold">{{statistics.profiles}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Movies -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm border-start border-warning border-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-film me-2 text-warning"></i> Total Movies</h5>
+          <p class="card-text fs-4 fw-bold">{{statistics.videos}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Categories -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm border-start border-info border-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-list me-2 text-info"></i> Categories</h5>
+          <p class="card-text fs-4 fw-bold">{{statistics.categories}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subscriptions -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm border-start border-danger border-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-credit-card me-2 text-danger"></i> Subscriptions</h5>
+          <p class="card-text fs-4 fw-bold">{{statistics.subscriptions}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm border-start border-secondary border-4">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-star me-2 text-secondary"></i> Reviews</h5>
+          <p class="card-text fs-4 fw-bold">{{statistics.reviews}}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<div class="container mt-5 text-white">
+  <h2 class="top-content-heading mb-4">Top 10 Content</h2>
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-2">
+    <div class="col" *ngFor="let item of top10Content">
+      <div class="bg-dark rounded shadow-sm small-media-card text-center p-2" 
+      [routerLink]="['/admin/moviedetails', item.id]" >
+        <img [src]="'https://localhost:7140/'+item.imageUrl"
+        alt="Poster" class="img-fluid rounded mb-1"
+        style="width: 100%; height: auto; max-height: 200px; object-fit: contain; background-color: #000;" />
+        <div class="text-truncate fw-bold" style="font-size: 0.85rem;">{{ item.title }}</div>
+        <div class="text-text-truncate" style="font-size: 0.75rem;">{{ item.categoryName }}</div>
+        <div class="text-light" style="font-size: 0.75rem;">👁️ {{ item.totalView }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div>

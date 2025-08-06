@@ -1,0 +1,30 @@
+<div class="animate-fade-in">
+  <h3 class="text-white fw-bold mb-4">General Settings</h3>
+
+  <app-input-field
+    label="Site Name"
+    [value]="settings.siteName"
+    (valueChange)="updateSetting('siteName', $event)">
+  </app-input-field>
+
+  <app-input-field
+    label="Site Description"
+    type="textarea"
+    [value]="settings.siteDescription"
+    (valueChange)="updateSetting('siteDescription', $event)">
+  </app-input-field>
+
+  <app-toggle-switch
+    label="Maintenance Mode"
+    description="Enable to put the site in maintenance mode"
+    [checked]="settings.maintenanceMode"
+    (checkedChange)="updateSetting('maintenanceMode', $event)">
+  </app-toggle-switch>
+
+  <app-input-field
+    label="Language"
+    [value]="settings.language"
+    [options]="languageOptions"
+    (valueChange)="updateSetting('language', $event)">
+  </app-input-field>
+</div>

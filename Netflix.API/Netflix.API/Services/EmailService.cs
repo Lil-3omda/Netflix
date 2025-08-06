@@ -48,6 +48,39 @@ namespace Netflix.API.Services
             }
         }
 
+        public async Task<bool> SendPasswordResetOtpAsync(string email, string otpCode, string fullName)
+        {
+            try
+            {
+                var smtpClient = new SmtpClient(_configuration["Email:SmtpHost"])
+                {
+                    Port = int.Parse(_configuration["Email:SmtpPort"]),
+                    Credentials = new NetworkCredential(
+                        _configuration["Email:Username"],
+                        _configuration["Email:Password"]),
+                    EnableSsl = true
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(_configuration["Email:FromAddress"], "Netflix Team"),
+                    Subject = "Netflix Password Reset Code",
+                    Body = CreatePasswordResetEmailBody(otpCode, fullName),
+                    IsBodyHtml = true
+                };
+
+                mailMessage.To.Add(email);
+                await smtpClient.SendMailAsync(mailMessage);
+
+                _logger.LogInformation($"Password reset email sent successfully to {email}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to send password reset email to {email}");
+                return false;
+            }
+        }
 
         private string CreateOtpEmailBody(string otpCode, string fullName)
         {
@@ -62,6 +95,26 @@ namespace Netflix.API.Services
                         </div>
                         <p>This code will expire in 10 minutes.</p>
                         <p>If you didn't request this code, please ignore this email.</p>
+                        <p>Thanks,<br>The Netflix Team</p>
+                    </div>
+                </body>
+                </html>";
+        }
+
+        private string CreatePasswordResetEmailBody(string otpCode, string fullName)
+        {
+            return $@"
+                <html>
+                <body style='font-family: Arial, sans-serif;'>
+                    <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
+                        <h2 style='color: #e50914;'>Password Reset Request</h2>
+                        <p>Hi {fullName},</p>
+                        <p>We received a request to reset your Netflix password. Please use the following verification code:</p>
+                        <div style='background-color: #f5f5f5; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; margin: 20px 0;'>
+                            {otpCode}
+                        </div>
+                        <p>This code will expire in 10 minutes.</p>
+                        <p>If you didn't request this password reset, please ignore this email and your password will remain unchanged.</p>
                         <p>Thanks,<br>The Netflix Team</p>
                     </div>
                 </body>

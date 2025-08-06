@@ -1,27 +1,32 @@
 .slider-arrow {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(26, 25, 25, 0.8);
-  border: none;
-  font-size: 3rem;
-  padding: 0.5rem 1rem;
-  z-index: 10;
-  cursor: pointer;
+  transform: translateY(-35%);
   border-radius: 50%;
-  transition: background-color 0.3s;
+  width: fit-content;
+  height: fit-content;
+  background:none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 100px;
+  opacity: 1;
+
 }
 
-.slider-arrow:hover {
-  background-color: rgb(36, 35, 35);
+.slide-item{
+  margin-left:30px;
 }
 
 .left-arrow {
-  left: 0;
+  left: 20px;
 }
 
 .right-arrow {
-  right: 0;
+  right: 20px;
 }
 
 
@@ -34,3 +39,175 @@
   scrollbar-width: none;
 }
 
+.movie-card {
+   position: relative;
+    overflow: hidden;
+    width: 200px;
+    margin: 10px;
+    height: fit-content;
+    border-radius: 8px;
+    transition: transform 0.5s ease;
+    text-align: center;
+}
+
+.movie-card:hover {
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+.movie-image {
+  border-radius: 15px;
+}
+
+.movie-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-bottom: 1px solid #333;
+  position: relative;
+  z-index: 8;
+
+}
+
+
+.addition{
+  position: absolute;
+  width: 100%;
+  height: 90%;
+  z-index: 9;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(229, 9, 20, 0.9), rgba(229, 9, 20, 0));
+  transition: all 0.4s ease;
+  transform: translateY(20px);
+  opacity: 0;
+}
+.movie-title,
+.extra-info {
+  position: absolute;
+  z-index: 9;
+  width: 100%;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateY(20px);
+
+
+}
+
+
+.movie-title {
+  bottom: 40px;
+}
+
+.extra-info {
+  bottom: 0;
+}
+
+.movie-card:hover .movie-title,
+.movie-card:hover .extra-info,
+.movie-card:hover .addition {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.movie-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.extra-info {
+  margin-top: 8px;
+  color: white;
+}
+
+.extra-info .icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 5px;
+  font-size: 1.2rem;
+}
+.extra-info a:hover{
+  color: red;
+}
+
+.extra-info .meta {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.rank-number {
+  position: absolute;
+  color:black;
+  font-size: 220px;
+  font-weight: 900;
+  -webkit-text-stroke: 5px #555;
+  z-index: 0;
+  top: 0;
+  right: 195px;
+  line-height: 1.25;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ten-number{
+  position: absolute;
+  color:black;
+  font-size:162px;
+  font-weight: 900;
+  -webkit-text-stroke: 5px #555;
+  z-index: 0;
+  letter-spacing: -20px;
+  right: 203px;
+  line-height: 1.7;
+  pointer-events: none;
+  user-select: none;
+
+}
+
+.slide-item {
+  position: relative;
+}
+
+.slide-item:hover .rank-number {
+  transform: scale(1.05);
+}
+
+.with-rank {
+  margin-right: 3.5rem;
+}
+
+.no-rank {
+  margin-right: 0.25rem;
+}
+
+/* Heart Icon */
+.fas.fa-heart {
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.fas.fa-heart.text-danger {
+  color: red;
+}
+.fa-heart {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+.watched{
+  position: absolute;
+  top: 5px;
+  right: 0;
+  z-index: 10;
+  padding: 3px;
+  background-color: rgb(38, 194, 38);
+  font-size: small;
+  border-radius: 5px 0 0 5px;
+}

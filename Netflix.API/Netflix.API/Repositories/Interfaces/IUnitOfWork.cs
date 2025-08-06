@@ -7,6 +7,8 @@ using Netflix.API.Repositories.WatchProgressRepository;
 using Netflix.API.Repositories.SubscriptionsRepository;
 using Netflix.API.Repositories.MessageRepository;
 using Netflix.API.Repositories.ConversationRepository;
+using Netflix.API.Repositories.Categories;
+using Netflix.API.Repositories.MoviesRepository;
 
 namespace Netflix.API.Repositories.Interfaces
 {
@@ -22,6 +24,9 @@ namespace Netflix.API.Repositories.Interfaces
         IWatchingHistoryRepository WatchHistories { get; }
         IMessageRepository Messages { get; }
         IConversationRepository Conversations { get; }
+        ICategoryRepository Categories { get; }
+        IMovieRepository Movies { get; }
+
         Task<bool> CompleteAsync(); 
         Task<int> SaveAsync();
     }

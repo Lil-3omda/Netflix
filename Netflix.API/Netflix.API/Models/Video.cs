@@ -16,12 +16,14 @@
         public string TrailerUrl { get; set; }  
         public string ImageUrl { get; set; }    
 
-        public int ViewCount { get; set; }
+        public string CoverUrl { get; set; }
+
         public int TotalView { get; set; }
 
         public bool IsDeleted { get; set; }
         public string Duration { get; set; }
         public string Status { get; set; }
+
         public int CategoryId { get; set; }
         public VideoType Type { get; set; }
         public Category Category { get; set; }

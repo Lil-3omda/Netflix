@@ -5,8 +5,7 @@ import { Subject, takeUntil, filter } from 'rxjs';
 
 import { AdminService } from './services/admin.service';
 import { AdminPageType } from './models/admin.interfaces';
-import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
-import { AdminHeaderComponent } from './components/admin-header/admin-header.component';
+import { NavBar } from "../features/admin/shared/nav-bar/nav-bar";
 
 @Component({
   selector: 'app-admin',
@@ -15,32 +14,30 @@ import { AdminHeaderComponent } from './components/admin-header/admin-header.com
     CommonModule,
     RouterModule,
     RouterOutlet,
-    AdminSidebarComponent,
-    AdminHeaderComponent
-  ],
+    NavBar
+],
   template: `
+  <app-nav-bar></app-nav-bar>
+  <router-outlet></router-outlet>
+  <!-- <app-nav-bar></app-nav-bar>
     <div class="min-h-screen bg-gradient-to-br from-gray-900 via-black to-red-900 text-white">
       <div class="flex">
-        <!-- Sidebar -->
-        <app-admin-sidebar 
+        <app-admin-sidebar
           [currentPage]="currentPage"
           [isOpen]="sidebarOpen"
           (pageChange)="onPageChange($event)"
           (toggleSidebar)="onToggleSidebar()">
         </app-admin-sidebar>
-        
-        <!-- Main Content -->
-        <div 
+
+        <div
           class="flex-1 transition-all duration-500 ease-in-out"
           [class.ml-64]="sidebarOpen"
           [class.ml-16]="!sidebarOpen">
-          
-          <!-- Header -->
-          <app-admin-header 
+
+        <app-admin-header
             (menuToggle)="onToggleSidebar()">
           </app-admin-header>
-          
-          <!-- Page Content with Netflix-like fade transition -->
+
           <main class="p-6 relative">
             <div class="netflix-fade-in">
               <router-outlet></router-outlet>
@@ -48,70 +45,69 @@ import { AdminHeaderComponent } from './components/admin-header/admin-header.com
           </main>
         </div>
       </div>
-      
-      <!-- Netflix-style loading overlay -->
-      <div 
-        *ngIf="isLoading" 
+
+      <div
+        *ngIf="isLoading"
         class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
         <div class="netflix-spinner">
           <div class="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
-    </div>
+    </div> -->
   `,
-  styles: [`
-    .netflix-fade-in {
-      animation: netflixFadeIn 0.8s ease-out;
-    }
-    
-    @keyframes netflixFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .netflix-spinner {
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-    }
-    
-    /* Custom scrollbar like Netflix */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #1a1a1a;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: #dc2626;
-      border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: #b91c1c;
-    }
-  `]
+  // styles: [`
+  //   .netflix-fade-in {
+  //     animation: netflixFadeIn 0.8s ease-out;
+  //   }
+
+  //   @keyframes netflixFadeIn {
+  //     from {
+  //       opacity: 0;
+  //       transform: translateY(20px);
+  //     }
+  //     to {
+  //       opacity: 1;
+  //       transform: translateY(0);
+  //     }
+  //   }
+
+  //   .netflix-spinner {
+  //     animation: pulse 2s infinite;
+  //   }
+
+  //   @keyframes pulse {
+  //     0%, 100% {
+  //       transform: scale(1);
+  //     }
+  //     50% {
+  //       transform: scale(1.05);
+  //     }
+  //   }
+
+  //   /* Custom scrollbar like Netflix */
+  //   ::-webkit-scrollbar {
+  //     width: 8px;
+  //   }
+
+  //   ::-webkit-scrollbar-track {
+  //     background: #1a1a1a;
+  //   }
+
+  //   ::-webkit-scrollbar-thumb {
+  //     background: #dc2626;
+  //     border-radius: 4px;
+  //   }
+
+  //   ::-webkit-scrollbar-thumb:hover {
+  //     background: #b91c1c;
+  //   }
+  // `]
 })
 export class AdminComponent implements OnInit, OnDestroy {
   currentPage: AdminPageType = 'dashboard';
   sidebarOpen = true;
   isLoading = false;
-  
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -164,7 +160,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   onPageChange(page: AdminPageType): void {
     this.isLoading = true;
-    
+
     // Navigate to the new route
     const routeMap: { [key in AdminPageType]: string } = {
       'dashboard': '/admin/dashboard',

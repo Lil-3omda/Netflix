@@ -29,7 +29,6 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
           <!-- Support Options -->
           <section class="support-options" *ngIf="!showConversations && !showNewTicket">
             <h2>How can we help you?</h2>
-            
             <div class="options-grid">
               <div class="option-card" (click)="showNewTicket = true">
                 <div class="option-icon">
@@ -56,7 +55,7 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
                 <p>View your support history</p>
               </div>
 
-              <div class="option-card">
+              <div class="option-card" (click)="goToFAQ()">
                 <div class="option-icon">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="#e50914" stroke-width="2"/>
@@ -143,20 +142,20 @@ import { Conversation, CreateConversation, CreateMessage } from '../../models/co
             </div>
 
             <div class="conversations-list">
-              <div 
-                class="conversation-card" 
+              <div
+                class="conversation-card"
                 *ngFor="let conversation of customerConversations"
                 (click)="selectConversation(conversation)">
-                
+
                 <div class="conversation-header">
                   <h3>{{ conversation.subject }}</h3>
                   <span class="conversation-date">{{ formatDate(conversation.createdAt) }}</span>
                 </div>
-                
+
                 <p class="last-message" *ngIf="conversation.lastMessage">
                   {{ conversation.lastMessage.content }}
                 </p>
-                
+
                 <div class="conversation-footer">
                   <span class="status-badge" [class]="'status-' + conversation.status.toLowerCase()">
                     {{ conversation.status }}
@@ -565,7 +564,6 @@ export class CustomerSupportComponent implements OnInit {
         this.showNewTicket = false;
         this.showConversations = true;
         this.loadCustomerConversations();
-        
         // Reset form
         this.newTicket = {
           subject: '',
@@ -584,6 +582,7 @@ export class CustomerSupportComponent implements OnInit {
     // Navigate to conversation detail or open in modal
     console.log('Selected conversation:', conversation);
     // You can implement a detailed conversation view here
+
   }
 
   formatDate(dateString: string): string {
@@ -593,5 +592,8 @@ export class CustomerSupportComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+  goToFAQ() {
+    this.router.navigate(['/frequently-asked-questions']);
   }
 }

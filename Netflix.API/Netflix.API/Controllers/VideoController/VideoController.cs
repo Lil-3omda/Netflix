@@ -79,7 +79,6 @@ namespace Netflix.API.Controllers.VideoController
         {
             var video = _mapper.Map<Video>(dto);
 
-            video.ViewCount = 0;
             video.TotalView = 0;
             video.Ratings = new List<Rating>();
 
@@ -100,7 +99,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
         // update data vide by admin 
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateVideo(int id,[FromBody] VideoUploadDto dto)
         {
@@ -140,6 +139,7 @@ namespace Netflix.API.Controllers.VideoController
         //GetTopVideoViews
         [AllowAnonymous]
         [HttpGet("TopViews")]
+
         public async Task<IActionResult> GetTopVideos([FromQuery] int count = 5)
         {
             var videos = await _unitOfWork.Videos.GetTopVideosByViewsAsync(count);
@@ -147,7 +147,7 @@ namespace Netflix.API.Controllers.VideoController
             return Ok(mapp);
         }
         //SoftDeleted
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> SoftDelete(int id)
         {
@@ -158,7 +158,7 @@ namespace Netflix.API.Controllers.VideoController
         }
 
         // Restore Video From Delete 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}/restore")]
         public async Task<IActionResult> RestoreVideo(int id)
         {
@@ -181,6 +181,14 @@ namespace Netflix.API.Controllers.VideoController
 
 
 
+//         [AllowAnonymous]
+//         [HttpGet("TopViews")]
+//         public async Task<IActionResult> GetTopVideos([FromQuery] int n=5)
+//         {
+//             var videos = await _unitOfWork.Videos.GetTopVideosByViewsAsync(n);
+//             var mapp = _mapper.Map<List<VideoResponseDto>>(videos);
+//             return Ok(mapp);
+//         }
 
     }
 }

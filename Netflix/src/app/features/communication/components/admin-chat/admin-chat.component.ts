@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommunicationService } from '../../services/communication.service';
 import { Conversation, Message, CreateMessage } from '../../models/conversation.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-chat',
@@ -578,7 +579,11 @@ export class AdminChatComponent implements OnInit {
   replyMessage = '';
   isLoading = false;
 
-  constructor(private communicationService: CommunicationService) {}
+
+  constructor(
+    private communicationService: CommunicationService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.loadConversations();
@@ -663,22 +668,25 @@ export class AdminChatComponent implements OnInit {
     });
   }
 
-  assignToMe() {
-    if (!this.selectedConversation) return;
+assignToMe() {
+  if (!this.selectedConversation) return;
 
-    const currentAdminId = '166f4eeb-135a-4067-b2f1-a76787c8acea'; // Replace with actual admin ID
+  const currentAdminId = this.authService.getCurrentUser()?.id;
+  console.log('Assigning conversation to admin:', currentAdminId);
+  if (!currentAdminId) return;
 
-    this.communicationService.assignConversation(this.selectedConversation.id, currentAdminId).subscribe({
-      next: () => {
-        if (this.selectedConversation) {
-          this.selectedConversation.assignedAdminName = 'You';
-        }
-      },
-      error: (error) => {
-        console.error('Error assigning conversation:', error);
+  this.communicationService.assignConversation(this.selectedConversation.id, currentAdminId).subscribe({
+    next: () => {
+      if (this.selectedConversation) {
+        this.selectedConversation.assignedAdminName = 'You';
       }
-    });
-  }
+      this.loadConversations();
+    },
+    error: (error) => {
+      console.error('Error assigning conversation:', error);
+    }
+  });
+}
 
   updateStatus(event: any) {
     if (!this.selectedConversation) return;

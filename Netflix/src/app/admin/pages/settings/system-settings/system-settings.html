@@ -1,0 +1,34 @@
+<div class="animate-fade-in">
+  <h3 class="text-white fw-bold mb-4">System Settings</h3>
+
+  <app-toggle-switch
+    label="Automatic Backup"
+    description="Enable automatic database backups"
+    [checked]="settings.autoBackup"
+    (checkedChange)="updateSetting('autoBackup', $event)">
+  </app-toggle-switch>
+
+  <app-input-field
+    label="Backup Frequency"
+    [value]="settings.backupFrequency"
+    [options]="backupOptions"
+    (valueChange)="updateSetting('backupFrequency', $event)">
+  </app-input-field>
+
+  <app-toggle-switch
+    label="Cache System"
+    description="Enable caching for better performance"
+    [checked]="settings.cacheEnabled"
+    (checkedChange)="updateSetting('cacheEnabled', $event)">
+  </app-toggle-switch>
+
+  <div class="card bg-secondary border-0 p-4">
+    <h5 class="text-white fw-medium mb-3">System Status</h5>
+    <div class="row g-2">
+      <div class="col-12 d-flex justify-content-between" *ngFor="let status of systemStatus">
+        <span class="text-muted">{{ status.label }}:</span>
+        <span [class]="'fw-bold ' + status.colorClass">{{ status.value }}</span>
+      </div>
+    </div>
+  </div>
+</div>

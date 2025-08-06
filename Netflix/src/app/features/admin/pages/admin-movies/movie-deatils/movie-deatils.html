@@ -1,0 +1,116 @@
+<div *ngIf="movieDetails" class="movie-detail-page text-light">
+
+  <!-- 🎬 Movie Info Card -->
+  <div class="container mt-5">
+    <div class="row g-4 glass-card p-4 rounded-4 shadow-lg align-items-center">
+
+      <!-- Poster -->
+      <div class="col-md-4">
+        <img
+          [src]="'https://localhost:7140/' + movieDetails.imageUrl"
+          alt="Movie Poster"
+          class="img-fluid rounded-4 shadow object-fit-cover w-100"
+          style="max-height: 480px;" />
+      </div>
+
+      <!-- Info -->
+      <div class="col-md-8">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 movie-header">
+        <h1 class="fw-bold  display-5 m-0">{{ movieDetails.title }}</h1>
+
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+          <button class="btn btn-outline-info" (click)="oneditMovie()">
+            <i class="bi bi-pencil-square me-1"></i> Edit
+          </button>
+
+          <button
+          *ngIf="!movieDetails.isDeleted"
+          class="btn btn-outline-danger" (click)="onDeleteMovie()">
+            <i class="bi bi-trash me-1"></i> Delete
+          </button>
+          <button
+          *ngIf="movieDetails.isDeleted"
+          class="btn btn-outline-success" (click)="onRestoreMovie()">
+            <i class="bi bi-arrow-clockwise me-1"></i> Restore
+          </button>
+  </div>
+</div>
+
+        <hr class="border-light opacity-25" />
+
+        <div class="fs-5">
+          <p><strong>📂 Category:</strong> {{ movieDetails.categoryName }}</p>
+          <p><strong>📝 Description:</strong> {{ movieDetails.description }}</p>
+          <p><strong>⏱️ Duration:</strong> {{ movieDetails.duration }}</p>
+          <p><strong>📌 Status:</strong> {{ movieDetails.status }}</p>
+          <p><strong>🎭 Type:</strong> {{ movieDetails.type }}</p>
+
+          <p><strong>👁️ Views:</strong> {{ movieDetails.totalView }}</p>
+        </div>
+
+        <!-- 🎞️ Trailer Section at Bottom -->
+              <div class="mt-4">
+            <h3 class="mb-3 text-info fw-semibold">🎞️ Trailer</h3>
+            <div class="ratio ratio-16x9 rounded overflow-hidden">
+              <iframe
+                [src]="safeTrailerUrl"
+                frameborder="0"
+                allowfullscreen>
+              </iframe>
+            </div>
+
+          </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎦 Full Movie Video -->
+        <div class="container my-5">
+          <div class="glass-card p-4 rounded-4 shadow-lg">
+          <h5 class="mb-2">📺 Watch Full Movie</h5>
+          <video controls class="w-100 rounded-4 shadow" style="max-height: 400px;">
+            <source [src]="'https://localhost:7140/' + movieDetails.videoUrl" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          </div>
+        </div>
+
+
+
+</div>
+
+
+<div *ngIf="editing" class="uploading-overlay">
+  <form #movieForm="ngForm" name="movieForm" (ngSubmit)="saveChanges()" class="bg-dark p-4 rounded text-light w-50">
+    <h3 class="mb-4">Edit Movie</h3>
+
+    <div class="mb-3">
+      <label class="form-label">Category</label>
+      <select class="form-select bg-black text-light" [(ngModel)]="editMovie.categoryId" name="categoryId" required #cat="ngModel">
+        <option value="">Select Category</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+      </select>
+      <div *ngIf="cat.invalid && cat.touched" class="text-danger">Category is required.</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" [(ngModel)]="editMovie.description" name="description" required #desc="ngModel"></textarea>
+      <div *ngIf="desc.invalid && desc.touched" class="text-danger">Description is required.</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Trailer URL</label>
+      <input type="text" class="form-control" [(ngModel)]="editMovie.trailerUrl" name="trailerUrl" required #trailer="ngModel" />
+      <div *ngIf="trailer.invalid && trailer.touched" class="text-danger">Trailer URL is required.</div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+      <button type="submit" class="btn btn-success" [disabled]="movieForm.invalid">Save Changes</button>
+    </div>
+  </form>
+</div>
+

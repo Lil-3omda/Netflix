@@ -24,7 +24,7 @@ namespace Netflix.API.Repositories.VideoRepository
         {
             return await _context.Videos
                 .Include(v => v.Category)
-                .FirstOrDefaultAsync(v => v.Id == id && !v.IsDeleted);
+                .FirstOrDefaultAsync(v => v.Id == id );
         }
 
 
@@ -75,7 +75,7 @@ namespace Netflix.API.Repositories.VideoRepository
             return await _context.Videos
                 .Include(v => v.Category)
                 .Where(v => !v.IsDeleted)
-                .OrderByDescending(v => v.ViewCount)
+                .OrderByDescending(v => v.TotalView)
                 .Take(count).ToListAsync();
         }
         //softDeleted

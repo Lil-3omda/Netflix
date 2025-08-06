@@ -1,0 +1,26 @@
+.admin-navbar{
+    background-color: rgb(12, 12, 12);
+}
+.navbar-items{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+.logo{
+    font-size: x-large;
+    cursor: pointer;
+}
+.navbar-items ul a:hover {
+    color: rgb(202, 41, 41);
+    cursor: pointer;
+    text-decoration: none;
+}
+.text-gradient {
+  background: linear-gradient(90deg, #694706, #34a853, #520909, #ea4335);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+

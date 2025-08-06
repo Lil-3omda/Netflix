@@ -54,7 +54,7 @@ export class AccountComponent implements OnInit {
 
     setTimeout(() => {
       if (isLoggedIn) {
-        this.router.navigate(['/browse']);
+        this.router.navigate(['/account']);
       } else {
         this.router.navigate(['/login']);
       }

@@ -10,6 +10,8 @@ using Netflix.API.Repositories.SubscriptionsRepository;
 using Netflix.API.Repositories.WatchHistoryRepository;
 using Netflix.API.Repositories.MessageRepository;
 using Netflix.API.Repositories.ConversationRepository;
+using Netflix.API.Repositories.Categories;
+using Netflix.API.Repositories.MoviesRepository;
 namespace Netflix.API.Repositories
 {
     public class UnitOfWork : IUnitOfWork
@@ -25,6 +27,9 @@ namespace Netflix.API.Repositories
         public IWatchingHistoryRepository WatchHistories { get; private set; }
         public IMessageRepository Messages { get; private set; }
         public IConversationRepository Conversations { get; private set; }
+        public ICategoryRepository Categories { get; private set; }
+        public IMovieRepository Movies { get; private set; }
+
 
         public UnitOfWork(
             ApplicationDbContext context,
@@ -36,7 +41,9 @@ namespace Netflix.API.Repositories
             ISubscriptionRepository subscriptionRepo,
             IWatchingHistoryRepository watchHistoryRepo,
             IMessageRepository messageRepo,
-            IConversationRepository conversationRepo)
+            IConversationRepository conversationRepo,
+            ICategoryRepository categoryRepository,
+            IMovieRepository movieRepository)
         {
             this.context = context;
             Videos = videoRepo;
@@ -48,6 +55,8 @@ namespace Netflix.API.Repositories
             WatchHistories = watchHistoryRepo;
             Messages = messageRepo;
             Conversations = conversationRepo;
+            Categories = categoryRepository;
+            Movies = movieRepository;
         }
 
 

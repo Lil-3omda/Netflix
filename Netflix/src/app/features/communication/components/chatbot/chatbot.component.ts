@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CommunicationService } from '../../services/communication.service';
 import { Message } from '../../models/conversation.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-chatbot',
@@ -12,8 +14,8 @@ import { Message } from '../../models/conversation.model';
     <div class="chatbot-container" [class.open]="isOpen">
       <!-- Chatbot Toggle Button -->
       <button class="chatbot-toggle" (click)="toggleChatbot()" [class.has-unread]="hasUnreadMessages">
-        <svg *ngIf="!isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg *ngIf="!isOpen" width="24" height="24" viewBox="0 0 24 24" fill="white">
+          <path d="M3 3H9L15 21H21V3H15L9 21H3V3Z" />
         </svg>
         <svg *ngIf="isOpen" width="24" height="24" viewBox="0 0 24 24" fill="none">
           <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -21,6 +23,7 @@ import { Message } from '../../models/conversation.model';
         </svg>
         <span class="unread-badge" *ngIf="hasUnreadMessages && !isOpen">{{ unreadCount }}</span>
       </button>
+
 
       <!-- Chatbot Window -->
       <div class="chatbot-window" *ngIf="isOpen">
@@ -50,7 +53,7 @@ import { Message } from '../../models/conversation.model';
         <div class="chatbot-messages" #messagesContainer>
           <div class="welcome-message" *ngIf="messages.length === 0">
             <div class="bot-avatar">🤖</div>
-            <div class="message-content">
+            <div class="message-content" *ngIf="isAuthenticated">
               <p>Hi! I'm the Netflix support chatbot. How can I help you today?</p>
               <div class="quick-actions">
                 <button class="quick-action" (click)="sendQuickMessage('I need help with login')">
@@ -67,19 +70,38 @@ import { Message } from '../../models/conversation.model';
                 </button>
               </div>
             </div>
+            <div class="message-content" *ngIf="!isAuthenticated">
+              <p>Welcome to Netflix! 🎬</p>
+              <p>Discover unlimited movies, TV shows, and more. Join millions of viewers worldwide!</p>
+              <div class="visitor-features">
+                <div class="feature">✓ Thousands of movies and TV shows</div>
+                <div class="feature">✓ Watch on any device</div>
+                <div class="feature">✓ Cancel anytime</div>
+                <div class="feature">✓ New content added regularly</div>
+              </div>
+              <div class="visitor-actions">
+                <button class="signup-action" (click)="goToSignup()">
+                  Get Started - Sign Up Now
+                </button>
+                <button class="login-action" (click)="goToLogin()">
+                  Already have an account? Sign In
+                </button>
+              </div>
+              <p class="visitor-note">Have questions? Feel free to ask me anything about Netflix!</p>
+            </div>
           </div>
 
-          <div class="message" 
-               *ngFor="let message of messages" 
+          <div class="message"
+               *ngFor="let message of messages"
                [class.user-message]="message.type === 'CustomerToAdmin'"
                [class.bot-message]="message.type === 'SystemMessage'"
                [class.admin-message]="message.type === 'AdminToCustomer'">
-            
+
             <div class="message-avatar" *ngIf="message.type !== 'CustomerToAdmin'">
               <span *ngIf="message.type === 'SystemMessage'">🤖</span>
               <span *ngIf="message.type === 'AdminToCustomer'">👨‍💼</span>
             </div>
-            
+
             <div class="message-content">
               <p>{{ message.content }}</p>
               <span class="message-time">{{ formatTime(message.createdAt) }}</span>
@@ -106,9 +128,9 @@ import { Message } from '../../models/conversation.model';
               placeholder="Type your message..."
               class="message-input"
               [disabled]="isLoading">
-            <button 
-              class="send-btn" 
-              (click)="sendMessage()" 
+            <button
+              class="send-btn"
+              (click)="sendMessage()"
               [disabled]="!currentMessage.trim() || isLoading">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <line x1="22" y1="2" x2="11" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -339,6 +361,65 @@ import { Message } from '../../models/conversation.model';
       color: white;
     }
 
+    .visitor-features {
+      margin: 16px 0;
+    }
+
+    .feature {
+      color: #46d369;
+      font-size: 14px;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .visitor-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .signup-action, .login-action {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .signup-action {
+      background: #e50914;
+      color: white;
+    }
+
+    .signup-action:hover {
+      background: #f40612;
+      transform: scale(1.02);
+    }
+
+    .login-action {
+      background: transparent;
+      color: #999;
+      border: 1px solid #333;
+    }
+
+    .login-action:hover {
+      background: #333;
+      color: white;
+    }
+
+    .visitor-note {
+      font-size: 12px;
+      color: #666;
+      margin-top: 16px;
+      font-style: italic;
+    }
+
     .typing-indicator {
       display: flex;
       gap: 10px;
@@ -468,10 +549,23 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
   isTyping = false;
   hasUnreadMessages = false;
   unreadCount = 0;
+  isAuthenticated = false;
 
-  constructor(private communicationService: CommunicationService) {}
+  constructor(
+    private communicationService: CommunicationService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    // Check authentication status
+    this.isAuthenticated = this.authService.isAuthenticated();
+
+    // Subscribe to authentication changes
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
+    });
+
     // Subscribe to unread count changes
     this.communicationService.unreadCount$.subscribe(count => {
       this.unreadCount = count;
@@ -520,9 +614,16 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Show typing indicator
       this.isTyping = true;
 
-      // Send to chatbot service
-      const response = await this.communicationService.sendChatbotMessage(messageText).toPromise();
-      
+      let response;
+
+      if (this.isAuthenticated) {
+        // Send to chatbot service for authenticated users
+        response = await this.communicationService.sendChatbotMessage(messageText).toPromise();
+      } else {
+        // Handle visitor messages with Netflix info
+        response = this.generateVisitorResponse(messageText);
+      }
+
       // Hide typing indicator
       this.isTyping = false;
 
@@ -532,7 +633,7 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (error) {
       this.isTyping = false;
       console.error('Error sending message:', error);
-      
+
       // Add error message
       const errorMessage: Message = {
         id: Date.now() + 1,
@@ -543,12 +644,75 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
         conversationId: 0,
         senderName: 'System'
       };
-      
+
       this.messages.push(errorMessage);
     } finally {
       this.isLoading = false;
       this.scrollToBottom();
     }
+  }
+
+  generateVisitorResponse(message: string): Message {
+    const lowerMessage = message.toLowerCase();
+    let responseContent = '';
+
+    if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('plan')) {
+      responseContent = `Netflix offers flexible plans starting from EGP 100/month:
+
+📺 Basic (EGP 100/month) - Good quality, 1 screen
+📺 Standard (EGP 170/month) - Great quality, 2 screens
+📺 Premium (EGP 240/month) - Best quality, 4 screens, 4K
+
+Ready to start your Netflix journey? Click "Get Started" above!`;
+    } else if (lowerMessage.includes('device') || lowerMessage.includes('watch')) {
+      responseContent = `You can watch Netflix on:
+
+📱 Smartphones & Tablets
+💻 Computers & Laptops
+📺 Smart TVs
+🎮 Gaming Consoles
+📡 Streaming Devices
+
+Watch anywhere, anytime! Sign up to get started.`;
+    } else if (lowerMessage.includes('content') || lowerMessage.includes('movie') || lowerMessage.includes('show')) {
+      responseContent = `Netflix has thousands of:
+
+🎬 Movies (Action, Comedy, Drama, Horror & more)
+📺 TV Shows (Series, Documentaries, Kids content)
+🌍 International content from around the world
+🆕 Netflix Originals you can't find anywhere else
+
+New content added every week! Join now to explore.`;
+    } else if (lowerMessage.includes('cancel') || lowerMessage.includes('subscription')) {
+      responseContent = `Netflix subscriptions are flexible:
+
+✅ Cancel anytime online
+✅ No long-term contracts
+✅ No cancellation fees
+✅ Watch until your billing period ends
+
+Try Netflix risk-free! Sign up now.`;
+    } else {
+      responseContent = `Thanks for your interest in Netflix! 🎬
+
+We offer unlimited streaming of movies and TV shows with:
+• Multiple subscription plans to fit your needs
+• Watch on any device, anywhere
+• Cancel anytime with no fees
+• New content added regularly
+
+Ready to start watching? Click "Get Started" above to sign up, or ask me about our plans, content, or features!`;
+    }
+
+    return {
+      id: Date.now() + 1,
+      content: responseContent,
+      type: 'SystemMessage',
+      status: 'Sent',
+      createdAt: new Date().toISOString(),
+      conversationId: 0,
+      senderName: 'Netflix Bot'
+    };
   }
 
   sendQuickMessage(message: string) {
@@ -559,6 +723,14 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
   formatTime(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  goToSignup(): void {
+    this.router.navigate(['/signup']);
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 
   private scrollToBottom() {

@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+<div class="relative ">
+
+<section *ngIf="!showTrailer"
+
+
+  class="hero-section text-white vh-100 d-flex align-items-center"
+  [ngStyle]="{
+    'background-image':
+      'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(' +
+      'https://localhost:7140/' +
+      movie.coverUrl +
+      ')'
+  }"
+>  <div class=" ms-5">
+     
+   
+    <h1 class="fw-bold display-4">{{movie.title}}</h1>
+     <span>{{movie.categoryName}}</span>
+    <p class="lead mt-1 mb-5">{{movie.description}}</p>
+    <div class="mt-5 d-flex gap-3">
+      <button class="btn btn-danger px-4 py-2 fw-bold" [routerLink]="'/watchMovie/'+movie.id" >▶ Play Now</button>
+      <button class="btn btn-secondary px-4 py-2 fw-bold" (click)="onShowTrailer()" >▶ Show 
+        Trailer Now</button>
+    </div>
+  </div>
+</section>
+
+
+
+<div *ngIf="showTrailer" class="trailer-fullscreen">
+    <button class="btn btn-light back-btn" (click)="onShowTrailer()" >
+    ⬅ Back
+  </button>
+<iframe
+  [src]=safeTrailerUrl
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
+</div>
+
+
+</div>
+
+
+
+
+
+
