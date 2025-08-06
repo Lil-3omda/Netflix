@@ -177,7 +177,6 @@ Revenue + churn metrics
 
 - Role-based token validation and expiration handling
 
-- ℹ️ Register an admin account via the API and manually assign the "Admin" role to access the admin dashboard.
 ---
 ---
 ## 📄 License
